@@ -1,226 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UniLink - Student Profile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniLink - Student Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+  <style>
+    /* Profile Page Specific Styles */
+    .profile-page-header {
+      margin-bottom: 32px;
+    }
+    .profile-page-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #1e293b, #6366F1);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .profile-page-sub {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 6px;
+    }
 
-<style>
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 28px;
+    }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
+    /* Left: Avatar Card */
+    .profile-avatar-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
 
-body{
-display:flex;
-height:100vh;
-background:#0f172a;
-color:white;
-}
+    .profile-avatar-large {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(99, 102, 241, 0.2);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+      transition: all 0.3s ease;
+    }
+    .profile-avatar-large:hover {
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
 
-/* SIDEBAR */
+    .profile-avatar-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .profile-avatar-role {
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(99, 102, 241, 0.08);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
 
-.sidebar{
-width:240px;
-background:#111827;
-padding:20px;
-display:flex;
-flex-direction:column;
-}
+    .change-avatar-btn {
+      margin-top: 8px;
+      background: transparent;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .change-avatar-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
 
-.logo{
-font-size:22px;
-font-weight:600;
-color:#5865F2;
-margin-bottom:30px;
-}
+    /* Right: Info Cards */
+    .profile-details-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-.menu a{
-display:block;
-padding:12px;
-margin-bottom:8px;
-text-decoration:none;
-color:#cbd5e1;
-border-radius:8px;
-}
+    .info-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: var(--shadow-soft);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
 
-.menu a:hover{
-background:#1f2937;
-}
+    .info-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .info-card-title i {
+      font-size: 22px;
+      color: var(--primary);
+    }
 
-.logout{
-margin-top:auto;
-}
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .info-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .info-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
 
-.logout a{
-color:#ef4444;
-}
+    /* Avatar Selection Modal */
+    .avatar-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      animation: modalFadeIn 0.25s ease;
+    }
+    .avatar-modal-overlay.active {
+      display: flex;
+    }
 
-/* MAIN */
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-.main{
-flex:1;
-display:flex;
-flex-direction:column;
-}
+    .avatar-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      width: 480px;
+      max-width: 90vw;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      animation: modalSlideUp 0.3s ease;
+    }
+    @keyframes modalSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-.navbar{
-height:60px;
-background:#111827;
-display:flex;
-align-items:center;
-padding:0 20px;
-border-bottom:1px solid #1f2937;
-}
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .modal-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--text-main); }
 
-/* PROFILE CARD */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .avatar-option {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .avatar-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-option:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: scale(1.05);
+    }
+    .avatar-option.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .avatar-option.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 22px;
+      height: 22px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
 
-.container{
-padding:30px;
-display:flex;
-justify-content:center;
-}
+    .modal-save-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .modal-save-btn:hover {
+      background: var(--primary-hover);
+    }
 
-.profile-card{
-background:#1e293b;
-padding:30px;
-border-radius:12px;
-width:450px;
-}
+    /* Back button */
+    .back-to-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+    .back-to-dashboard:hover {
+      color: var(--primary);
+    }
 
-.profile-header{
-text-align:center;
-margin-bottom:20px;
-}
-
-.profile-header img{
-width:90px;
-border-radius:50%;
-margin-bottom:10px;
-}
-
-.info{
-margin-top:15px;
-}
-
-.info div{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-border-bottom:1px solid #334155;
-}
-
-.label{
-color:#94a3b8;
-}
-
-</style>
+    @media (max-width: 768px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i>
+        <span>Dashboard</span></a>
+      <a href="student_dashboard.html#announcements" class="nav-item"><i class="ph ph-megaphone"></i>
+        <span>Important Announcements</span></a>
+      <a href="student_dashboard.html#deadlines" class="nav-item"><i class="ph ph-calendar-check"></i>
+        <span>Assignment Deadlines</span></a>
+      <a href="student_dashboard.html#internships" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships &
+          Hackathons</span></a>
+      <a href="student_dashboard.html#events" class="nav-item"><i class="ph ph-ticket"></i> <span>Event
+          Registration</span></a>
+      <a href="student_dashboard.html#scholarships" class="nav-item"><i class="ph ph-graduation-cap"></i>
+        <span>Scholarships</span></a>
+      <a href="student_dashboard.html#news" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News &
+          Community</span></a>
+      <a href="student_dashboard.html#ask-seniors" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask
+          Seniors</span></a>
+      <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
 
-<div class="sidebar">
+  <main class="main-wrapper">
 
-<div class="logo">UniLink</div>
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
 
-<div class="menu">
-<a href="dashboard.html">🏠 Dashboard</a>
-<a href="subjects.html">📚 My Subjects</a>
-<a href="../../pages/student/dues.html">📅 Dues</a>
-<a href="../../pages/common/announcements.html">📢 Announcements</a>
-<a href="faq.html">❓ FAQs</a>
-<a href="#">⚙ Settings</a>
-</div>
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search announcements, assignments, events...">
+      </div>
 
-<div class="logout">
-<a href="index.html">🚪 Logout</a>
-</div>
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
 
-</div>
+        <a href="student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
+          <div class="avatar" id="navAvatar">A</div>
+          <div class="user-info">
+            <span class="user-name" id="navUserName">Student</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </a>
+      </div>
+    </header>
 
-<!-- MAIN -->
+    <!-- Profile Content -->
+    <a href="student_dashboard.html" class="back-to-dashboard">
+      <i class="ph ph-arrow-left"></i> Back to Dashboard
+    </a>
 
-<div class="main">
+    <div class="profile-page-header">
+      <h1 class="profile-page-title">My Profile</h1>
+      <p class="profile-page-sub">View and manage your personal information</p>
+    </div>
 
-<div class="navbar">
-<h3>Student Profile</h3>
-</div>
+    <div class="profile-layout">
+      <!-- Left: Avatar Card -->
+      <div class="profile-avatar-card">
+        <img id="profileAvatarImg" class="profile-avatar-large" src="https://api.dicebear.com/7.x/initials/svg?seed=AP&backgroundColor=6366f1&textColor=ffffff&fontSize=42" alt="Profile Avatar">
+        <div class="profile-avatar-name" id="profileName">Student</div>
+        <span class="profile-avatar-role" id="profileRoleBadge">Student</span>
+        <button class="change-avatar-btn" id="openAvatarModal">
+          <i class="ph ph-camera"></i> Change Avatar
+        </button>
+      </div>
 
-<div class="container">
+      <!-- Right: Info Cards -->
+      <div class="profile-details-section">
+        <!-- Personal Info Card -->
+        <div class="info-card">
+          <div class="info-card-title"><i class="ph ph-user-circle"></i> Personal Information</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Full Name</span>
+              <span class="info-value" id="infoName">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email Address</span>
+              <span class="info-value" id="infoEmail">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Student ID (PRN)</span>
+              <span class="info-value" id="infoPrn">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Phone</span>
+              <span class="info-value" id="infoPhone">Not set</span>
+            </div>
+          </div>
+        </div>
 
-<div class="profile-card">
+        <!-- Academic Info Card -->
+        <div class="info-card">
+          <div class="info-card-title"><i class="ph ph-graduation-cap"></i> Academic Details</div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Branch / Department</span>
+              <span class="info-value" id="infoBranch">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Academic Year</span>
+              <span class="info-value" id="infoYear">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Division</span>
+              <span class="info-value" id="infoDivision">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">College</span>
+              <span class="info-value">PCCOE, Pune</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="profile-header">
-<img src="https://i.pravatar.cc/120">
-<h2 id="profileName">Aditya Pingle</h2>
-<p id="profileSub">Student</p>
-</div>
+  </main>
 
-<div class="info">
+  <!-- Avatar Selection Modal -->
+  <div class="avatar-modal-overlay" id="avatarModal">
+    <div class="avatar-modal">
+      <div class="modal-header">
+        <h3>Choose Your Avatar</h3>
+        <button class="modal-close" id="closeAvatarModal"><i class="ph ph-x"></i></button>
+      </div>
+      <div class="avatar-grid" id="avatarGrid">
+        <!-- Avatars will be injected by JS -->
+      </div>
+      <button class="modal-save-btn" id="saveAvatar">Save Avatar</button>
+    </div>
+  </div>
 
-<div>
-<span class="label">Student ID</span>
-<span id="profilePrn">CS2026001</span>
-</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // --- Populate profile data from localStorage ---
+      const name = localStorage.getItem('userName');
+      const email = localStorage.getItem('userEmail');
+      const prn = localStorage.getItem('userPrn');
+      const branch = localStorage.getItem('userBranch');
+      const year = localStorage.getItem('userYear');
+      const division = localStorage.getItem('userDivision');
 
-<div>
-<span class="label">Email</span>
-<span id="profileEmail">aditya@college.edu</span>
-</div>
+      const yearMap = { '1': 'First Year (FE)', '2': 'Second Year (SE)', '3': 'Third Year (TE)', '4': 'Final Year (BE)' };
+      const branchMap = { 
+        'CS': 'Computer Science', 'IT': 'Information Technology', 
+        'CSE-AIML': 'CSE (AI & ML)', 'Civil': 'Civil Engineering',
+        'ENTC': 'Electronics & Telecom', 'Mechanical': 'Mechanical Engineering',
+        'Computer-regional': 'Computer (Regional)' 
+      };
 
-<div>
-<span class="label">Department</span>
-<span id="profileBranch">Computer Science</span>
-</div>
+      if (name) {
+        document.getElementById('profileName').innerText = name;
+        document.getElementById('navUserName').innerText = name;
+        document.getElementById('navAvatar').innerText = name.charAt(0).toUpperCase();
+        document.getElementById('infoName').innerText = name;
+      }
+      if (email) document.getElementById('infoEmail').innerText = email;
+      if (prn) document.getElementById('infoPrn').innerText = prn;
+      if (branch) {
+        document.getElementById('infoBranch').innerText = branchMap[branch] || branch;
+        document.getElementById('profileRoleBadge').innerText = (branchMap[branch] || branch) + ' Student';
+      }
+      if (year) document.getElementById('infoYear').innerText = yearMap[year] || year;
+      if (division) document.getElementById('infoDivision').innerText = 'Division ' + division;
 
-<div>
-<span class="label">Year</span>
-<span id="profileYear">Third Year</span>
-</div>
+      // --- Load saved avatar ---
+      const savedAvatar = localStorage.getItem('userAvatar');
+      if (savedAvatar) {
+        document.getElementById('profileAvatarImg').src = savedAvatar;
+      } else if (name) {
+        document.getElementById('profileAvatarImg').src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=6366f1&textColor=ffffff&fontSize=42`;
+      }
 
-<div>
-<span class="label">Phone</span>
-<span>+91 9876543210</span>
-</div>
+      // --- Avatar selection modal ---
+      const avatarStyles = [
+        { style: 'adventurer', label: 'Adventurer' },
+        { style: 'avataaars', label: 'Avataaars' },
+        { style: 'bottts', label: 'Bottts' },
+        { style: 'fun-emoji', label: 'Fun Emoji' },
+        { style: 'lorelei', label: 'Lorelei' },
+        { style: 'micah', label: 'Micah' },
+        { style: 'miniavs', label: 'Mini' },
+        { style: 'personas', label: 'Personas' },
+        { style: 'pixel-art', label: 'Pixel' },
+        { style: 'big-ears', label: 'Big Ears' },
+        { style: 'croodles', label: 'Croodles' },
+        { style: 'notionists', label: 'Notionists' }
+      ];
 
-<div>
-<span class="label">College</span>
-<span>XYZ University</span>
-</div>
+      const seed = name || 'UniLink';
+      const grid = document.getElementById('avatarGrid');
+      let selectedUrl = savedAvatar || '';
 
-</div>
+      avatarStyles.forEach((a, index) => {
+        const url = `https://api.dicebear.com/7.x/${a.style}/svg?seed=${encodeURIComponent(seed)}`;
+        const div = document.createElement('div');
+        div.className = 'avatar-option' + (url === savedAvatar ? ' selected' : '');
+        div.innerHTML = `<img src="${url}" alt="${a.label}" loading="lazy">`;
+        div.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+          div.classList.add('selected');
+          selectedUrl = url;
+        });
+        grid.appendChild(div);
+      });
 
-</div>
+      document.getElementById('openAvatarModal').addEventListener('click', () => {
+        document.getElementById('avatarModal').classList.add('active');
+      });
+      document.getElementById('closeAvatarModal').addEventListener('click', () => {
+        document.getElementById('avatarModal').classList.remove('active');
+      });
+      document.getElementById('avatarModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+      });
 
-</div>
+      document.getElementById('saveAvatar').addEventListener('click', () => {
+        if (selectedUrl) {
+          localStorage.setItem('userAvatar', selectedUrl);
+          document.getElementById('profileAvatarImg').src = selectedUrl;
+          document.getElementById('avatarModal').classList.remove('active');
+        }
+      });
+    });
+  </script>
 
-</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const name = localStorage.getItem('userName');
-    const email = localStorage.getItem('userEmail');
-    const prn = localStorage.getItem('userPrn');
-    const branch = localStorage.getItem('userBranch');
-    const year = localStorage.getItem('userYear');
-
-    if (name) document.getElementById('profileName').innerText = name;
-    if (email) document.getElementById('profileEmail').innerText = email;
-    if (prn) document.getElementById('profilePrn').innerText = prn;
-    if (branch) {
-      document.getElementById('profileBranch').innerText = branch;
-      document.getElementById('profileSub').innerText = `${branch} Student`;
-    }
-    if (year) {
-      const yearMap = { '1': 'First Year', '2': 'Second Year', '3': 'Third Year', '4': 'Final Year' };
-      document.getElementById('profileYear').innerText = yearMap[year] || year;
-    }
-  });
-</script>
 </body>
 </html>
