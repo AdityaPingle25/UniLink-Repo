@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Seniors - UniLink</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item active"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search questions, tags, mentors...">
+      </div>
+
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Aditya</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section" style="display: flex; justify-content: space-between; align-items: flex-end;">
+      <div>
+        <h1 class="welcome-title">Ask Seniors (Q&A Forum)</h1>
+        <p style="color: var(--text-muted); font-size: 15px;">Get career advice, academic help, and guidance from alumni and seniors.</p>
+      </div>
+      <button class="primary-btn"><i class="ph ph-pencil-simple"></i> Post a Question</button>
+    </section>
+
+    <!-- Q&A List -->
+    <div class="qa-list" style="display: flex; flex-direction: column; gap: 16px;">
+      
+      <div class="card" style="display: flex; gap: 24px;">
+        <div class="vote-column" style="display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-muted);">
+          <button style="border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 20px;"><i class="ph ph-caret-up"></i></button>
+          <span style="font-weight: 600; color: var(--text-main); font-size: 18px;">42</span>
+          <button style="border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 20px;"><i class="ph ph-caret-down"></i></button>
+        </div>
+        <div class="qa-content" style="flex: 1;">
+          <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-main);">How to prepare for off-campus Placements as a non-CS branch student?</h3>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">I am currently in my 3rd year in Mechanical, but I want to apply for SDE roles off-campus. What should be my roadmap for the next 6 months regarding DSA and projects?</p>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 8px;">
+              <span class="badge">Placements</span>
+              <span class="badge">SDE</span>
+              <span class="badge">Non-CS</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; align-items: center;">
+              <span style="display: flex; align-items: center; gap: 4px; color: var(--primary);"><i class="ph ph-check-circle"></i> 5 Answers</span>
+              <span>Asked by <span style="font-weight: 500;">Anonymous</span> • 3 days ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="display: flex; gap: 24px;">
+        <div class="vote-column" style="display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-muted);">
+          <button style="border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 20px;"><i class="ph ph-caret-up"></i></button>
+          <span style="font-weight: 600; color: var(--text-main); font-size: 18px;">18</span>
+          <button style="border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 20px;"><i class="ph ph-caret-down"></i></button>
+        </div>
+        <div class="qa-content" style="flex: 1;">
+          <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--text-main);">Which elective should I choose: Deep Learning or Cloud Computing?</h3>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px;">Could seniors who have taken these courses point out the workload difference, instructor grading strictness, and practical industry relevance of these two electives?</p>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 8px;">
+              <span class="badge">Academics</span>
+              <span class="badge">Electives</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; align-items: center;">
+              <span style="display: flex; align-items: center; gap: 4px;"><i class="ph ph-chat-circle"></i> 2 Answers</span>
+              <span>Asked by <span style="font-weight: 500;">Rahul M.</span> • 1 week ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</body>
+</html>

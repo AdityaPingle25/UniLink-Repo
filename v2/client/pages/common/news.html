@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus News - UniLink</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item active"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search news, articles, achievements...">
+      </div>
+
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Aditya</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">Campus News & Community</h1>
+      <p style="color: var(--text-muted); font-size: 15px;">Achievements, lost & found, idea voting, and student articles.</p>
+    </section>
+
+    <div class="dashboard-grid">
+      
+      <!-- News Article -->
+      <div class="card" style="grid-column: span 2;">
+        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, var(--primary), #a855f7); border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 48px;">
+          <i class="ph ph-trophy"></i>
+        </div>
+        <span class="badge" style="width: fit-content; margin-bottom: 12px;">Achievement</span>
+        <h2 class="card-title" style="font-size: 22px; margin-bottom: 8px;">University Team Wins Smart India Hackathon</h2>
+        <p class="card-desc" style="font-size: 15px;">Our fourth-year CS students secured the 1st runner-up position at the SIH finals held in Pune. Their AI-driven healthcare solution was praised by the national panel.</p>
+        <div class="card-meta" style="margin-top: 20px;">
+          <span style="font-size: 13px; color: var(--text-muted);">By Student Editorial Board • 2 days ago</span>
+          <button class="primary-btn secondary" style="padding: 6px 16px;">Read Story</button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Lost & Found -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon bg-rose"><i class="ph ph-magnifying-glass-plus"></i></div>
+            <h2 class="card-title">Lost & Found</h2>
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+            <li style="display: flex; justify-content: space-between; font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
+              <span><span style="color: #e11d48; font-weight: 600;">Lost:</span> Scientific Calculator</span>
+              <span style="color: var(--text-muted);">Library</span>
+            </li>
+            <li style="display: flex; justify-content: space-between; font-size: 14px;">
+              <span><span style="color: #059669; font-weight: 600;">Found:</span> ID Card (Aditya)</span>
+              <span style="color: var(--text-muted);">Canteen</span>
+            </li>
+          </ul>
+          <button class="primary-btn" style="width: 100%; justify-content: center; margin-top: 20px;">Report Item</button>
+        </div>
+
+        <!-- Idea Voting -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon bg-sky"><i class="ph ph-lightbulb"></i></div>
+            <h2 class="card-title">Idea Voting</h2>
+          </div>
+          <div style="background: rgba(0,0,0,0.03); padding: 16px; border-radius: 12px; margin-top: 10px;">
+            <h4 style="font-size: 14px; margin-bottom: 6px;">Extend Library Hours to 2 AM during Exams</h4>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <span style="font-size: 12px; color: var(--text-muted);">142 votes (78% in favor)</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="primary-btn" style="flex: 1; justify-content: center; padding: 6px;"><i class="ph ph-thumbs-up"></i> Yes</button>
+              <button class="primary-btn secondary" style="flex: 1; justify-content: center; padding: 6px;"><i class="ph ph-thumbs-down"></i> No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internships & Hackathons - UniLink</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item active"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search companies, roles, hackathons...">
+      </div>
+
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Aditya</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">Internships & Hackathons</h1>
+      <p style="color: var(--text-muted); font-size: 15px;">Launch your career with the latest off-campus and on-campus opportunities.</p>
+    </section>
+
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">Software Engineering</button>
+      <button class="filter-tab">Data Science</button>
+      <button class="filter-tab">Hackathons</button>
+      <button class="filter-tab">Remote</button>
+    </div>
+
+    <div class="job-grid">
+      
+      <!-- Card 1 -->
+      <div class="job-card">
+        <div class="job-header">
+          <div class="company-logo" style="background: #000; color: #fff;">M</div>
+          <div class="job-titles">
+            <h3>Frontend Developer Intern</h3>
+            <span class="company-name">Meta</span>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag"><i class="ph ph-map-pin"></i> Remote</span>
+          <span class="tag"><i class="ph ph-money"></i> $8k/mo</span>
+          <span class="tag"><i class="ph ph-clock"></i> 6 Months</span>
+        </div>
+        <p class="job-desc">Join the React core team to work on UI performance tooling. Must have strong JavaScript fundamentals.</p>
+        <div class="job-footer">
+          <span class="apply-deadline" style="color: #e11d48;">Closes in 3 days</span>
+          <button class="apply-btn">Apply Now</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="job-card">
+        <div class="job-header">
+          <div class="company-logo" style="background: #ea4335; color: #fff;">G</div>
+          <div class="job-titles">
+            <h3>STEP Intern 2024</h3>
+            <span class="company-name">Google</span>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag"><i class="ph ph-map-pin"></i> Bangalore</span>
+          <span class="tag">For 2nd Years</span>
+        </div>
+        <p class="job-desc">A 12-week development program for first and second-year undergraduate students with a passion for computer science.</p>
+        <div class="job-footer">
+          <span class="apply-deadline">Closes Oct 30</span>
+          <button class="apply-btn">Apply Now</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="job-card" style="border-top: 4px solid var(--primary);">
+        <div class="job-header">
+          <div class="company-logo" style="background: var(--primary); color: #fff;"><i class="ph ph-code"></i></div>
+          <div class="job-titles">
+            <h3>Global HackWeek 2024</h3>
+            <span class="company-name">MLH</span>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag"><i class="ph ph-globe"></i> Virtual</span>
+          <span class="tag bg-emerald-light color-emerald">Hackathon</span>
+        </div>
+        <p class="job-desc">Join thousands of hackers worldwide for a week of coding, workshops, and building real-world projects.</p>
+        <div class="job-footer">
+          <span class="apply-deadline">Starts Nov 15</span>
+          <button class="apply-btn secondary">Register Team</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</body>
+</html>

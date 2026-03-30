@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink - FAQs</title>
+
+<style>
+
+/* GENERAL */
+
+body{
+font-family:"Segoe UI",sans-serif;
+background:#0f172a;
+margin:0;
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#020617;
+border-bottom:1px solid #1e293b;
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+color:#6366f1;
+}
+
+.nav-links{
+display:flex;
+gap:25px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#cbd5f5;
+font-size:14px;
+transition:0.3s;
+}
+
+.nav-links a:hover{
+color:white;
+}
+
+.logout{
+background:#6366f1;
+padding:6px 14px;
+border-radius:5px;
+color:white;
+text-decoration:none;
+font-size:13px;
+}
+
+/* FAQ SECTION */
+
+.faq-section{
+max-width:800px;
+margin:60px auto;
+padding:20px;
+}
+
+.faq-section h1{
+text-align:center;
+margin-bottom:40px;
+font-size:34px;
+}
+
+/* FAQ CARD */
+
+.faq{
+background:#1e293b;
+border-radius:8px;
+margin-bottom:15px;
+overflow:hidden;
+border:1px solid #334155;
+transition:0.3s;
+}
+
+.faq-question{
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+font-size:17px;
+}
+
+.faq-question:hover{
+background:#334155;
+}
+
+.icon{
+font-size:20px;
+transition:0.3s;
+}
+
+.faq-answer{
+max-height:0;
+overflow:hidden;
+background:#020617;
+padding:0 20px;
+transition:max-height 0.4s ease;
+}
+
+.faq-answer p{
+padding:15px 0;
+color:#cbd5f5;
+line-height:1.6;
+}
+
+.faq.active .faq-answer{
+max-height:200px;
+}
+
+.faq.active .icon{
+transform:rotate(45deg);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:800px){
+
+.nav-links{
+display:none;
+}
+
+.faq-section{
+margin:40px 15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION BAR -->
+
+<div class="navbar">
+
+<div class="logo">UniLink</div>
+
+<div class="nav-links">
+<a href="#">Dashboard</a>
+<a href="#">Announcements</a>
+<a href="#">Events</a>
+<a href="#">Internships</a>
+<a href="#">Hackathons</a>
+<a href="#">Deadlines</a>
+<a href="#">FAQs</a>
+</div>
+
+<a href="#" class="logout">Logout</a>
+
+</div>
+
+
+<!-- FAQ SECTION -->
+
+<section class="faq-section">
+
+<h1>Frequently Asked Questions</h1>
+
+<div class="faq">
+
+<div class="faq-question">
+<span>What is UniLink?</span>
+<span class="icon">+</span>
+</div>
+
+<div class="faq-answer">
+<p>
+UniLink is a centralized platform where students can access announcements,
+events, internships, hackathons, and academic deadlines in one place.
+</p>
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<div class="faq-question">
+<span>How do students register for events?</span>
+<span class="icon">+</span>
+</div>
+
+<div class="faq-answer">
+<p>
+Students can browse upcoming events in the Events section and register
+directly through the UniLink portal.
+</p>
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<div class="faq-question">
+<span>Where can I find internship opportunities?</span>
+<span class="icon">+</span>
+</div>
+
+<div class="faq-answer">
+<p>
+Internship opportunities are listed under the Internships section where
+faculty and companies post available openings.
+</p>
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<div class="faq-question">
+<span>Does UniLink remind students about deadlines?</span>
+<span class="icon">+</span>
+</div>
+
+<div class="faq-answer">
+<p>
+Yes. UniLink provides automatic reminders for assignment deadlines,
+events, and other academic activities.
+</p>
+</div>
+
+</div>
+
+
+<div class="faq">
+
+<div class="faq-question">
+<span>Can students participate in hackathons through UniLink?</span>
+<span class="icon">+</span>
+</div>
+
+<div class="faq-answer">
+<p>
+Yes. The Hackathons section provides information about upcoming
+national and international hackathons students can join.
+</p>
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* FAQ TOGGLE */
+
+const faqs=document.querySelectorAll(".faq");
+
+faqs.forEach(faq=>{
+
+faq.querySelector(".faq-question").addEventListener("click",()=>{
+
+faqs.forEach(item=>{
+if(item!==faq){
+item.classList.remove("active");
+}
+});
+
+faq.classList.toggle("active");
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Faculty Login - UniLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_login.css">
+  <style>
+    /* Override primary to Emerald for faculty */
+    :root {
+      --primary: #059669;
+      --primary-hover: #047857;
+    }
+    .left-panel {
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.9), rgba(16, 185, 129, 0.8)), url('../../assets/img/Login-Page.gif') center/cover no-repeat;
+    }
+    .login-btn {
+      background: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <!-- LEFT PANEL IMAGE -->
+    <div class="left-panel">
+      <div class="overlay-text">
+        <div class="logo-area" style="margin-bottom: auto;">
+          <div class="logo-icon bg-white" style="color: #059669;">U</div>
+          <div class="logo-text text-white">UniLink</div>
+        </div>
+        
+        <div>
+          <h2>Manage Your <br>Classes Better.</h2>
+          <p>Post announcements, manage deadlines, and communicate with students effortlessly.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT LOGIN FORM -->
+    <div class="right-panel">
+      <a href="../../pages/auth/choose_role.html" class="back-link"><i class="ph ph-arrow-left"></i> Back to Roles</a>
+      
+      <div class="form-container">
+        <div class="login-header">
+          <h1>Faculty Login</h1>
+          <p>Welcome back, Professor! Please enter your details.</p>
+        </div>
+
+        <form action="../teacher/teacher_dashboard.html" method="GET">
+          <div class="input-group">
+            <label>Employee ID or Email</label>
+            <div class="input-wrapper">
+              <i class="ph ph-identification-card"></i>
+              <input type="text" placeholder="e.g. EMP4002" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <i class="ph ph-lock-key"></i>
+              <input type="password" id="password" placeholder="••••••••" required>
+              <i class="ph ph-eye show-pwd" onclick="togglePassword()"></i>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox">
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Log In <i class="ph ph-sign-in"></i></button>
+
+          <p class="signup-prompt">Don't have an account? <a href="#">Contact HR</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../assets/js/student_login.js"></script>
+
+</body>
+</html>

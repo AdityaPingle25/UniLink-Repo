@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink - Academic Dues</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+display:flex;
+height:100vh;
+background:#0f172a;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:240px;
+background:#111827;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+color:#5865F2;
+margin-bottom:30px;
+}
+
+.menu a{
+display:block;
+padding:12px;
+margin-bottom:8px;
+text-decoration:none;
+color:#cbd5e1;
+border-radius:8px;
+transition:0.3s;
+}
+
+.menu a:hover{
+background:#1f2937;
+}
+
+.logout{
+margin-top:auto;
+}
+
+.logout a{
+color:#ef4444;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.navbar{
+height:60px;
+background:#111827;
+display:flex;
+align-items:center;
+padding:0 20px;
+border-bottom:1px solid #1f2937;
+}
+
+/* TABLE */
+
+.container{
+padding:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1e293b;
+border-radius:12px;
+overflow:hidden;
+}
+
+th,td{
+padding:15px;
+text-align:left;
+border-bottom:1px solid #334155;
+}
+
+th{
+background:#111827;
+color:#cbd5e1;
+}
+
+/* STATUS */
+
+.status{
+padding:5px 10px;
+border-radius:6px;
+font-size:13px;
+}
+
+.pending{
+background:#f59e0b;
+}
+
+.submitted{
+background:#22c55e;
+}
+
+.overdue{
+background:#ef4444;
+}
+
+/* SUBMIT BUTTON */
+
+.submit-btn{
+background:#5865F2;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.submit-btn:hover{
+background:#4752c4;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">UniLink</div>
+
+<div class="menu">
+<a href="dashboard.html">🏠 Dashboard</a>
+<a href="subjects.html">📚 My Subjects</a>
+<a href="../../pages/student/dues.html">📅 Dues</a>
+<a href="#">📢 Announcements</a>
+<a href="#">❓ FAQs</a>
+<a href="#">⚙ Settings</a>
+</div>
+
+<div class="logout">
+<a href="index.html">🚪 Logout</a>
+</div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="navbar">
+<h3>Academic Submissions</h3>
+</div>
+
+<div class="container">
+
+<table>
+
+<thead>
+<tr>
+<th>Subject</th>
+<th>Submission</th>
+<th>Due Date</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Machine Learning</td>
+<td>Assignment 2</td>
+<td>29 Sept</td>
+<td><span class="status pending">Pending</span></td>
+<td><button class="submit-btn">Submit</button></td>
+</tr>
+
+<tr>
+<td>Operating Systems</td>
+<td>Practical File</td>
+<td>2 Oct</td>
+<td><span class="status pending">Pending</span></td>
+<td><button class="submit-btn">Submit</button></td>
+</tr>
+
+<tr>
+<td>Database Management</td>
+<td>Mini Project</td>
+<td>25 Sept</td>
+<td><span class="status submitted">Submitted</span></td>
+<td>-</td>
+</tr>
+
+<tr>
+<td>Computer Networks</td>
+<td>Lab Report</td>
+<td>20 Sept</td>
+<td><span class="status overdue">Overdue</span></td>
+<td><button class="submit-btn">Submit</button></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

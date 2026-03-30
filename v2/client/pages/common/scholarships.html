@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarships - UniLink</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item active"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search scholarships, grants...">
+      </div>
+
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Aditya</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">Scholarships & Financial Aid</h1>
+      <p style="color: var(--text-muted); font-size: 15px;">Discover grants and scholarships tailored to your academic profile.</p>
+    </section>
+
+    <div class="dashboard-grid">
+      
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon bg-amber"><i class="ph ph-bank"></i></div>
+          <h2 class="card-title">National Scholarship Portal (NSP)</h2>
+        </div>
+        <p class="card-desc">Government schemes for merit-based and means-based financial assistance for undergraduate students.</p>
+        <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Amount</span>
+            <span style="font-weight: 600;">Up to ₹50,000/yr</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Deadline</span>
+            <span style="color: #e11d48; font-weight: 600;">Oct 31, 2023</span>
+          </div>
+          <button class="primary-btn" style="width: 100%; justify-content: center;">Check Eligibility</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon bg-indigo"><i class="ph ph-medal"></i></div>
+          <h2 class="card-title">University Merit Grant</h2>
+        </div>
+        <p class="card-desc">Exclusively for students who have maintained a CGPA of 9.0+ in the previous two concrete academic semesters.</p>
+        <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Amount</span>
+            <span style="font-weight: 600;">₹25,000/yr</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Deadline</span>
+            <span style="font-weight: 600;">Nov 15, 2023</span>
+          </div>
+          <button class="primary-btn secondary" style="width: 100%; justify-content: center;">Apply Online</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon bg-emerald"><i class="ph ph-users-three"></i></div>
+          <h2 class="card-title">Alumni Association Fund</h2>
+        </div>
+        <p class="card-desc">Financial assistance program funded by our proud alumni network for students requiring support.</p>
+        <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Amount</span>
+            <span style="font-weight: 600;">Variable</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+            <span style="color: var(--text-muted);">Deadline</span>
+            <span style="font-weight: 600;">Rolling Basis</span>
+          </div>
+          <button class="primary-btn secondary" style="width: 100%; justify-content: center;">View Details</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</body>
+</html>

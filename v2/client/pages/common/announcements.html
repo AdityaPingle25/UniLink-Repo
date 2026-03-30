@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Important Announcements - UniLink</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item active"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search announcements, circulars...">
+      </div>
+
+      <div class="profile-area">
+        <button class="icon-btn">
+          <i class="ph ph-bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="avatar">A</div>
+          <div class="user-info">
+            <span class="user-name">Aditya</span>
+            <span class="user-role">Student</span>
+          </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">Important Announcements</h1>
+      <p style="color: var(--text-muted); font-size: 15px;">Official circulars, academic notices, and urgent updates.</p>
+    </section>
+
+    <!-- Announcements Filter -->
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">Academic</button>
+      <button class="filter-tab">Administrative</button>
+      <button class="filter-tab">Exams</button>
+    </div>
+
+    <!-- Announcements List -->
+    <div class="announcement-list">
+      
+      <div class="announcement-card unread">
+        <div class="announcement-icon bg-rose"><i class="ph ph-warning-circle"></i></div>
+        <div class="announcement-content">
+          <div class="announcement-header">
+            <h3 class="announcement-title">Revised Mid-Semester Examination Schedule</h3>
+            <span class="announcement-date">Just now</span>
+          </div>
+          <p class="announcement-desc">The mid-semester examinations for all B.Tech branches have been rescheduled. Please check the new timetable attached below to find your specific exam dates and venues.</p>
+          <div class="announcement-meta">
+            <span class="badge" style="background: rgba(225, 29, 72, 0.1); color: #e11d48;">Urgent</span>
+            <span class="badge">Exams</span>
+            <a href="#" class="attachment-link"><i class="ph ph-paperclip"></i> Revised_Timetable.pdf</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcement-card unread">
+        <div class="announcement-icon bg-indigo"><i class="ph ph-books"></i></div>
+        <div class="announcement-content">
+          <div class="announcement-header">
+            <h3 class="announcement-title">Registration Open for Open Elective Courses</h3>
+            <span class="announcement-date">2 hours ago</span>
+          </div>
+          <p class="announcement-desc">Course registration for exactly one open elective is now live on the portal. Seats are allocated on a first-come, first-served basis. Deadline is October 15th, 5:00 PM.</p>
+          <div class="announcement-meta">
+            <span class="badge">Academic</span>
+            <span class="badge">Registration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcement-card">
+        <div class="announcement-icon bg-emerald"><i class="ph ph-buildings"></i></div>
+        <div class="announcement-content">
+          <div class="announcement-header">
+            <h3 class="announcement-title">Hostel Maintenance & Power Outage Notice</h3>
+            <span class="announcement-date">Yesterday</span>
+          </div>
+          <p class="announcement-desc">There will be a scheduled power outage in Boys Hostel Block B and Girls Hostel Block A on Sunday from 10:00 AM to 2:00 PM for routine transformer maintenance.</p>
+          <div class="announcement-meta">
+            <span class="badge">Administrative</span>
+            <span class="badge">Hostel</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcement-card">
+        <div class="announcement-icon bg-amber"><i class="ph ph-graduation-cap"></i></div>
+        <div class="announcement-content">
+          <div class="announcement-header">
+            <h3 class="announcement-title">Call for Applications: Semester Abroad Program</h3>
+            <span class="announcement-date">Oct 10, 2023</span>
+          </div>
+          <p class="announcement-desc">Applications are invited from 3rd-year students for the Semester Abroad Program at partnered international universities. Minimum CGPA required is 8.0.</p>
+          <div class="announcement-meta">
+            <span class="badge">Academic</span>
+            <a href="#" class="attachment-link"><i class="ph ph-arrow-square-out"></i> Apply Portal</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <div class="ai-widget">
+    <i class="ph ph-sparkle"></i>
+    <span>Summarize recent announcements</span>
+  </div>
+
+</body>
+</html>

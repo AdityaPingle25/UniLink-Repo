@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink - My Subjects</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+display:flex;
+height:100vh;
+background:#0f172a;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:240px;
+background:#111827;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+color:#5865F2;
+margin-bottom:30px;
+}
+
+.menu a{
+display:block;
+padding:12px;
+margin-bottom:8px;
+text-decoration:none;
+color:#cbd5e1;
+border-radius:8px;
+transition:0.3s;
+}
+
+.menu a:hover{
+background:#1f2937;
+}
+
+.logout{
+margin-top:auto;
+}
+
+.logout a{
+color:#ef4444;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+/* NAVBAR */
+
+.navbar{
+height:60px;
+background:#111827;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 20px;
+border-bottom:1px solid #1f2937;
+}
+
+/* SUBJECT GRID */
+
+.subjects{
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+/* SUBJECT CARD */
+
+.subject-card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.subject-card:hover{
+transform:translateY(-4px);
+}
+
+.subject-card h3{
+margin-bottom:10px;
+}
+
+.teacher{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:15px;
+}
+
+/* Progress Bar */
+
+.progress{
+height:8px;
+background:#334155;
+border-radius:6px;
+overflow:hidden;
+margin-bottom:15px;
+}
+
+.progress-bar{
+height:100%;
+background:#5865F2;
+}
+
+/* Button */
+
+.btn{
+display:inline-block;
+padding:8px 12px;
+background:#5865F2;
+border-radius:6px;
+text-decoration:none;
+color:white;
+font-size:14px;
+}
+
+.btn:hover{
+background:#4752c4;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">UniLink</div>
+
+<div class="menu">
+<a href="dashboard.html">🏠 Dashboard</a>
+<a href="subjects.html">📚 My Subjects</a>
+<a href="#">📅 Dues</a>
+<a href="#">📢 Announcements</a>
+<a href="#">❓ FAQs</a>
+<a href="#">⚙ Settings</a>
+</div>
+
+<div class="logout">
+<a href="index.html">🚪 Logout</a>
+</div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="navbar">
+<h3>My Subjects</h3>
+</div>
+
+<!-- SUBJECTS -->
+
+<div class="subjects">
+
+<div class="subject-card">
+<h3>Machine Learning</h3>
+<p class="teacher">Teacher: Dr. Sharma</p>
+
+<div class="progress">
+<div class="progress-bar" style="width:70%"></div>
+</div>
+
+<a class="btn" href="#">View Materials</a>
+</div>
+
+<div class="subject-card">
+<h3>Operating Systems</h3>
+<p class="teacher">Teacher: Prof. Patel</p>
+
+<div class="progress">
+<div class="progress-bar" style="width:55%"></div>
+</div>
+
+<a class="btn" href="#">View Materials</a>
+</div>
+
+<div class="subject-card">
+<h3>Database Management</h3>
+<p class="teacher">Teacher: Prof. Deshmukh</p>
+
+<div class="progress">
+<div class="progress-bar" style="width:80%"></div>
+</div>
+
+<a class="btn" href="#">View Materials</a>
+</div>
+
+<div class="subject-card">
+<h3>Computer Networks</h3>
+<p class="teacher">Teacher: Dr. Kulkarni</p>
+
+<div class="progress">
+<div class="progress-bar" style="width:60%"></div>
+</div>
+
+<a class="btn" href="#">View Materials</a>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

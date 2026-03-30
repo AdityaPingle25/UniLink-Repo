@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Login - UniLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_login.css">
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <!-- LEFT PANEL IMAGE -->
+    <div class="left-panel">
+      <div class="overlay-text">
+        <div class="logo-area" style="margin-bottom: auto;">
+          <div class="logo-icon bg-white color-primary">U</div>
+          <div class="logo-text text-white">UniLink</div>
+        </div>
+        
+        <div>
+          <h2>Your Entire Campus, <br>One Dashboard.</h2>
+          <p>Access announcements, find internships, and track your deadlines effortlessly.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT LOGIN FORM -->
+    <div class="right-panel">
+      <a href="../../pages/auth/choose_role.html" class="back-link"><i class="ph ph-arrow-left"></i> Back to Roles</a>
+      
+      <div class="form-container">
+        <div class="login-header">
+          <h1>Student Login</h1>
+          <p>Welcome back! Please enter your university details.</p>
+        </div>
+
+        <form action="../student/student_dashboard.html" method="GET">
+          <div class="input-group">
+            <label>Roll Number or Email</label>
+            <div class="input-wrapper">
+              <i class="ph ph-user"></i>
+              <input type="text" placeholder="e.g. CS2024001" required>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <i class="ph ph-lock-key"></i>
+              <input type="password" id="password" placeholder="••••••••" required>
+              <i class="ph ph-eye show-pwd" onclick="togglePassword()"></i>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox">
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Log In <i class="ph ph-sign-in"></i></button>
+
+          <p class="signup-prompt">Don't have an account? <a href="#">Contact Admin</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../assets/js/student_login.js"></script>
+
+</body>
+</html>

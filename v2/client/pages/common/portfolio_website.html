@@ -1,0 +1,808 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Aditya Pingle — AI/ML Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+      /* ─── TOKENS ─────────────────────────────────────────── */
+      :root {
+        --bg:        #050709;
+        --surface:   #0a0d12;
+        --card:      #0f1318;
+        --border:    rgba(255,255,255,0.08);
+        --accent:    #00e5a0;
+        --accent-lo: rgba(0,229,160,0.08);
+        --accent-md: rgba(0,229,160,0.18);
+        --text:      #dde3ec;
+        --muted:     #5a6275;
+        --muted2:    #8a95a8;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      body::after {
+        content: '';
+        position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background-image:
+          linear-gradient(rgba(0,229,160,0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,229,160,0.025) 1px, transparent 1px);
+        background-size: 56px 56px;
+      }
+
+      section, nav, footer { position: relative; z-index: 1; }
+
+      /* ─── NAV ────────────────────────────────────────────── */
+      nav {
+        position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1rem 5vw;
+        background: rgba(5,7,9,0.88);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-logo {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em;
+        color: var(--accent); text-decoration: none;
+      }
+      .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+      .nav-links a {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--muted2); text-decoration: none; transition: color 0.2s;
+      }
+      .nav-links a:hover { color: var(--accent); }
+      .nav-btn {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+        padding: 0.55rem 1.3rem;
+        border: 1px solid var(--accent); color: var(--accent);
+        text-decoration: none; border-radius: 3px; transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-btn:hover { background: var(--accent); color: var(--bg); }
+
+      /* ─── SHARED ─────────────────────────────────────────── */
+      .sec-pad { padding: 7rem 5vw; }
+
+      .sec-label {
+        display: flex; align-items: center; gap: 0.6rem;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--accent); margin-bottom: 0.75rem;
+      }
+      .sec-label::after {
+        content: ''; display: block; height: 1px; width: 40px;
+        background: var(--accent); opacity: 0.4;
+      }
+
+      .sec-title {
+        font-family: 'Syne', sans-serif; font-weight: 800;
+        font-size: clamp(1.9rem, 3.5vw, 3rem);
+        letter-spacing: -0.03em; line-height: 1.1;
+        margin-bottom: 3rem;
+      }
+
+      .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .d1 { transition-delay: 0.1s; }
+      .d2 { transition-delay: 0.2s; }
+
+      /* ─── HERO ───────────────────────────────────────────── */
+      #hero {
+        min-height: 100vh;
+        display: flex; flex-direction: column; justify-content: center;
+        padding: 7rem 5vw 5rem;
+        overflow: hidden;
+      }
+      .hero-glow {
+        position: absolute; width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(0,229,160,0.07) 0%, transparent 70%);
+        top: -80px; left: -100px; pointer-events: none;
+      }
+
+      .hero-badge {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        width: fit-content;
+        padding: 0.38rem 0.9rem;
+        background: var(--accent-lo);
+        border: 1px solid rgba(0,229,160,0.22); border-radius: 100px;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.65rem; letter-spacing: 0.08em; color: var(--accent);
+        margin-bottom: 2rem;
+        opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
+      }
+      .pulse { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; flex-shrink: 0; animation: blink 2s infinite; }
+
+      .hero-role {
+        font-family: 'Space Mono', monospace;
+        font-size: clamp(0.7rem, 1.1vw, 0.88rem);
+        letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--accent); margin-bottom: 1.2rem;
+        opacity: 0; animation: fadeUp 0.7s 0.25s forwards;
+      }
+
+      .hero-name {
+        font-family: 'Syne', sans-serif; font-weight: 800;
+        font-size: clamp(3.8rem, 10vw, 9rem);
+        line-height: 0.9; letter-spacing: -0.04em;
+        margin-bottom: 1.8rem;
+        opacity: 0; animation: fadeUp 0.8s 0.35s forwards;
+      }
+      .hero-name .outline {
+        -webkit-text-stroke: 1.5px rgba(0,229,160,0.4);
+        color: transparent;
+      }
+
+      .hero-desc {
+        max-width: 500px; font-size: 1rem; line-height: 1.75;
+        color: var(--muted2); margin-bottom: 2.8rem;
+        opacity: 0; animation: fadeUp 0.7s 0.5s forwards;
+      }
+
+      .hero-btns {
+        display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+        opacity: 0; animation: fadeUp 0.7s 0.65s forwards;
+      }
+
+      .btn-fill {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        padding: 0.85rem 2rem;
+        background: var(--accent); color: var(--bg);
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem;
+        text-decoration: none; border-radius: 3px; transition: all 0.2s;
+      }
+      .btn-fill:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(0,229,160,0.28); }
+
+      .btn-outline {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        padding: 0.85rem 2rem;
+        border: 1px solid var(--border); color: var(--text);
+        font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.88rem;
+        text-decoration: none; border-radius: 3px; transition: all 0.2s;
+      }
+      .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+      .hero-social-strip {
+        position: absolute; right: 5vw; top: 50%; transform: translateY(-50%);
+        display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
+        opacity: 0; animation: fadeIn 0.8s 0.9s forwards;
+      }
+      .vline { width: 1px; height: 52px; background: var(--border); }
+      .soc-btn {
+        width: 38px; height: 38px;
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid var(--border); border-radius: 3px;
+        color: var(--muted2); text-decoration: none; transition: all 0.2s;
+      }
+      .soc-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lo); }
+
+      .hero-scroll-hint {
+        position: absolute; bottom: 2rem; left: 5vw;
+        display: flex; align-items: center; gap: 0.8rem;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+        color: var(--muted);
+        opacity: 0; animation: fadeIn 1s 1.1s forwards;
+      }
+      .hero-scroll-hint::before { content: ''; display: block; width: 32px; height: 1px; background: var(--muted); }
+
+      /* ─── ABOUT ──────────────────────────────────────────── */
+      #about { background: var(--surface); }
+
+      .about-grid {
+        display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: start;
+      }
+      .about-body p {
+        font-size: 0.97rem; line-height: 1.8; color: var(--muted2); margin-bottom: 1.1rem;
+      }
+      .about-body p strong { color: var(--text); font-weight: 500; }
+
+      .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .stat-box {
+        background: var(--card); border: 1px solid var(--border);
+        border-top: 2px solid var(--accent);
+        padding: 1.4rem 1.2rem; border-radius: 4px; transition: box-shadow 0.2s;
+      }
+      .stat-box:hover { box-shadow: 0 0 0 1px var(--accent-lo), 0 4px 20px rgba(0,229,160,0.07); }
+      .stat-num {
+        font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem;
+        color: var(--accent); letter-spacing: -0.03em;
+      }
+      .stat-txt { font-size: 0.8rem; color: var(--muted2); margin-top: 0.2rem; line-height: 1.4; }
+
+      /* ─── PROJECTS ───────────────────────────────────────── */
+      #projects { background: var(--bg); }
+
+      .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+
+      .proj-card {
+        background: var(--card); border: 1px solid var(--border);
+        padding: 2.2rem; border-radius: 4px;
+        position: relative; overflow: hidden;
+        transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      }
+      .proj-card.featured { grid-column: 1 / -1; }
+      .proj-card:hover {
+        border-color: rgba(0,229,160,0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      }
+      .proj-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: var(--accent); opacity: 0; transition: opacity 0.25s;
+      }
+      .proj-card:hover::before { opacity: 1; }
+
+      .proj-chip {
+        display: inline-block;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+        padding: 0.22rem 0.65rem;
+        background: var(--accent-lo); border: 1px solid rgba(0,229,160,0.2);
+        color: var(--accent); border-radius: 2px; margin-bottom: 1.1rem;
+      }
+      .proj-date {
+        position: absolute; top: 2.2rem; right: 2.2rem;
+        font-family: 'Space Mono', monospace;
+        font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em;
+      }
+      .proj-title {
+        font-family: 'Syne', sans-serif; font-weight: 700;
+        font-size: 1.25rem; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+      }
+      .proj-card.featured .proj-title { font-size: 1.6rem; }
+      .proj-desc { font-size: 0.88rem; line-height: 1.7; color: var(--muted2); margin-bottom: 1.3rem; }
+
+      .proj-points { list-style: none; margin-bottom: 1.3rem; }
+      .proj-points li {
+        font-size: 0.84rem; color: var(--muted2);
+        padding: 0.28rem 0 0.28rem 1.3rem; position: relative; line-height: 1.5;
+      }
+      .proj-points li::before {
+        content: '▸'; position: absolute; left: 0; top: 0.35rem;
+        color: var(--accent); font-size: 0.7rem;
+      }
+      .tech-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+      .tech-tag {
+        font-family: 'Space Mono', monospace; font-size: 0.6rem;
+        color: var(--muted2); background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border); padding: 0.22rem 0.6rem; border-radius: 2px;
+      }
+
+      /* ─── SKILLS ─────────────────────────────────────────── */
+      #skills { background: var(--surface); }
+
+      .skills-layout { display: grid; grid-template-columns: 260px 1fr; gap: 5rem; align-items: start; }
+      .skills-side p { font-size: 0.92rem; line-height: 1.78; color: var(--muted2); }
+
+      .skill-group { margin-bottom: 2rem; }
+      .skill-group:last-child { margin-bottom: 0; }
+      .skill-group-name {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--muted); margin-bottom: 0.8rem;
+      }
+      .skill-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .skill-pill {
+        padding: 0.45rem 0.95rem; background: var(--card);
+        border: 1px solid var(--border); border-radius: 3px;
+        font-size: 0.84rem; color: var(--text); transition: all 0.18s; cursor: default;
+      }
+      .skill-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lo); }
+      .skill-pill.key {
+        border-color: rgba(0,229,160,0.25); color: var(--accent); background: var(--accent-lo);
+      }
+
+      /* ─── EDUCATION ──────────────────────────────────────── */
+      #education { background: var(--bg); }
+
+      .timeline { position: relative; padding-left: 1.8rem; }
+      .timeline::before {
+        content: ''; position: absolute; left: 0; top: 8px; bottom: 0;
+        width: 1px; background: linear-gradient(to bottom, var(--accent) 0%, rgba(0,229,160,0.08) 100%);
+      }
+      .tl-item { position: relative; padding: 0 0 3rem 2.5rem; }
+      .tl-item:last-child { padding-bottom: 0; }
+      .tl-item::before {
+        content: ''; position: absolute; left: -4.5px; top: 5px;
+        width: 10px; height: 10px;
+        background: var(--bg); border: 2px solid var(--accent); border-radius: 50%;
+      }
+      .tl-year {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.65rem; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.4rem;
+      }
+      .tl-school {
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.25rem;
+      }
+      .tl-degree { font-size: 0.88rem; color: var(--muted2); margin-bottom: 0.75rem; }
+      .tl-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .tl-chip {
+        font-family: 'Space Mono', monospace; font-size: 0.62rem;
+        padding: 0.22rem 0.7rem; background: var(--card);
+        border: 1px solid var(--border); border-radius: 2px; color: var(--text);
+      }
+
+      /* ─── RESUME CTA ─────────────────────────────────────── */
+      #resume {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 5.5rem 5vw;
+        text-align: center;
+      }
+      #resume .sec-label {
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      #resume .sec-label::after { display: none; }
+      #resume h2 {
+        font-family: 'Syne', sans-serif; font-weight: 800;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        letter-spacing: -0.03em; margin-bottom: 0.7rem;
+      }
+      #resume p { color: var(--muted2); font-size: 0.95rem; margin-bottom: 2.2rem; }
+      #resume .btn-fill { display: inline-flex; margin: 0 auto; }
+
+      /* ─── CONTACT ────────────────────────────────────────── */
+      #contact { background: var(--bg); }
+
+      .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+      .contact-info h3 {
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 0.8rem;
+      }
+      .contact-info > p { font-size: 0.9rem; line-height: 1.75; color: var(--muted2); margin-bottom: 2rem; }
+
+      .clink-list { display: flex; flex-direction: column; gap: 0.75rem; }
+      .clink {
+        display: flex; align-items: center; gap: 1rem;
+        padding: 0.9rem 1.1rem; background: var(--card);
+        border: 1px solid var(--border); border-radius: 4px;
+        text-decoration: none; color: var(--text); font-size: 0.88rem;
+        transition: all 0.2s;
+      }
+      .clink:hover { border-color: var(--accent); color: var(--accent); }
+      .clink-icon {
+        width: 34px; height: 34px; min-width: 34px;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--accent-lo); border: 1px solid rgba(0,229,160,0.2);
+        border-radius: 3px; color: var(--accent);
+      }
+      .clink-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
+
+      .c-form { display: flex; flex-direction: column; gap: 1.1rem; }
+      .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .f-group { display: flex; flex-direction: column; gap: 0.45rem; }
+      .f-label {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted2);
+      }
+      .f-input, .f-textarea {
+        background: var(--card); border: 1px solid var(--border);
+        color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+        padding: 0.82rem 1rem; border-radius: 3px; outline: none;
+        transition: border-color 0.2s; resize: none;
+      }
+      .f-input:focus, .f-textarea:focus { border-color: var(--accent); }
+      .f-input::placeholder, .f-textarea::placeholder { color: var(--muted); }
+      .f-textarea { height: 128px; }
+      .f-btn {
+        padding: 0.88rem 1.8rem; background: var(--accent); color: var(--bg);
+        font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+        border: none; border-radius: 3px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+        transition: all 0.2s;
+      }
+      .f-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,229,160,0.25); }
+      .f-ok {
+        display: none; padding: 0.9rem;
+        background: var(--accent-lo); border: 1px solid rgba(0,229,160,0.22);
+        border-radius: 4px; color: var(--accent); font-size: 0.85rem; text-align: center;
+      }
+
+      /* ─── FOOTER ─────────────────────────────────────────── */
+      footer {
+        background: var(--surface); border-top: 1px solid var(--border);
+        padding: 2rem 5vw;
+        display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      }
+      .foot-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--accent); }
+      .foot-copy { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.06em; }
+      .foot-links { display: flex; gap: 1.5rem; }
+      .foot-links a { font-size: 0.8rem; color: var(--muted2); text-decoration: none; transition: color 0.2s; }
+      .foot-links a:hover { color: var(--accent); }
+
+      /* ─── KEYFRAMES ──────────────────────────────────────── */
+      @keyframes fadeUp  { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+      @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+      @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+      /* ─── RESPONSIVE ─────────────────────────────────────── */
+      @media (max-width: 860px) {
+        .nav-links { display: none; }
+        #hero { padding: 6rem 4vw 4rem; }
+        .hero-social-strip, .hero-scroll-hint { display: none; }
+        .about-grid, .skills-layout, .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+        .proj-grid { grid-template-columns: 1fr; }
+        .proj-card.featured { grid-column: 1; }
+        .stat-grid { grid-template-columns: 1fr 1fr; }
+        .f-row { grid-template-columns: 1fr; }
+        footer { flex-direction: column; text-align: center; }
+      }
+    </style>
+  </head>
+  <body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">AP.</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="nav-btn" href="#resume">Download CV</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-badge">
+      <span class="pulse"></span>
+      Open to Internships &amp; Opportunities
+    </div>
+
+    <div class="hero-role">AI / ML Engineer · Full-Stack Developer</div>
+
+    <h1 class="hero-name">
+      Aditya<br>
+      <span class="outline">Pingle</span>
+    </h1>
+
+    <p class="hero-desc">
+      2nd-year BTech student in AI &amp; ML at PCCOE, Pune.
+      Building intelligent systems — from brain tumor detection to real-time railway optimization.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#projects" class="btn-fill">
+        View Projects
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+
+    <div class="hero-social-strip">
+      <div class="vline"></div>
+      <a href="https://github.com/AdityaPingle25" target="_blank" class="soc-btn" title="GitHub">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/aditya-pingle" target="_blank" class="soc-btn" title="LinkedIn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="mailto:pingleaditya03@gmail.com" class="soc-btn" title="Email">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+      </a>
+      <div class="vline"></div>
+    </div>
+
+    <div class="hero-scroll-hint">Scroll to explore</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="sec-pad">
+    <div class="reveal">
+      <div class="sec-label">01 — About</div>
+      <h2 class="sec-title">Building at the<br>intersection of AI &amp; Code</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal d1">
+        <p>I'm <strong>Aditya Pingle</strong>, a second-year BTech student in <strong>Computer Science Engineering (AI &amp; ML)</strong> at Pimpri Chinchwad College of Engineering, Pune.</p>
+        <p>My passion lies in applying machine learning and AI to real-world problems — from medical imaging to large-scale transportation optimization. I love working across the full stack: training deep learning models, deploying interactive dashboards, and writing clean, efficient code.</p>
+        <p>When I'm not building, I'm exploring new algorithms, competing in hackathons, and learning emerging tech like VR/AR and cloud platforms.</p>
+      </div>
+      <div class="stat-grid reveal d2">
+        <div class="stat-box">
+          <div class="stat-num">7.12</div>
+          <div class="stat-txt">Current CGPA<br>PCCOE, Pune</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">98%</div>
+          <div class="stat-txt">MHTCET Percentile<br>State Entrance</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">2+</div>
+          <div class="stat-txt">Projects Shipped<br>AI/ML focus</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">10+</div>
+          <div class="stat-txt">Technologies<br>Across the stack</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="sec-pad">
+    <div class="reveal">
+      <div class="sec-label">02 — Projects</div>
+      <h2 class="sec-title">What I've built</h2>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card featured reveal d1">
+        <span class="proj-date">June 2025</span>
+        <div class="proj-chip">Featured · Computer Vision</div>
+        <h3 class="proj-title">Brain Tumor Detection</h3>
+        <p class="proj-desc">
+          A novel brain MRI scan classification approach combining Convolutional Neural Networks,
+          Topological Data Analysis, and Vision Transformers for high-accuracy tumor detection.
+        </p>
+        <ul class="proj-points">
+          <li>Developed classification pipeline using CNN + TDA + ViT architecture</li>
+          <li>Implemented advanced preprocessing and data augmentation strategies</li>
+          <li>Optimized training pipeline using TensorFlow, Keras, and PyTorch</li>
+        </ul>
+        <div class="tech-row">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">TensorFlow</span>
+          <span class="tech-tag">Keras</span>
+          <span class="tech-tag">OpenCV</span>
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">CNN</span>
+          <span class="tech-tag">ViT</span>
+          <span class="tech-tag">TDA</span>
+        </div>
+      </div>
+      <div class="proj-card reveal d2">
+        <span class="proj-date">Sept 2025</span>
+        <div class="proj-chip">Smart India Hackathon</div>
+        <h3 class="proj-title">AI-Powered Train Traffic Control</h3>
+        <p class="proj-desc">
+          Hybrid AI + Operations Research model for real-time railway scheduling with disruption-aware re-optimization.
+        </p>
+        <ul class="proj-points">
+          <li>Built hybrid AI + OR model for real-time scheduling</li>
+          <li>Implemented disruption-aware re-optimization</li>
+          <li>Designed analytics dashboard for railway controllers</li>
+          <li>Achieved ~10–15% simulated throughput improvement</li>
+        </ul>
+        <div class="tech-row">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Operations Research</span>
+          <span class="tech-tag">Simulation</span>
+          <span class="tech-tag">Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="sec-pad">
+    <div class="reveal">
+      <div class="sec-label">03 — Skills</div>
+      <h2 class="sec-title">Technical toolkit</h2>
+    </div>
+    <div class="skills-layout">
+      <div class="skills-side reveal d1">
+        <p>A versatile skill set spanning machine learning, full-stack development, cloud, and emerging technologies — built through coursework, projects, and self-learning.</p>
+      </div>
+      <div class="reveal d2">
+        <div class="skill-group">
+          <div class="skill-group-name">Languages</div>
+          <div class="skill-wrap">
+            <span class="skill-pill key">Python</span>
+            <span class="skill-pill key">C / C++</span>
+            <span class="skill-pill">Java</span>
+            <span class="skill-pill">R</span>
+            <span class="skill-pill">SQL</span>
+            <span class="skill-pill">HTML</span>
+            <span class="skill-pill">CSS</span>
+            <span class="skill-pill">JavaScript</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-name">AI / ML Frameworks</div>
+          <div class="skill-wrap">
+            <span class="skill-pill key">TensorFlow</span>
+            <span class="skill-pill key">PyTorch</span>
+            <span class="skill-pill key">Keras</span>
+            <span class="skill-pill">OpenCV</span>
+            <span class="skill-pill">Machine Learning</span>
+            <span class="skill-pill">Data Science</span>
+            <span class="skill-pill">MLOps</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-name">Databases</div>
+          <div class="skill-wrap">
+            <span class="skill-pill">MySQL</span>
+            <span class="skill-pill">PostgreSQL</span>
+            <span class="skill-pill">MongoDB</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-name">Other Technologies</div>
+          <div class="skill-wrap">
+            <span class="skill-pill">Cloud</span>
+            <span class="skill-pill">Web Development</span>
+            <span class="skill-pill">Virtual Reality</span>
+            <span class="skill-pill">Augmented Reality</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="sec-pad">
+    <div class="reveal">
+      <div class="sec-label">04 — Education</div>
+      <h2 class="sec-title">Academic background</h2>
+    </div>
+    <div class="timeline reveal d1">
+      <div class="tl-item">
+        <div class="tl-year">2024 – 2028</div>
+        <div class="tl-school">Pimpri Chinchwad College of Engineering</div>
+        <div class="tl-degree">BTech — Computer Science &amp; Engineering (AI &amp; ML), Pune</div>
+        <div class="tl-chips">
+          <span class="tl-chip">Year 1 CGPA: 7.03 / 10</span>
+          <span class="tl-chip">Year 2 CGPA: 7.12 / 10</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2022 – 2024</div>
+        <div class="tl-school">Matoshri Junior College Mhasrul, Nashik</div>
+        <div class="tl-degree">Higher Secondary Certificate (HSC)</div>
+        <div class="tl-chips">
+          <span class="tl-chip">HSC: 90.5%</span>
+          <span class="tl-chip">MHTCET: 98.0369 percentile</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2012 – 2022</div>
+        <div class="tl-school">Shree Swaminarayan English Medium School, Nashik</div>
+        <div class="tl-degree">Secondary School Certificate (SSC)</div>
+        <div class="tl-chips">
+          <span class="tl-chip">SSC: 84.20%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUME CTA -->
+  <section id="resume">
+    <div class="reveal">
+      <div class="sec-label">05 — Resume</div>
+      <h2>Want the full picture?</h2>
+      <p>Download my resume to see complete details on education, projects, and skills.</p>
+      <a href="DOC-20260220-WA0073_.pdf" download="Aditya_Pingle_Resume.pdf" class="btn-fill">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Resume (PDF)
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="sec-pad">
+    <div class="reveal">
+      <div class="sec-label">06 — Contact</div>
+      <h2 class="sec-title">Let's work together</h2>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-info reveal d1">
+        <h3>Get in touch</h3>
+        <p>Whether you have an internship opportunity, a project to collaborate on, or just want to say hello — my inbox is always open.</p>
+        <div class="clink-list">
+          <a href="mailto:pingleaditya03@gmail.com" class="clink">
+            <span class="clink-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+            </span>
+            <span>
+              <div>pingleaditya03@gmail.com</div>
+              <div class="clink-sub">Email</div>
+            </span>
+          </a>
+          <a href="tel:+917350351503" class="clink">
+            <span class="clink-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+            </span>
+            <span>
+              <div>+91 7350351503</div>
+              <div class="clink-sub">Phone</div>
+            </span>
+          </a>
+          <a href="https://www.linkedin.com/in/aditya-pingle" target="_blank" class="clink">
+            <span class="clink-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </span>
+            <span>
+              <div>Aditya Pingle</div>
+              <div class="clink-sub">LinkedIn</div>
+            </span>
+          </a>
+          <a href="https://github.com/AdityaPingle25" target="_blank" class="clink">
+            <span class="clink-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            </span>
+            <span>
+              <div>AdityaPingle25</div>
+              <div class="clink-sub">GitHub</div>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="c-form reveal d2">
+        <div class="f-row">
+          <div class="f-group">
+            <label class="f-label">Name</label>
+            <input type="text" class="f-input" placeholder="Your name" id="fn"/>
+          </div>
+          <div class="f-group">
+            <label class="f-label">Email</label>
+            <input type="email" class="f-input" placeholder="your@email.com" id="fe"/>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label">Subject</label>
+          <input type="text" class="f-input" placeholder="What's this about?" id="fs"/>
+        </div>
+        <div class="f-group">
+          <label class="f-label">Message</label>
+          <textarea class="f-textarea" placeholder="Tell me more..." id="fm"></textarea>
+        </div>
+        <button class="f-btn" onclick="submitForm()">
+          Send Message
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+        <div class="f-ok" id="fok">✅ Message received — Aditya will be in touch soon!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-logo">Aditya Pingle</div>
+    <div class="foot-copy">© 2026 · Designed &amp; built with passion</div>
+    <div class="foot-links">
+      <a href="https://github.com/AdityaPingle25" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/aditya-pingle" target="_blank">LinkedIn</a>
+      <a href="mailto:pingleaditya03@gmail.com">Email</a>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Contact form
+    function submitForm() {
+      const n = document.getElementById('fn').value.trim();
+      const e = document.getElementById('fe').value.trim();
+      const m = document.getElementById('fm').value.trim();
+      if (!n || !e || !m) { alert('Please fill in your name, email, and message.'); return; }
+      ['fn','fe','fs','fm'].forEach(id => document.getElementById(id).value = '');
+      const ok = document.getElementById('fok');
+      ok.style.display = 'block';
+      setTimeout(() => ok.style.display = 'none', 4500);
+    }
+  </script>
+  </body>
+  </html>

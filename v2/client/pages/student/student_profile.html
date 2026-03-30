@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink - Student Profile</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+display:flex;
+height:100vh;
+background:#0f172a;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:240px;
+background:#111827;
+padding:20px;
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-size:22px;
+font-weight:600;
+color:#5865F2;
+margin-bottom:30px;
+}
+
+.menu a{
+display:block;
+padding:12px;
+margin-bottom:8px;
+text-decoration:none;
+color:#cbd5e1;
+border-radius:8px;
+}
+
+.menu a:hover{
+background:#1f2937;
+}
+
+.logout{
+margin-top:auto;
+}
+
+.logout a{
+color:#ef4444;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+.navbar{
+height:60px;
+background:#111827;
+display:flex;
+align-items:center;
+padding:0 20px;
+border-bottom:1px solid #1f2937;
+}
+
+/* PROFILE CARD */
+
+.container{
+padding:30px;
+display:flex;
+justify-content:center;
+}
+
+.profile-card{
+background:#1e293b;
+padding:30px;
+border-radius:12px;
+width:450px;
+}
+
+.profile-header{
+text-align:center;
+margin-bottom:20px;
+}
+
+.profile-header img{
+width:90px;
+border-radius:50%;
+margin-bottom:10px;
+}
+
+.info{
+margin-top:15px;
+}
+
+.info div{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #334155;
+}
+
+.label{
+color:#94a3b8;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">UniLink</div>
+
+<div class="menu">
+<a href="dashboard.html">🏠 Dashboard</a>
+<a href="subjects.html">📚 My Subjects</a>
+<a href="../../pages/student/dues.html">📅 Dues</a>
+<a href="../../pages/common/announcements.html">📢 Announcements</a>
+<a href="faq.html">❓ FAQs</a>
+<a href="#">⚙ Settings</a>
+</div>
+
+<div class="logout">
+<a href="index.html">🚪 Logout</a>
+</div>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="navbar">
+<h3>Student Profile</h3>
+</div>
+
+<div class="container">
+
+<div class="profile-card">
+
+<div class="profile-header">
+<img src="https://i.pravatar.cc/120">
+<h2>Aditya Pingle</h2>
+<p>Computer Science Student</p>
+</div>
+
+<div class="info">
+
+<div>
+<span class="label">Student ID</span>
+<span>CS2026001</span>
+</div>
+
+<div>
+<span class="label">Email</span>
+<span>aditya@college.edu</span>
+</div>
+
+<div>
+<span class="label">Department</span>
+<span>Computer Science</span>
+</div>
+
+<div>
+<span class="label">Year</span>
+<span>Third Year</span>
+</div>
+
+<div>
+<span class="label">Phone</span>
+<span>+91 9876543210</span>
+</div>
+
+<div>
+<span class="label">College</span>
+<span>XYZ University</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
