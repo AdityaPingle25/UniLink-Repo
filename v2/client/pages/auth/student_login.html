@@ -9,6 +9,13 @@
 </head>
 <body>
 
+  <!-- Auto Login Check -->
+  <script>
+    if (localStorage.getItem('userName') && localStorage.getItem('userPrn')) {
+      window.location.href = '../student/student_dashboard.html';
+    }
+  </script>
+
   <div class="login-wrapper">
     <!-- LEFT PANEL IMAGE -->
     <div class="left-panel">
