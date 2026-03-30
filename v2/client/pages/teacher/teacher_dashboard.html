@@ -200,9 +200,22 @@
               <label>Target Audience</label>
               <select id="annAudience" required>
                 <option value="">Select Audience...</option>
-                <option>All Students (CS Dept)</option>
-                <option>CS301 - Data Structures</option>
-                <option>CS405 - Artificial Intelligence</option>
+                <option value="All Students">All Students (University-wide)</option>
+                <optgroup label="By Branch">
+                  <option value="Computer Science (CS)">Computer Science (CS)</option>
+                  <option value="Information Technology (IT)">Information Technology (IT)</option>
+                  <option value="CSE (AI & ML)">CSE (AI & ML)</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Electronics & Telecom (ENTC)">Electronics & Telecom (ENTC)</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Computer (Regional)">Computer (Regional)</option>
+                </optgroup>
+                <optgroup label="By Year">
+                  <option value="First Year (FE)">First Year (FE)</option>
+                  <option value="Second Year (SE)">Second Year (SE)</option>
+                  <option value="Third Year (TE)">Third Year (TE)</option>
+                  <option value="Final Year (BE/BTech)">Final Year (BE/BTech)</option>
+                </optgroup>
               </select>
             </div>
             <div class="form-group">
