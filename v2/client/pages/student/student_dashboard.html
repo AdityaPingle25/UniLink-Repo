@@ -61,14 +61,14 @@
           <span class="notification-dot"></span>
         </button>
 
-        <div class="user-profile">
-          <div class="avatar">A</div>
+        <a href="student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
+          <div class="avatar" id="navAvatar">A</div>
           <div class="user-info">
-            <span class="user-name">Aditya</span>
+            <span class="user-name" id="navUserName">Aditya</span>
             <span class="user-role">Student</span>
           </div>
           <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
-        </div>
+        </a>
       </div>
     </header>
 
@@ -167,6 +167,22 @@
   </div>
 
   <script src="../../assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const storedName = localStorage.getItem('userName');
+      if (storedName) {
+        document.getElementById('navUserName').innerText = storedName;
+        // Also update the initials
+        document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+
+        // Also update the welcome message
+        const welcomeTitle = document.querySelector('.welcome-title');
+        if (welcomeTitle) {
+          welcomeTitle.innerText = `Hi ${storedName}, Ready to Stay Updated with Campus?`;
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>

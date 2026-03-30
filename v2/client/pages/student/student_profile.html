@@ -157,30 +157,30 @@ color:#94a3b8;
 
 <div class="profile-header">
 <img src="https://i.pravatar.cc/120">
-<h2>Aditya Pingle</h2>
-<p>Computer Science Student</p>
+<h2 id="profileName">Aditya Pingle</h2>
+<p id="profileSub">Student</p>
 </div>
 
 <div class="info">
 
 <div>
 <span class="label">Student ID</span>
-<span>CS2026001</span>
+<span id="profilePrn">CS2026001</span>
 </div>
 
 <div>
 <span class="label">Email</span>
-<span>aditya@college.edu</span>
+<span id="profileEmail">aditya@college.edu</span>
 </div>
 
 <div>
 <span class="label">Department</span>
-<span>Computer Science</span>
+<span id="profileBranch">Computer Science</span>
 </div>
 
 <div>
 <span class="label">Year</span>
-<span>Third Year</span>
+<span id="profileYear">Third Year</span>
 </div>
 
 <div>
@@ -201,5 +201,26 @@ color:#94a3b8;
 
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const name = localStorage.getItem('userName');
+    const email = localStorage.getItem('userEmail');
+    const prn = localStorage.getItem('userPrn');
+    const branch = localStorage.getItem('userBranch');
+    const year = localStorage.getItem('userYear');
+
+    if (name) document.getElementById('profileName').innerText = name;
+    if (email) document.getElementById('profileEmail').innerText = email;
+    if (prn) document.getElementById('profilePrn').innerText = prn;
+    if (branch) {
+      document.getElementById('profileBranch').innerText = branch;
+      document.getElementById('profileSub').innerText = `${branch} Student`;
+    }
+    if (year) {
+      const yearMap = { '1': 'First Year', '2': 'Second Year', '3': 'Third Year', '4': 'Final Year' };
+      document.getElementById('profileYear').innerText = yearMap[year] || year;
+    }
+  });
+</script>
 </body>
 </html>

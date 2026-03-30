@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
           // Map target ID to filename
           const fileMap = {
             'dashboard': 'student_dashboard.html',
-            'announcements': 'announcements.html',
+            'announcements': '../common/announcements.html',
             'deadlines': 'deadlines.html',
-            'internships': 'internships.html',
-            'events': 'events.html',
-            'scholarships': 'scholarships.html',
-            'news': 'news.html',
+            'internships': '../common/internships.html',
+            'events': '../common/events.html',
+            'scholarships': '../common/scholarships.html',
+            'news': '../common/news.html',
             'ask-seniors': 'ask_seniors.html'
           };
 
