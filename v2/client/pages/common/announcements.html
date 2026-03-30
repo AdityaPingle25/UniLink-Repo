@@ -66,13 +66,7 @@
       <p style="color: var(--text-muted); font-size: 15px;">Official circulars, academic notices, and urgent updates.</p>
     </section>
 
-    <!-- Announcements Filter -->
-    <div class="filter-tabs">
-      <button class="filter-tab active">All</button>
-      <button class="filter-tab">Academic</button>
-      <button class="filter-tab">Administrative</button>
-      <button class="filter-tab">Exams</button>
-    </div>
+
 
     <!-- Announcements List -->
     <div class="announcement-list" id="announcementsContainer">
@@ -88,12 +82,17 @@
 
   <script src="../../assets/js/app.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // 1. Setup Student Nav Profile
+    // Use IIFE so it works both on standalone page load and when injected via AJAX
+    (function() {
+      // 1. Setup Student Nav Profile (only if nav elements exist)
       const storedName = localStorage.getItem('userName');
-      if (storedName) {
-        document.getElementById('navUserName').innerText = storedName;
-        document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+      const navUserName = document.getElementById('navUserName');
+      const navAvatar = document.getElementById('navAvatar');
+      if (storedName && navUserName) {
+        navUserName.innerText = storedName;
+      }
+      if (storedName && navAvatar) {
+        navAvatar.innerText = storedName.charAt(0).toUpperCase();
       }
 
       // 2. Fetch Announcements
@@ -103,24 +102,16 @@
           const result = await response.json();
           
           const container = document.getElementById('announcementsContainer');
-          container.innerHTML = ''; // clear
+          if (!container) return;
+          container.innerHTML = '';
 
           if (result.success && result.data.length > 0) {
             result.data.forEach(ann => {
-              // Create card UI
-              let iconClass = 'bg-indigo';
-              let iconPh = 'ph-megaphone';
-              
-              if (ann.category === 'Academic') { iconClass = 'bg-indigo'; iconPh = 'ph-books'; }
-              if (ann.category === 'Administrative') { iconClass = 'bg-emerald'; iconPh = 'ph-buildings'; }
-              if (ann.category === 'Exam') { iconClass = 'bg-rose'; iconPh = 'ph-warning-circle'; }
-              if (ann.category === 'Event') { iconClass = 'bg-amber'; iconPh = 'ph-confetti'; }
-
               const dateStr = new Date(ann.createdAt).toLocaleDateString();
 
               let cardHtml = `
                 <div class="announcement-card unread">
-                  <div class="announcement-icon ${iconClass}"><i class="ph ${iconPh}"></i></div>
+                  <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
                   <div class="announcement-content">
                     <div class="announcement-header">
                       <h3 class="announcement-title">${ann.title}</h3>
@@ -128,8 +119,7 @@
                     </div>
                     <p class="announcement-desc">${ann.description}</p>
                     <div class="announcement-meta">
-                      <span class="badge">${ann.category}</span>
-                      <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department})</span>
+                      <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department || ''})</span>
                       <span class="badge" style="background: rgba(0,0,0,0.05)">To: ${ann.audience}</span>
                     </div>
                   </div>
@@ -142,12 +132,15 @@
           }
         } catch (err) {
           console.error('Error fetching announcements:', err);
-          document.getElementById('announcementsContainer').innerHTML = '<p style="color: #e11d48; padding: 20px;">Failed to load announcements from server.</p>';
+          const container = document.getElementById('announcementsContainer');
+          if (container) {
+            container.innerHTML = '<p style="color: #e11d48; padding: 20px;">Failed to load announcements from server.</p>';
+          }
         }
       }
 
       loadAnnouncements();
-    });
+    })();
   </script>
 </body>
 </html>

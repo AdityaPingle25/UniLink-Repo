@@ -5,6 +5,52 @@ document.addEventListener('DOMContentLoaded', () => {
   // We need to fetch and cache the content for other pages
   const pageCache = {};
 
+  // --- Post-load handlers for dynamically loaded sections ---
+  // These run after the section HTML has been injected into the DOM.
+  const postLoadHandlers = {
+    'announcements': loadAnnouncementsSection,
+  };
+
+  // Fetch and render announcements into a container element
+  async function loadAnnouncementsSection(section) {
+    const container = section.querySelector('#announcementsContainer') || section.querySelector('.announcement-list');
+    if (!container) return;
+
+    try {
+      const response = await fetch('/api/announcements');
+      const result = await response.json();
+      container.innerHTML = '';
+
+      if (result.success && result.data.length > 0) {
+        result.data.forEach(ann => {
+          const dateStr = new Date(ann.createdAt).toLocaleDateString();
+
+          container.innerHTML += `
+            <div class="announcement-card unread">
+              <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
+              <div class="announcement-content">
+                <div class="announcement-header">
+                  <h3 class="announcement-title">${ann.title}</h3>
+                  <span class="announcement-date">${dateStr}</span>
+                </div>
+                <p class="announcement-desc">${ann.description}</p>
+                <div class="announcement-meta">
+                  <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department || ''})</span>
+                  <span class="badge" style="background: rgba(0,0,0,0.05)">To: ${ann.audience}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); padding: 20px;">No announcements found.</p>';
+      }
+    } catch (err) {
+      console.error('Error fetching announcements:', err);
+      container.innerHTML = '<p style="color: #e11d48; padding: 20px;">Failed to load announcements from server.</p>';
+    }
+  }
+
   navItems.forEach(item => {
     item.addEventListener('click', async (e) => {
       e.preventDefault();
@@ -24,9 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
       let targetSection = document.getElementById(targetId);
       
       if (!targetSection) {
-        // We need to fetch the content from the respective HTML file
-        // For local development without a server, fetch() might fail due to CORS. 
-        // We will assume it's running via a local server (like Live Server or python -m http.server).
         try {
           // Map target ID to filename
           const fileMap = {
@@ -51,8 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Get the contents AFTER the top-nav (we don't want to duplicate the top-nav)
           const mainWrapperHtml = doc.querySelector('.main-wrapper').innerHTML;
           
-          // We need to carefully extract the inner contents minus the top-nav.
-          // Since all our pages have top-nav, we can find elements after it.
+          // Extract inner contents minus the top-nav
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = mainWrapperHtml;
           const topNav = tempDiv.querySelector('.top-nav');
@@ -67,6 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
           targetSection.innerHTML = tempDiv.innerHTML;
           
           contentArea.appendChild(targetSection);
+
+          // Run post-load handler if one is registered for this section
+          if (postLoadHandlers[targetId]) {
+            postLoadHandlers[targetId](targetSection);
+          }
 
         } catch (error) {
           console.error("Error loading page content:", error);

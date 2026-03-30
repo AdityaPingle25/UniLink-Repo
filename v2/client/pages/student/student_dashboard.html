@@ -209,19 +209,11 @@
             if (announcements.length > 0) {
               const topAnnouncements = announcements.slice(0, 3);
               topAnnouncements.forEach(ann => {
-                let iconClass = 'bg-indigo';
-                let iconPh = 'ph-megaphone';
-                
-                if (ann.category === 'Academic') { iconClass = 'bg-indigo'; iconPh = 'ph-books'; }
-                if (ann.category === 'Administrative') { iconClass = 'bg-emerald'; iconPh = 'ph-buildings'; }
-                if (ann.category === 'Exam') { iconClass = 'bg-rose'; iconPh = 'ph-warning-circle'; }
-                if (ann.category === 'Event') { iconClass = 'bg-amber'; iconPh = 'ph-confetti'; }
-
                 const dateStr = new Date(ann.createdAt).toLocaleDateString();
 
                 let cardHtml = `
                   <div class="announcement-card">
-                    <div class="announcement-icon ${iconClass}"><i class="ph ${iconPh}"></i></div>
+                    <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
                     <div class="announcement-content">
                       <div class="announcement-header">
                         <h3 class="announcement-title">${ann.title}</h3>
@@ -229,7 +221,6 @@
                       </div>
                       <p class="announcement-desc" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">${ann.description}</p>
                       <div class="announcement-meta">
-                        <span class="badge">${ann.category}</span>
                         <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy}</span>
                       </div>
                     </div>

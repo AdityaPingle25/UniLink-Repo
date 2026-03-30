@@ -5,12 +5,11 @@ const Announcement = require('../models/Announcement');
 // POST /api/announcements
 router.post('/', async (req, res) => {
   try {
-    const { title, description, category, audience, postedBy, department } = req.body;
+    const { title, description, audience, postedBy, department } = req.body;
 
     const newAnnouncement = new Announcement({
       title,
       description,
-      category,
       audience,
       postedBy,
       department
