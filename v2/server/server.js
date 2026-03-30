@@ -18,7 +18,9 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Routes
 const authRoutes = require('./routes/auth');
+const announcementRoutes = require('./routes/announcements');
 app.use('/api/auth', authRoutes);
+app.use('/api/announcements', announcementRoutes);
 
 // Serve the static frontend files from 'v2/client'
 app.use(express.static(path.join(__dirname, '../client')));

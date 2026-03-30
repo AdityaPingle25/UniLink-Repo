@@ -22,6 +22,13 @@
 </head>
 <body>
 
+  <!-- Auto Login Check -->
+  <script>
+    if (localStorage.getItem('userRole') === 'Teacher' && localStorage.getItem('teacherId')) {
+      window.location.href = '../teacher/teacher_dashboard.html';
+    }
+  </script>
+
   <div class="login-wrapper">
     <!-- LEFT PANEL IMAGE -->
     <div class="left-panel">
@@ -48,12 +55,12 @@
           <p>Welcome back, Professor! Please enter your details.</p>
         </div>
 
-        <form action="../teacher/teacher_dashboard.html" method="GET">
+        <form id="teacherLoginForm">
           <div class="input-group">
             <label>Employee ID or Email</label>
             <div class="input-wrapper">
               <i class="ph ph-identification-card"></i>
-              <input type="text" placeholder="e.g. EMP4002" required>
+              <input type="text" id="identifier" placeholder="e.g. EMP4002" required>
             </div>
           </div>
 
@@ -77,13 +84,47 @@
 
           <button type="submit" class="login-btn">Log In <i class="ph ph-sign-in"></i></button>
 
-          <p class="signup-prompt">Don't have an account? <a href="#">Contact HR</a></p>
+          <p class="signup-prompt">Don't have an account? <a href="teacher_signup.html">Create Profile</a></p>
         </form>
       </div>
     </div>
   </div>
 
   <script src="../../assets/js/student_login.js"></script>
+  <script>
+    document.getElementById('teacherLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const identifier = document.getElementById('identifier').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/teacher/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Store data in localStorage for dynamic UI update
+          localStorage.setItem('teacherName', result.data.fullName);
+          localStorage.setItem('teacherEmail', result.data.email);
+          localStorage.setItem('teacherId', result.data.employeeId);
+          localStorage.setItem('teacherDept', result.data.department);
+          localStorage.setItem('userRole', 'Teacher');
+
+          window.location.href = '../teacher/teacher_dashboard.html';
+        } else {
+          alert('Login failed: ' + result.message);
+        }
+      } catch (err) {
+        console.error('Error during login:', err);
+        alert('Server error. Please try again later.');
+      }
+    });
+  </script>
 
 </body>
 </html>

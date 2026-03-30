@@ -51,9 +51,9 @@
         </button>
         
         <div class="user-profile">
-          <div class="avatar">A</div>
+          <div class="avatar" id="navAvatar">A</div>
           <div class="user-info">
-            <span class="user-name">Aditya</span>
+            <span class="user-name" id="navUserName">Student</span>
             <span class="user-role">Student</span>
           </div>
           <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
@@ -75,69 +75,8 @@
     </div>
 
     <!-- Announcements List -->
-    <div class="announcement-list">
-      
-      <div class="announcement-card unread">
-        <div class="announcement-icon bg-rose"><i class="ph ph-warning-circle"></i></div>
-        <div class="announcement-content">
-          <div class="announcement-header">
-            <h3 class="announcement-title">Revised Mid-Semester Examination Schedule</h3>
-            <span class="announcement-date">Just now</span>
-          </div>
-          <p class="announcement-desc">The mid-semester examinations for all B.Tech branches have been rescheduled. Please check the new timetable attached below to find your specific exam dates and venues.</p>
-          <div class="announcement-meta">
-            <span class="badge" style="background: rgba(225, 29, 72, 0.1); color: #e11d48;">Urgent</span>
-            <span class="badge">Exams</span>
-            <a href="#" class="attachment-link"><i class="ph ph-paperclip"></i> Revised_Timetable.pdf</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="announcement-card unread">
-        <div class="announcement-icon bg-indigo"><i class="ph ph-books"></i></div>
-        <div class="announcement-content">
-          <div class="announcement-header">
-            <h3 class="announcement-title">Registration Open for Open Elective Courses</h3>
-            <span class="announcement-date">2 hours ago</span>
-          </div>
-          <p class="announcement-desc">Course registration for exactly one open elective is now live on the portal. Seats are allocated on a first-come, first-served basis. Deadline is October 15th, 5:00 PM.</p>
-          <div class="announcement-meta">
-            <span class="badge">Academic</span>
-            <span class="badge">Registration</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="announcement-card">
-        <div class="announcement-icon bg-emerald"><i class="ph ph-buildings"></i></div>
-        <div class="announcement-content">
-          <div class="announcement-header">
-            <h3 class="announcement-title">Hostel Maintenance & Power Outage Notice</h3>
-            <span class="announcement-date">Yesterday</span>
-          </div>
-          <p class="announcement-desc">There will be a scheduled power outage in Boys Hostel Block B and Girls Hostel Block A on Sunday from 10:00 AM to 2:00 PM for routine transformer maintenance.</p>
-          <div class="announcement-meta">
-            <span class="badge">Administrative</span>
-            <span class="badge">Hostel</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="announcement-card">
-        <div class="announcement-icon bg-amber"><i class="ph ph-graduation-cap"></i></div>
-        <div class="announcement-content">
-          <div class="announcement-header">
-            <h3 class="announcement-title">Call for Applications: Semester Abroad Program</h3>
-            <span class="announcement-date">Oct 10, 2023</span>
-          </div>
-          <p class="announcement-desc">Applications are invited from 3rd-year students for the Semester Abroad Program at partnered international universities. Minimum CGPA required is 8.0.</p>
-          <div class="announcement-meta">
-            <span class="badge">Academic</span>
-            <a href="#" class="attachment-link"><i class="ph ph-arrow-square-out"></i> Apply Portal</a>
-          </div>
-        </div>
-      </div>
-
+    <div class="announcement-list" id="announcementsContainer">
+      <p style="color: var(--text-muted); padding: 20px;">Loading announcements...</p>
     </div>
 
   </main>
@@ -147,5 +86,68 @@
     <span>Summarize recent announcements</span>
   </div>
 
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Setup Student Nav Profile
+      const storedName = localStorage.getItem('userName');
+      if (storedName) {
+        document.getElementById('navUserName').innerText = storedName;
+        document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+      }
+
+      // 2. Fetch Announcements
+      async function loadAnnouncements() {
+        try {
+          const response = await fetch('http://localhost:3000/api/announcements');
+          const result = await response.json();
+          
+          const container = document.getElementById('announcementsContainer');
+          container.innerHTML = ''; // clear
+
+          if (result.success && result.data.length > 0) {
+            result.data.forEach(ann => {
+              // Create card UI
+              let iconClass = 'bg-indigo';
+              let iconPh = 'ph-megaphone';
+              
+              if (ann.category === 'Academic') { iconClass = 'bg-indigo'; iconPh = 'ph-books'; }
+              if (ann.category === 'Administrative') { iconClass = 'bg-emerald'; iconPh = 'ph-buildings'; }
+              if (ann.category === 'Exam') { iconClass = 'bg-rose'; iconPh = 'ph-warning-circle'; }
+              if (ann.category === 'Event') { iconClass = 'bg-amber'; iconPh = 'ph-confetti'; }
+
+              const dateStr = new Date(ann.createdAt).toLocaleDateString();
+
+              let cardHtml = `
+                <div class="announcement-card unread">
+                  <div class="announcement-icon ${iconClass}"><i class="ph ${iconPh}"></i></div>
+                  <div class="announcement-content">
+                    <div class="announcement-header">
+                      <h3 class="announcement-title">${ann.title}</h3>
+                      <span class="announcement-date">${dateStr}</span>
+                    </div>
+                    <p class="announcement-desc">${ann.description}</p>
+                    <div class="announcement-meta">
+                      <span class="badge">${ann.category}</span>
+                      <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department})</span>
+                      <span class="badge" style="background: rgba(0,0,0,0.05)">To: ${ann.audience}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+              container.innerHTML += cardHtml;
+            });
+          } else {
+            container.innerHTML = '<p style="color: var(--text-muted); padding: 20px;">No announcements found.</p>';
+          }
+        } catch (err) {
+          console.error('Error fetching announcements:', err);
+          document.getElementById('announcementsContainer').innerHTML = '<p style="color: #e11d48; padding: 20px;">Failed to load announcements from server.</p>';
+        }
+      }
+
+      loadAnnouncements();
+    });
+  </script>
 </body>
 </html>

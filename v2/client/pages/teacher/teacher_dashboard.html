@@ -128,10 +128,10 @@
       <div class="profile-area">
         <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
         <div class="user-profile">
-          <div class="avatar" style="background-image: url('https://ui-avatars.com/api/?name=Dr+Smith&background=059669&color=fff');"></div>
+          <div class="avatar" id="navAvatar" style="background-image: url('https://ui-avatars.com/api/?name=Teacher&background=059669&color=fff');"></div>
           <div class="user-info">
-            <span class="user-name">Dr. Smith</span>
-            <span class="user-role">Prof. of Computer Science</span>
+            <span class="user-name" id="navTeacherName">Teacher</span>
+            <span class="user-role" id="navTeacherDept">Department</span>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
       <!-- DASHBOARD OVERVIEW SECTION -->
       <div id="dashboard" class="page-section active">
         <section class="welcome-section">
-          <h1 class="welcome-title">Welcome back, Dr. Smith</h1>
+          <h1 class="welcome-title" id="welcomeTeacherName">Welcome back,</h1>
           <p style="color: var(--text-muted); font-size: 15px;">Here is your faculty overview for today.</p>
         </section>
 
@@ -189,16 +189,16 @@
           <p style="color: var(--text-muted); font-size: 15px;">Broadcast important circulars to specific classes or the entire department.</p>
         </section>
 
-        <form class="dashboard-form" onsubmit="event.preventDefault(); alert('Announcement Posted!');">
+        <form class="dashboard-form" id="announcementForm">
           <div class="form-group">
             <label>Announcement Title</label>
-            <input type="text" placeholder="e.g., Change in schedule for Lab 4" required>
+            <input type="text" id="annTitle" placeholder="e.g., Change in schedule for Lab 4" required>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Target Audience</label>
-              <select required>
+              <select id="annAudience" required>
                 <option value="">Select Audience...</option>
                 <option>All Students (CS Dept)</option>
                 <option>CS301 - Data Structures</option>
@@ -207,19 +207,19 @@
             </div>
             <div class="form-group">
               <label>Category</label>
-              <select required>
+              <select id="annCategory" required>
                 <option value="">Select Category...</option>
-                <option>Academic</option>
-                <option>Administrative</option>
-                <option>Exam</option>
-                <option>Event</option>
+                <option value="Academic">Academic</option>
+                <option value="Administrative">Administrative</option>
+                <option value="Exam">Exam</option>
+                <option value="Event">Event</option>
               </select>
             </div>
           </div>
 
           <div class="form-group">
             <label>Description</label>
-            <textarea rows="5" placeholder="Write your full announcement here..." required></textarea>
+            <textarea id="annDesc" rows="5" placeholder="Write your full announcement here..." required></textarea>
           </div>
           
           <div class="form-group">
@@ -363,5 +363,67 @@
   </main>
 
   <script src="../../assets/js/teacher_app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Populate Teacher Profile Data
+      const name = localStorage.getItem('teacherName');
+      const dept = localStorage.getItem('teacherDept');
+      
+      if (name) {
+        document.getElementById('navTeacherName').innerText = name;
+        document.getElementById('welcomeTeacherName').innerText = `Welcome back, ${name}`;
+        document.getElementById('navAvatar').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=fff')`;
+      }
+      if (dept) {
+        document.getElementById('navTeacherDept').innerText = `Dept. of ${dept}`;
+      }
+
+      // 2. Handle Announcement Submission
+      const annForm = document.getElementById('announcementForm');
+      if (annForm) {
+        annForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          
+          const payload = {
+            title: document.getElementById('annTitle').value,
+            description: document.getElementById('annDesc').value,
+            category: document.getElementById('annCategory').value,
+            audience: document.getElementById('annAudience').value,
+            postedBy: localStorage.getItem('teacherName') || 'Unknown Teacher',
+            department: localStorage.getItem('teacherDept') || 'Unknown'
+          };
+
+          try {
+            const btn = annForm.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Posting...';
+            btn.disabled = true;
+
+            const response = await fetch('http://localhost:3000/api/announcements', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              alert('Announcement posted successfully!');
+              annForm.reset();
+            } else {
+              alert('Failed to post announcement: ' + result.message);
+            }
+          } catch (err) {
+            console.error('Error:', err);
+            alert('Server error while posting. Make sure the backend is running.');
+          } finally {
+            const btn = annForm.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Post Announcement';
+            btn.disabled = false;
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
