@@ -94,15 +94,38 @@
       justify-content: center;
       font-weight: 600;
     }
+
+    /* Dark Theme specifics for Faculty Dashboard */
+    body.dark-theme .dashboard-form {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(30, 41, 59, 0.5);
+    }
+    
+    body.dark-theme .form-group input,
+    body.dark-theme .form-group select,
+    body.dark-theme .form-group textarea {
+      background: rgba(15, 23, 42, 0.4);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+    }
+
+    body.dark-theme .form-group input::placeholder,
+    body.dark-theme .form-group textarea::placeholder {
+      color: rgba(248, 250, 252, 0.4);
+    }
+
+    body.dark-theme .form-group label {
+      color: #f8fafc;
+    }
   </style>
+
 </head>
 <body>
 
   <!-- LEFT NAVIGATION BAR -->
   <aside class="sidebar">
-    <div class="logo-area" style="padding: 24px;">
-      <div class="logo-icon bg-primary" style="color: white; width: 32px; height: 32px; border-radius: 8px; font-size: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800;">U</div>
-      <div class="logo-text" style="font-size: 20px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px;">UniLink</div>
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
     </div>
     <nav class="nav-items">
       <a href="#dashboard" class="nav-item active" data-target="dashboard"><i class="ph ph-squares-four"></i> <span>Overview</span></a>
@@ -114,7 +137,7 @@
       <a href="#events" class="nav-item" data-target="events"><i class="ph ph-ticket"></i> <span>Manage Events</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      <a href="#settings" class="nav-item" data-target="settings"><i class="ph ph-gear"></i> <span>Settings</span></a>
+      
       <a href="../../index.html" class="nav-item text-danger"><i class="ph ph-sign-out"></i> <span>Log Out</span></a>
     </nav>
   </aside>
@@ -125,13 +148,13 @@
     <header class="top-nav">
       <div class="profile-area" style="margin-left: auto;">
         <button class="icon-btn" id="themeToggleBtn"><i class="ph ph-moon"></i></button>
-        <div class="user-profile">
+        <a href="teacher_profile.html" class="user-profile" style="text-decoration: none; color: inherit;">
           <div class="avatar" id="navAvatar" style="background-image: url('https://ui-avatars.com/api/?name=Teacher&background=059669&color=fff');"></div>
           <div class="user-info">
             <span class="user-name" id="navTeacherName">Teacher</span>
             <span class="user-role" id="navTeacherDept">Department</span>
           </div>
-        </div>
+        </a>
       </div>
     </header>
 
@@ -237,35 +260,39 @@
           <p style="color: var(--text-muted); font-size: 15px;">Create new assignments, set deadlines, and review submissions.</p>
         </section>
 
-        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
-           <button class="primary-btn"><i class="ph ph-plus"></i> Create New Assignment</button>
+        <form class="dashboard-form" id="assignmentForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Subject / Class</label>
+              <input type="text" id="asgSubject" placeholder="e.g. CS301 - Data Structures" required>
+            </div>
+            <div class="form-group">
+              <label>Assignment Title</label>
+              <input type="text" id="asgTitle" placeholder="e.g. Midterm Project" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Deadline</label>
+              <input type="datetime-local" id="asgDeadline" required>
+            </div>
+            <div class="form-group">
+              <label>Team Project?</label>
+              <select id="asgTeam">
+                <option value="false">No (Individual)</option>
+                <option value="true">Yes (Team)</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="primary-btn"><i class="ph ph-plus"></i> Post Assignment</button>
+        </form>
+
+        <div style="margin-top: 40px; margin-bottom: 40px;">
+           <h3 style="margin-bottom: 16px; font-size: 18px;">Active Assignments</h3>
+           <div id="assignmentList" style="display: grid; gap: 16px;">
+              <p style="color: var(--text-muted);">Loading assignments...</p>
+           </div>
         </div>
-
-        <section class="dashboard-grid">
-           <div class="card">
-             <div class="card-header">
-               <div class="card-icon bg-purple"><i class="ph ph-kanban"></i></div>
-               <h2 class="card-title">CS301 - Midterm Project</h2>
-             </div>
-             <p class="card-desc">Due in 3 days. 85/120 submissions received so far.</p>
-             <div class="card-meta">
-               <span class="badge bg-purple-light color-purple">Active</span>
-               <span class="badge">View Submissions</span>
-             </div>
-           </div>
-
-           <div class="card">
-             <div class="card-header">
-               <div class="card-icon bg-sky"><i class="ph ph-kanban"></i></div>
-               <h2 class="card-title">CS405 - Research Paper</h2>
-             </div>
-             <p class="card-desc">Due next week. 10/120 submissions received.</p>
-             <div class="card-meta">
-               <span class="badge bg-sky-light color-sky">Active</span>
-               <span class="badge">View Submissions</span>
-             </div>
-           </div>
-        </section>
       </div><!-- End Manage Assignments -->
 
       <!-- STUDENT LIST SECTION -->
@@ -275,39 +302,8 @@
           <p style="color: var(--text-muted); font-size: 15px;">View profiles and academic standing of your currently enrolled students.</p>
         </section>
 
-        <div class="dashboard-form" style="padding: 0; overflow: hidden;">
-           <div class="student-item">
-             <div class="student-info">
-               <div class="student-avatar" style="background: #6366F1;">A</div>
-               <div>
-                  <div style="font-weight: 600; font-size: 15px;">Aditya Sharma</div>
-                  <div style="font-size: 13px; color: var(--text-muted);">CS301 • Roll: CS2024001</div>
-               </div>
-             </div>
-             <button class="primary-btn secondary">View Profile</button>
-           </div>
-           
-           <div class="student-item">
-             <div class="student-info">
-               <div class="student-avatar" style="background: #e11d48;">P</div>
-               <div>
-                  <div style="font-weight: 600; font-size: 15px;">Priya Mehta</div>
-                  <div style="font-size: 13px; color: var(--text-muted);">CS405 • Roll: CS2024045</div>
-               </div>
-             </div>
-             <button class="primary-btn secondary">View Profile</button>
-           </div>
-           
-           <div class="student-item">
-             <div class="student-info">
-               <div class="student-avatar" style="background: #059669;">R</div>
-               <div>
-                  <div style="font-weight: 600; font-size: 15px;">Rahul Patel</div>
-                  <div style="font-size: 13px; color: var(--text-muted);">CS301 • Roll: CS2024102</div>
-               </div>
-             </div>
-             <button class="primary-btn secondary">View Profile</button>
-           </div>
+        <div class="dashboard-form" id="dynamicStudentList" style="padding: 0; overflow: hidden; border: none; background: transparent; box-shadow: none;">
+           <p style="padding: 16px; color: var(--text-muted);">Loading students...</p>
         </div>
       </div><!-- End Student List -->
 
@@ -479,16 +475,6 @@
            </div>
         </div>
 
-        <!-- Registration Details Modal -->
-        <div id="regDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-          <div style="background: white; border-radius: 16px; padding: 32px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-              <h2 style="margin: 0; font-size: 20px;" id="regModalTitle">Registrations</h2>
-              <button onclick="closeRegModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
-            </div>
-            <div id="regDetailsContainer"></div>
-          </div>
-        </div>
       </div><!-- End Events -->
 
     </div> <!-- End Content Area -->
@@ -501,10 +487,15 @@
       const name = localStorage.getItem('teacherName');
       const dept = localStorage.getItem('teacherDept');
       
+      const savedAvatar = localStorage.getItem('userAvatar');
       if (name) {
         document.getElementById('navTeacherName').innerText = name;
         document.getElementById('welcomeTeacherName').innerText = `Welcome back, ${name}`;
-        document.getElementById('navAvatar').style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=fff')`;
+        if (savedAvatar) {
+          document.getElementById('navAvatar').style.backgroundImage = `url('${savedAvatar}')`;
+        } else {
+          document.getElementById('navAvatar').style.backgroundImage = `url('https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=059669&textColor=ffffff')`;
+        }
       }
       if (dept) {
         document.getElementById('navTeacherDept').innerText = `Dept. of ${dept}`;
@@ -767,6 +758,40 @@
         document.getElementById('regDetailsModal').style.display = 'none';
       };
 
+      window.viewAssignmentSubmissions = async (id, title) => {
+        document.getElementById('subModalTitle').innerText = 'Submissions: ' + title;
+        const container = document.getElementById('subDetailsContainer');
+        container.innerHTML = '<p style="color: var(--text-muted);">Loading...</p>';
+        document.getElementById('subDetailsModal').style.display = 'flex';
+
+        try {
+          const res = await fetch(`http://localhost:3000/api/assignments/${id}/submissions`);
+          const data = await res.json();
+          container.innerHTML = '';
+          if (data.success && data.data.length > 0) {
+            data.data.forEach((sub, idx) => {
+              container.innerHTML += `
+                <div style="background: #f8f9fd; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h4 style="margin: 0; font-size: 15px;">${idx + 1}. ${sub.studentName}</h4>
+                    <p style="margin: 4px 0 0; font-size: 13px; color: var(--text-muted);">${new Date(sub.submittedAt).toLocaleString()}</p>
+                  </div>
+                  <a href="${sub.submissionLink}" target="_blank" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px; text-decoration: none;">View Link</a>
+                </div>
+              `;
+            });
+          } else {
+            container.innerHTML = '<p style="color: var(--text-muted);">No submissions yet.</p>';
+          }
+        } catch(e) {
+          container.innerHTML = '<p style="color: #e11d48;">Failed to load submissions.</p>';
+        }
+      };
+
+      window.closeSubModal = () => {
+        document.getElementById('subDetailsModal').style.display = 'none';
+      };
+
       async function fetchEvents() {
         try {
           const res = await fetch('http://localhost:3000/api/events');
@@ -798,11 +823,149 @@
         } catch(e) {}
       }
 
+      // Handle Assignments Management
+      const assignForm = document.getElementById('assignmentForm');
+      if (assignForm) {
+        assignForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const payload = {
+            subject: document.getElementById('asgSubject').value,
+            title: document.getElementById('asgTitle').value,
+            deadline: document.getElementById('asgDeadline').value,
+            isTeamProject: document.getElementById('asgTeam').value === 'true',
+            postedBy: localStorage.getItem('teacherName') || 'Teacher'
+          };
+          try {
+            const res = await fetch('http://localhost:3000/api/assignments', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if ((await res.json()).success) { alert('Assignment Posted!'); assignForm.reset(); fetchAssignments(); }
+          } catch(err) { alert('Error posting assignment'); }
+        });
+      }
+
+      window.deleteAssignment = async (id) => {
+        if(confirm('Delete this assignment?')) {
+          await fetch('http://localhost:3000/api/assignments/' + id, { method: 'DELETE' });
+          fetchAssignments();
+        }
+      };
+
+      async function fetchAssignments() {
+        console.log("Fetching assignments...");
+        try {
+          const res = await fetch('http://localhost:3000/api/assignments');
+          const data = await res.json();
+          console.log("Assignments data received:", data);
+          const list = document.getElementById('assignmentList');
+          if (!list) return;
+          list.innerHTML = '';
+          if(data.success && data.data.length > 0) {
+            data.data.forEach(item => {
+              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <h4 style="margin: 0; font-size: 16px;">${item.subject} - ${item.title}</h4>
+                  <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">Due: ${new Date(item.deadline).toLocaleString()}</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button onclick="viewAssignmentSubmissions('${item._id}', '${item.title.replace(/'/g, "\\'")}')" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px;">View Submissions</button>
+                  <button onclick="deleteAssignment('${item._id}')" class="primary-btn" style="background: #e11d48; color: white; padding: 6px 12px; font-size: 13px;">Delete</button>
+                </div>
+              </div>`;
+
+            });
+          } else {
+            list.innerHTML = '<p style="color: var(--text-muted);">No active assignments.</p>';
+          }
+        } catch(e) {}
+      }
+
+      // Handle Student List Fetching
+      async function fetchMyStudents() {
+        const divisionsStr = localStorage.getItem('teacherDivisions');
+        if (!divisionsStr || divisionsStr === 'undefined') {
+            const list = document.getElementById('dynamicStudentList');
+            if(list) list.innerHTML = '<p style="padding: 16px; color: var(--text-muted);">No divisions assigned. Add divisions in your settings to view students.</p>';
+            return;
+        }
+        
+        try {
+          let divisions;
+          try {
+             divisions = JSON.parse(divisionsStr);
+          } catch(e) {
+             divisions = [divisionsStr]; // Fallback for old string cache
+          }
+          
+          if(!divisions || divisions.length === 0) {
+            const list = document.getElementById('dynamicStudentList');
+            if(list) list.innerHTML = '<p style="padding: 16px; color: var(--text-muted);">No divisions assigned. Add divisions in your settings to view students.</p>';
+            return;
+          }
+
+          const q = divisions.join(',');
+          const res = await fetch(`http://localhost:3000/api/students?divisions=${encodeURIComponent(q)}`);
+          const data = await res.json();
+          const list = document.getElementById('dynamicStudentList');
+          if(!list) return;
+
+          list.innerHTML = '';
+          if(data.success && data.data.length > 0) {
+            data.data.forEach(stud => {
+              const bgColors = ['#6366F1', '#e11d48', '#059669', '#d97706', '#8b5cf6'];
+              const col = bgColors[stud.fullName.length % bgColors.length];
+              list.innerHTML += `<div class="student-item" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <div class="student-info">
+                  <div class="student-avatar" style="background: ${col};">${stud.fullName.charAt(0).toUpperCase()}</div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 15px;">${stud.fullName}</div>
+                    <div style="font-size: 13px; color: var(--text-muted);">Div: ${stud.division} • PRN: ${stud.prn}</div>
+                  </div>
+                </div>
+              </div>`;
+            });
+          } else {
+            list.innerHTML = '<p style="padding: 16px; color: var(--text-muted);">No students registered in your divisions yet.</p>';
+          }
+        } catch(e) {
+            const list = document.getElementById('dynamicStudentList');
+            if(list) list.innerHTML = '<p style="padding: 16px; color: #e11d48;">Error loading students.</p>';
+        }
+      }
+
       // Initial loads
       fetchInternships();
       fetchScholarships();
       fetchEvents();
+      fetchAssignments();
+      fetchMyStudents();
     });
   </script>
+
+  <!-- Registration Details Modal -->
+  <div id="regDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: var(--card-bg); border-radius: 16px; padding: 32px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; color: var(--text-main);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0; font-size: 20px;" id="regModalTitle">Registrations</h2>
+        <button onclick="closeRegModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+      <div id="regDetailsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Assignment Submissions Modal -->
+  <div id="subDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: var(--card-bg); border-radius: 16px; padding: 32px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; color: var(--text-main);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0; font-size: 20px;" id="subModalTitle">Submissions</h2>
+        <button onclick="closeSubModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+      <div id="subDetailsContainer"></div>
+    </div>
+  </div>
+
 </body>
 </html>
+

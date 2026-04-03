@@ -6,6 +6,9 @@ const teacherSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   department: { type: String, required: true },
+  divisions: [{ type: String }],
+  phone: { type: String, default: 'Not set' },
+  college: { type: String, default: 'PCCOE, Pune' },
   role: { type: String, default: 'Teacher' }
 }, { timestamps: true });
 

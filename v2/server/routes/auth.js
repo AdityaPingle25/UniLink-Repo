@@ -83,7 +83,7 @@ router.post('/login', async (req, res) => {
 // POST /api/auth/teacher/register
 router.post('/teacher/register', async (req, res) => {
   try {
-    const { fullName, employeeId, email, password, department } = req.body;
+    const { fullName, employeeId, email, password, department, divisions, phone, college } = req.body;
 
     // Check if teacher exists
     const existingTeacher = await Teacher.findOne({ $or: [{ email }, { employeeId }] });
@@ -97,7 +97,10 @@ router.post('/teacher/register', async (req, res) => {
       employeeId,
       email,
       password,
-      department
+      department,
+      phone: phone || 'Not set',
+      college: college || 'PCCOE, Pune',
+      divisions: divisions || []
     });
 
     await newTeacher.save();
@@ -110,6 +113,9 @@ router.post('/teacher/register', async (req, res) => {
         email: newTeacher.email,
         employeeId: newTeacher.employeeId,
         department: newTeacher.department,
+        divisions: newTeacher.divisions,
+        phone: newTeacher.phone,
+        college: newTeacher.college,
         role: newTeacher.role
       }
     });
@@ -145,6 +151,9 @@ router.post('/teacher/login', async (req, res) => {
         email: teacher.email,
         employeeId: teacher.employeeId,
         department: teacher.department,
+        divisions: teacher.divisions,
+        phone: teacher.phone,
+        college: teacher.college,
         role: teacher.role
       }
     });
@@ -152,6 +161,52 @@ router.post('/teacher/login', async (req, res) => {
   } catch (err) {
     console.error('Teacher Login Error:', err);
     res.status(500).json({ success: false, message: 'Server error during login.' });
+  }
+});
+
+// PUT /api/auth/teacher/:id
+router.put('/teacher/:id', async (req, res) => {
+  try {
+    const { fullName, email, employeeId, department, divisions, phone, college } = req.body;
+    
+    // Check if email or employeeId is taken by another teacher
+    const existing = await Teacher.findOne({ 
+      $or: [{ email }, { employeeId }], 
+      _id: { $ne: req.params.id } 
+    });
+
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Email or Employee ID already in use.' });
+    }
+
+    const teacher = await Teacher.findByIdAndUpdate(
+      req.params.id,
+      { fullName, email, employeeId, department, divisions, phone, college },
+      { new: true }
+    );
+
+    if (!teacher) {
+      return res.status(404).json({ success: false, message: 'Teacher not found.' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        id: teacher._id,
+        fullName: teacher.fullName,
+        email: teacher.email,
+        employeeId: teacher.employeeId,
+        department: teacher.department,
+        divisions: teacher.divisions,
+        phone: teacher.phone,
+        college: teacher.college,
+        role: teacher.role
+      }
+    });
+  } catch (err) {
+    console.error('Teacher Update Error:', err);
+    res.status(500).json({ success: false, message: 'Server error during update.' });
   }
 });
 

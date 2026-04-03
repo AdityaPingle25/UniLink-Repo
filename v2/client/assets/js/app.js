@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     'announcements': loadAnnouncementsSection,
     'scholarships': loadScholarshipsSection,
     'internships': loadInternshipsSection,
+    'internships': loadInternshipsSection,
     'events': loadEventsSection,
+    'deadlines': loadDeadlinesSection,
   };
 
   // Fetch and render scholarships into a container element
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
                   <span style="color: var(--text-muted);">Deadline</span>
-                  <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString()}</span>
+                  <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString('en-GB')}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
                   <span style="color: var(--text-muted);">Category</span>
@@ -187,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           document.getElementById('regEventId').value = eventId;
           document.getElementById('modalTitle').innerText = 'Register: ' + eventTitle;
-          document.getElementById('modalSubtitle').innerText = teamSize > 1 ? `Team event — add ${teamSize - 1} team member(s)` : 'Individual registration';
+          document.getElementById('modalSubtitle').innerText = teamSize > 1 ? `Team of up to ${teamSize} (others optional)` : 'Individual registration';
           
           const teamSection = document.getElementById('teamSection');
           const teamContainer = document.getElementById('teamMembersContainer');
@@ -198,8 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 1; i < teamSize; i++) {
               teamContainer.innerHTML += `
                 <div class="team-member-row">
-                  <h4>Member ${i + 1}</h4>
-                  <div class="form-group"><label>Name *</label><input type="text" class="tm-name" required placeholder="Full name"></div>
+                  <h4>Member ${i + 1} (Optional)</h4>
+                  <div class="form-group"><label>Name</label><input type="text" class="tm-name" placeholder="Full name"></div>
                   <div class="form-group"><label>Email</label><input type="email" class="tm-email" placeholder="Email"></div>
                   <div class="form-group"><label>Phone</label><input type="tel" class="tm-phone" placeholder="Phone"></div>
                 </div>
@@ -260,7 +262,82 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No events available right now. Check back soon!</p>';
       }
     } catch (err) {
+      console.error('Error fetching events:', err);
       document.getElementById('eventsContainer').innerHTML = '<p style="color: #e11d48; text-align: center; padding: 40px 0;">Failed to load events. Make sure the server is running.</p>';
+    }
+  }
+
+  // Fetch and render assignment deadlines
+  async function loadDeadlinesSection(section) {
+    const colDueSoon = section.querySelector('#colDueSoon');
+    const colUpcoming = section.querySelector('#colUpcoming');
+    const countDueSoon = section.querySelector('#countDueSoon');
+    const countUpcoming = section.querySelector('#countUpcoming');
+    
+    // Only proceed if columns exist (i.e. 'deadlines' section active)
+    if (!colDueSoon || !colUpcoming) return;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/assignments');
+      const data = await response.json();
+      
+      colDueSoon.innerHTML = '';
+      colUpcoming.innerHTML = '';
+      let dueSoonCount = 0;
+      let upcomingCount = 0;
+
+      if (data.success && data.data.length > 0) {
+        const now = new Date();
+        const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+
+        data.data.forEach(item => {
+          const deadline = new Date(item.deadline);
+          const isDueSoon = (deadline - now) > 0 && (deadline - now) <= threeDaysMs;
+          const isPast = deadline < now;
+
+          const teamBadge = item.isTeamProject ? `<span class="badge">Team Project</span>` : '';
+          const timeIcon = isDueSoon || isPast ? '<i class="ph ph-clock"></i>' : '<i class="ph ph-calendar"></i>';
+          const formattedDate = deadline.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+          
+          let colorClass = '';
+          if (isPast) colorClass = 'style="color: var(--text-muted); text-decoration: line-through;"';
+          else if (isDueSoon) colorClass = 'class="task-date color-rose"';
+          else colorClass = 'class="task-date"';
+
+          const cardHtml = `
+            <div class="task-card ${isDueSoon ? 'urgent' : ''}" ${isPast ? 'style="opacity: 0.6;"' : ''}>
+              <div style="display: flex; justify-content: space-between;">
+                <div class="task-subject">${item.subject}</div>
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">By: ${item.postedBy}</div>
+              </div>
+              <h4 class="task-title" ${isPast ? 'style="text-decoration: line-through;"' : ''}>${item.title}</h4>
+              <div class="task-footer">
+                <span ${colorClass}>${timeIcon} ${isPast ? 'Past Due (' : ''}${formattedDate}${isPast ? ')' : ''}</span>
+                ${teamBadge}
+              </div>
+              ${!isPast ? `<button onclick="window.submitAssignment('${item._id}')" class="primary-btn" style="width: 100%; margin-top: 10px; justify-content: center; font-size: 13px;">Submit Assignment</button>` : ''}
+            </div>
+          `;
+
+          if (isDueSoon || isPast) {
+            colDueSoon.innerHTML += cardHtml;
+            dueSoonCount++;
+          } else {
+            colUpcoming.innerHTML += cardHtml;
+            upcomingCount++;
+          }
+        });
+      }
+
+      if (dueSoonCount === 0) colDueSoon.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No immediate tasks!</p>';
+      if (upcomingCount === 0) colUpcoming.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No upcoming tasks yet.</p>';
+
+      if (countDueSoon) countDueSoon.innerText = dueSoonCount;
+      if (countUpcoming) countUpcoming.innerText = upcomingCount;
+      
+    } catch (err) {
+      console.error('Error fetching assignments:', err);
+      colDueSoon.innerHTML = '<p style="color: #e11d48; font-size: 13px;">Error loading data.</p>';
     }
   }
 
@@ -331,9 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'deadlines': 'deadlines.html',
             'internships': '../common/internships.html',
             'events': '../common/events.html',
-            'scholarships': '../common/scholarships.html',
-            'news': '../common/news.html',
-            'ask-seniors': 'ask_seniors.html'
+            'scholarships': '../common/scholarships.html'
           };
 
           const fileName = fileMap[targetId];
@@ -392,4 +467,27 @@ document.addEventListener('DOMContentLoaded', () => {
       activeNav.click();
     }
   }
+
+  // Global function for submitting assignments
+  window.submitAssignment = async (id) => {
+    const link = prompt("Enter your submission link (Drive, Github, etc):");
+    if (link !== null) {
+      try {
+        const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
+        const res = await fetch(`http://localhost:3000/api/assignments/${id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentName, submissionLink: link })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Assignment submitted successfully!');
+        } else {
+          alert('Submission failed: ' + data.message);
+        }
+      } catch (err) {
+        alert('Error submitting assignment. Ensure backend is running.');
+      }
+    }
+  };
 });

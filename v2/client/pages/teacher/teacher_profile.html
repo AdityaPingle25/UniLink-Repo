@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniLink - Student Profile</title>
+  <title>UniLink - Faculty Profile</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
   <style>
+    /* Theme override for Faculty (Emerald) */
+    :root {
+      --primary: #059669; /* Emerald 600 */
+      --primary-hover: #047857; /* Emerald 700 */
+    }
+    
     /* Profile Page Specific Styles */
     .profile-page-header {
       margin-bottom: 32px;
@@ -311,20 +317,13 @@
       <div class="logo-text">UniLink</div>
     </div>
     <nav class="nav-items">
-      <a href="student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i>
-        <span>Dashboard</span></a>
-      <a href="student_dashboard.html#announcements" class="nav-item"><i class="ph ph-megaphone"></i>
-        <span>Important Announcements</span></a>
-      <a href="student_dashboard.html#deadlines" class="nav-item"><i class="ph ph-calendar-check"></i>
-        <span>Assignment Deadlines</span></a>
-      <a href="student_dashboard.html#internships" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships &
-          Hackathons</span></a>
-      <a href="student_dashboard.html#events" class="nav-item"><i class="ph ph-ticket"></i> <span>Event
-          Registration</span></a>
-      <a href="student_dashboard.html#scholarships" class="nav-item"><i class="ph ph-graduation-cap"></i>
-        <span>Scholarships</span></a>
-
-      <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
+      <a href="teacher_dashboard.html#dashboard" class="nav-item"><i class="ph ph-squares-four"></i> <span>Overview</span></a>
+      <a href="teacher_dashboard.html#post-announcement" class="nav-item"><i class="ph ph-megaphone"></i> <span>Post Announcement</span></a>
+      <a href="teacher_dashboard.html#manage-assignments" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Manage Assignments</span></a>
+      <a href="teacher_dashboard.html#student-list" class="nav-item"><i class="ph ph-users"></i> <span>My Students</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Manage Events</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
       
@@ -352,7 +351,7 @@
     </header>
 
     <!-- Profile Content -->
-    <a href="student_dashboard.html" class="back-to-dashboard">
+    <a href="teacher_dashboard.html" class="back-to-dashboard">
       <i class="ph ph-arrow-left"></i> Back to Dashboard
     </a>
 
@@ -367,8 +366,8 @@
         <img id="profileAvatarImg" class="profile-avatar-large" src="https://api.dicebear.com/7.x/initials/svg?seed=AP&backgroundColor=6366f1&textColor=ffffff&fontSize=42" alt="Profile Avatar">
         <div class="profile-avatar-name" id="profileName">Student</div>
         <span class="profile-avatar-role" id="profileRoleBadge">Student</span>
-        <button class="change-avatar-btn" id="openAvatarModal">
-          <i class="ph ph-camera"></i> Change Avatar
+        <button class="change-avatar-btn" id="logoutBtn" style="border-color: #e11d48; color: #e11d48; width: 100%; justify-content: center; margin-top: auto;">
+          <i class="ph ph-sign-out"></i> Log Out
         </button>
       </div>
 
@@ -376,7 +375,10 @@
       <div class="profile-details-section">
         <!-- Personal Info Card -->
         <div class="info-card">
-          <div class="info-card-title"><i class="ph ph-user-circle"></i> Personal Information</div>
+          <div class="info-card-title" style="justify-content: space-between;">
+             <div style="display: flex; align-items: center; gap: 10px;"><i class="ph ph-user-circle"></i> Personal & Academic Details</div>
+             <button id="openEditModal" class="change-avatar-btn" style="margin: 0; padding: 4px 12px;"><i class="ph ph-pencil-simple"></i> Edit</button>
+          </div>
           <div class="info-grid">
             <div class="info-item">
               <span class="info-label">Full Name</span>
@@ -387,7 +389,7 @@
               <span class="info-value" id="infoEmail">—</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Student ID (PRN)</span>
+              <span class="info-label">Employee ID</span>
               <span class="info-value" id="infoPrn">—</span>
             </div>
             <div class="info-item">
@@ -402,20 +404,20 @@
           <div class="info-card-title"><i class="ph ph-graduation-cap"></i> Academic Details</div>
           <div class="info-grid">
             <div class="info-item">
-              <span class="info-label">Branch / Department</span>
+              <span class="info-label">Department</span>
               <span class="info-value" id="infoBranch">—</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Academic Year</span>
+              <span class="info-label">Role</span>
               <span class="info-value" id="infoYear">—</span>
             </div>
             <div class="info-item">
-              <span class="info-label">Division</span>
+              <span class="info-label">Divisions</span>
               <span class="info-value" id="infoDivision">—</span>
             </div>
             <div class="info-item">
               <span class="info-label">College</span>
-              <span class="info-value">PCCOE, Pune</span>
+              <span class="info-value" id="infoCollege">PCCOE, Pune</span>
             </div>
           </div>
         </div>
@@ -424,37 +426,66 @@
 
   </main>
 
-  <!-- Avatar Selection Modal -->
-  <div class="avatar-modal-overlay" id="avatarModal">
+  <!-- Edit Profile Modal -->
+  <div class="avatar-modal-overlay" id="editProfileModal">
     <div class="avatar-modal">
       <div class="modal-header">
-        <h3>Choose Your Avatar</h3>
-        <button class="modal-close" id="closeAvatarModal"><i class="ph ph-x"></i></button>
+        <h3>Edit Profile Details</h3>
+        <button class="modal-close" id="closeEditModal"><i class="ph ph-x"></i></button>
       </div>
-      <div class="avatar-grid" id="avatarGrid">
-        <!-- Avatars will be injected by JS -->
-      </div>
-      <button class="modal-save-btn" id="saveAvatar">Save Avatar</button>
+      <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Full Name</label>
+          <input type="text" id="editName" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Email</label>
+          <input type="email" id="editEmail" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Employee ID</label>
+          <input type="text" id="editPrn" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Department</label>
+          <input type="text" id="editDept" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Divisions (comma separated)</label>
+          <input type="text" id="editDivisions" placeholder="e.g. A, B, C" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Phone</label>
+          <input type="text" id="editPhone" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+        <div>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">College</label>
+          <input type="text" id="editCollege" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+        </div>
+      </form>
+      <button class="modal-save-btn" id="saveProfileBtn">Save Changes</button>
     </div>
   </div>
+
+
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // --- Populate profile data from localStorage ---
-      const name = localStorage.getItem('userName');
-      const email = localStorage.getItem('userEmail');
-      const prn = localStorage.getItem('userPrn');
-      const branch = localStorage.getItem('userBranch');
-      const year = localStorage.getItem('userYear');
-      const division = localStorage.getItem('userDivision');
-
-      const yearMap = { '1': 'First Year (FE)', '2': 'Second Year (SE)', '3': 'Third Year (TE)', '4': 'Final Year (BE)' };
-      const branchMap = { 
-        'CS': 'Computer Science', 'IT': 'Information Technology', 
-        'CSE-AIML': 'CSE (AI & ML)', 'Civil': 'Civil Engineering',
-        'ENTC': 'Electronics & Telecom', 'Mechanical': 'Mechanical Engineering',
-        'Computer-regional': 'Computer (Regional)' 
-      };
+      const name = localStorage.getItem('teacherName');
+      const email = localStorage.getItem('teacherEmail');
+      const prn = localStorage.getItem('teacherId'); // Employee ID
+      const branch = localStorage.getItem('teacherDept'); // Department
+      const phone = localStorage.getItem('teacherPhone') || 'Not set';
+      const college = localStorage.getItem('teacherCollege') || 'PCCOE, Pune';
+      let rawDivisions = localStorage.getItem('teacherDivisions');
+      let division = 'Not set';
+      if(rawDivisions) {
+        try {
+          let parsed = JSON.parse(rawDivisions);
+          if(Array.isArray(parsed) && parsed.length > 0) division = parsed.join(', ');
+        }catch(e) {}
+      }
 
       if (name) {
         document.getElementById('profileName').innerText = name;
@@ -465,11 +496,14 @@
       if (email) document.getElementById('infoEmail').innerText = email;
       if (prn) document.getElementById('infoPrn').innerText = prn;
       if (branch) {
-        document.getElementById('infoBranch').innerText = branchMap[branch] || branch;
-        document.getElementById('profileRoleBadge').innerText = (branchMap[branch] || branch) + ' Student';
+        document.getElementById('infoBranch').innerText = branch;
+        document.getElementById('profileRoleBadge').innerText = 'Faculty - ' + branch;
       }
-      if (year) document.getElementById('infoYear').innerText = yearMap[year] || year;
-      if (division) document.getElementById('infoDivision').innerText = 'Division ' + division;
+      
+      document.getElementById('infoYear').innerText = 'Faculty';
+      document.getElementById('infoDivision').innerText = division;
+      document.getElementById('infoPhone').innerText = phone;
+      document.getElementById('infoCollege').innerText = college;
 
       // --- Theme logic ---
       const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -489,64 +523,73 @@
         }
       });
 
-      // --- Load saved avatar ---
-      const savedAvatar = localStorage.getItem('userAvatar');
-      if (savedAvatar) {
-        document.getElementById('profileAvatarImg').src = savedAvatar;
-      } else if (name) {
-        document.getElementById('profileAvatarImg').src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=6366f1&textColor=ffffff&fontSize=42`;
+      // --- Logout ---
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+         if(confirm('Are you sure you want to log out?')) {
+            localStorage.clear();
+            window.location.href = '../auth/teacher_login.html';
+         }
+      });
+
+      // --- Edit Profile ---
+      const editModal = document.getElementById('editProfileModal');
+      document.getElementById('openEditModal').addEventListener('click', () => {
+         document.getElementById('editName').value = name;
+         document.getElementById('editEmail').value = email;
+         document.getElementById('editPrn').value = prn;
+         document.getElementById('editDept').value = branch;
+         document.getElementById('editDivisions').value = Array.isArray(JSON.parse(rawDivisions || '[]')) ? JSON.parse(rawDivisions || '[]').join(', ') : rawDivisions;
+         document.getElementById('editPhone').value = phone === 'Not set' ? '' : phone;
+         document.getElementById('editCollege').value = college === 'PCCOE, Pune' ? 'PCCOE, Pune' : college;
+         editModal.classList.add('active');
+      });
+      document.getElementById('closeEditModal').addEventListener('click', () => editModal.classList.remove('active'));
+
+      document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+         const teacherId = localStorage.getItem('teacherId_db'); // Assuming we stored the MongoDB ID somewhere. Wait, in auth.js we returned `id`. We should store it.
+         // Since we don't have it explicitly stored across all users yet, let's just make the PUT request.
+         const _id = localStorage.getItem('teacherDbId');
+         if(!_id) { alert("Missing teacher ID in session. Please login again."); return; }
+
+         const payload = {
+            fullName: document.getElementById('editName').value,
+            email: document.getElementById('editEmail').value,
+            employeeId: document.getElementById('editPrn').value,
+            department: document.getElementById('editDept').value,
+            phone: document.getElementById('editPhone').value,
+            college: document.getElementById('editCollege').value,
+            divisions: document.getElementById('editDivisions').value.split(',').map(s=>s.trim())
+         };
+
+         try {
+            const res = await fetch('http://localhost:3000/api/auth/teacher/' + _id, {
+               method: 'PUT',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if(data.success) {
+               localStorage.setItem('teacherName', data.data.fullName);
+               localStorage.setItem('teacherEmail', data.data.email);
+               localStorage.setItem('teacherId', data.data.employeeId);
+               localStorage.setItem('teacherDept', data.data.department);
+               localStorage.setItem('teacherPhone', data.data.phone);
+               localStorage.setItem('teacherCollege', data.data.college);
+               localStorage.setItem('teacherDivisions', JSON.stringify(data.data.divisions));
+               alert('Profile updated successfully!');
+               window.location.reload();
+            } else {
+               alert('Update failed: ' + data.message);
+            }
+         } catch(e) {
+            alert('Server error saving profile.');
+         }
+      });
+
+      // --- Standard Initial Avatar ---
+      if (name) {
+        document.getElementById('profileAvatarImg').src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=059669&textColor=ffffff&fontSize=42`;
       }
-
-      // --- Avatar selection modal ---
-      const avatarStyles = [
-        { style: 'adventurer', label: 'Adventurer' },
-        { style: 'avataaars', label: 'Avataaars' },
-        { style: 'bottts', label: 'Bottts' },
-        { style: 'fun-emoji', label: 'Fun Emoji' },
-        { style: 'lorelei', label: 'Lorelei' },
-        { style: 'micah', label: 'Micah' },
-        { style: 'miniavs', label: 'Mini' },
-        { style: 'personas', label: 'Personas' },
-        { style: 'pixel-art', label: 'Pixel' },
-        { style: 'big-ears', label: 'Big Ears' },
-        { style: 'croodles', label: 'Croodles' },
-        { style: 'notionists', label: 'Notionists' }
-      ];
-
-      const seed = name || 'UniLink';
-      const grid = document.getElementById('avatarGrid');
-      let selectedUrl = savedAvatar || '';
-
-      avatarStyles.forEach((a, index) => {
-        const url = `https://api.dicebear.com/7.x/${a.style}/svg?seed=${encodeURIComponent(seed)}`;
-        const div = document.createElement('div');
-        div.className = 'avatar-option' + (url === savedAvatar ? ' selected' : '');
-        div.innerHTML = `<img src="${url}" alt="${a.label}" loading="lazy">`;
-        div.addEventListener('click', () => {
-          document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
-          div.classList.add('selected');
-          selectedUrl = url;
-        });
-        grid.appendChild(div);
-      });
-
-      document.getElementById('openAvatarModal').addEventListener('click', () => {
-        document.getElementById('avatarModal').classList.add('active');
-      });
-      document.getElementById('closeAvatarModal').addEventListener('click', () => {
-        document.getElementById('avatarModal').classList.remove('active');
-      });
-      document.getElementById('avatarModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
-      });
-
-      document.getElementById('saveAvatar').addEventListener('click', () => {
-        if (selectedUrl) {
-          localStorage.setItem('userAvatar', selectedUrl);
-          document.getElementById('profileAvatarImg').src = selectedUrl;
-          document.getElementById('avatarModal').classList.remove('active');
-        }
-      });
     });
   </script>
 

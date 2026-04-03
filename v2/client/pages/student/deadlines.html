@@ -22,11 +22,10 @@
       <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
       <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
       <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
-      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
-      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+      
     </nav>
   </aside>
 
@@ -69,88 +68,31 @@
 
     <div class="kanban-board">
       
-      <!-- Column 1 -->
+      <!-- Column 1: Due Soon (< 3 days) -->
       <div class="kanban-column">
         <div class="column-header">
           <div class="column-title">
             <div class="status-dot bg-rose"></div>
             <h3>Due Soon</h3>
-            <span class="task-count">2</span>
+            <span class="task-count" id="countDueSoon">0</span>
           </div>
         </div>
-        
-        <div class="task-card urgent">
-          <div class="task-subject">Machine Learning (CS401)</div>
-          <h4 class="task-title">Lab Assignment 3: Decision Trees</h4>
-          <div class="task-footer">
-            <span class="task-date color-rose"><i class="ph ph-clock"></i> Today, 11:59 PM</span>
-            <div class="task-avatars">
-              <div class="mini-avatar">JD</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="task-card urgent">
-          <div class="task-subject">Database Systems (CS304)</div>
-          <h4 class="task-title">SQL Query Optimization Report</h4>
-          <div class="task-footer">
-            <span class="task-date color-rose"><i class="ph ph-clock"></i> Tomorrow, 5:00 PM</span>
-          </div>
+        <div id="colDueSoon" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- dynamically populated -->
         </div>
       </div>
 
-      <!-- Column 2 -->
+      <!-- Column 2: Upcoming -->
       <div class="kanban-column">
         <div class="column-header">
           <div class="column-title">
             <div class="status-dot bg-amber"></div>
             <h3>Upcoming</h3>
-            <span class="task-count">3</span>
+            <span class="task-count" id="countUpcoming">0</span>
           </div>
         </div>
-
-        <div class="task-card">
-          <div class="task-subject">Computer Networks (CS402)</div>
-          <h4 class="task-title">Socket Programming Mini-Project</h4>
-          <div class="task-footer">
-            <span class="task-date"><i class="ph ph-calendar"></i> Oct 15</span>
-            <span class="badge">Team Project</span>
-          </div>
-        </div>
-
-        <div class="task-card">
-          <div class="task-subject">Software Engineering (CS308)</div>
-          <h4 class="task-title">SRS Document Final Draft</h4>
-          <div class="task-footer">
-            <span class="task-date"><i class="ph ph-calendar"></i> Oct 18</span>
-          </div>
-        </div>
-
-        <div class="task-card">
-          <div class="task-subject">Cybersecurity (CS501)</div>
-          <h4 class="task-title">Cryptography Reading Summary</h4>
-          <div class="task-footer">
-            <span class="task-date"><i class="ph ph-calendar"></i> Oct 20</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Column 3 -->
-      <div class="kanban-column">
-        <div class="column-header">
-          <div class="column-title">
-            <div class="status-dot bg-emerald"></div>
-            <h3>Completed</h3>
-            <span class="task-count">1</span>
-          </div>
-        </div>
-
-        <div class="task-card completed">
-          <div class="task-subject">Web Development (CS305)</div>
-          <h4 class="task-title" style="text-decoration: line-through;">React Components Assignment</h4>
-          <div class="task-footer">
-            <span class="task-date" style="color: #059669;"><i class="ph ph-check-circle"></i> Submitted on time</span>
-          </div>
+        <div id="colUpcoming" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- dynamically populated -->
         </div>
       </div>
 

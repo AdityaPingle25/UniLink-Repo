@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const EventRegistration = require('../models/EventRegistration');
+const { sendNotificationToAllStudents } = require('../utils/emailSender');
+
 
 // Get all events
 router.get('/', async (req, res) => {
@@ -22,6 +24,23 @@ router.post('/', async (req, res) => {
     }
     const newEvent = new Event({ title, description, eventDate, eventTime, venue, category, teamSize: teamSize || 1, maxRegistrations: maxRegistrations || 100, postedBy });
     await newEvent.save();
+
+    // Trigger email notification
+    sendNotificationToAllStudents(
+      `New Event: ${title}`,
+      `A new event has been posted by ${postedBy}.\n\nTitle: ${title}\nDate: ${new Date(eventDate).toLocaleDateString()}\nTime: ${eventTime}\nVenue: ${venue}\nCategory: ${category}`,
+      `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #f59e0b;">New Campus Event</h2>
+        <p><strong>Event:</strong> ${title}</p>
+        <p><strong>Date:</strong> ${new Date(eventDate).toLocaleDateString()} at ${eventTime}</p>
+        <p><strong>Venue:</strong> ${venue}</p>
+        <p><strong>Category:</strong> ${category}</p>
+        <hr style="border: 0; border-top: 1px solid #eee;">
+        <p>${description}</p>
+        <p style="font-size: 12px; color: #666; margin-top: 20px;">Register now on the UniLink Events portal.</p>
+      </div>`
+    );
+
     res.status(201).json({ success: true, data: newEvent });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server Error' });

@@ -146,6 +146,20 @@
             </div>
           </div>
 
+          <div class="input-group">
+            <label>Divisions (Hold Ctrl/Cmd to select multiple)</label>
+            <div class="input-wrapper">
+              <i class="ph ph-users-three"></i>
+              <select id="divisions" required multiple style="height: auto; padding: 12px 16px 12px 44px; min-height: 100px;">
+                <option value="A">Division A</option>
+                <option value="B">Division B</option>
+                <option value="C">Division C</option>
+                <option value="D">Division D</option>
+                <option value="E">Division E</option>
+              </select>
+            </div>
+          </div>
+
           <button type="submit" class="login-btn">Create Profile <i class="ph ph-user-plus"></i></button>
 
           <p class="signup-prompt">Already have an account? <a href="teacher_login.html">Log In Instead</a></p>
@@ -163,7 +177,8 @@
         employeeId: document.getElementById('employeeId').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
-        department: document.getElementById('department').value
+        department: document.getElementById('department').value,
+        divisions: Array.from(document.getElementById('divisions').selectedOptions).map(opt => opt.value)
       };
 
       try {
@@ -179,10 +194,12 @@
 
         if (result.success) {
           // Store data in localStorage for dynamic UI update
+          localStorage.setItem('teacherDbId', result.data.id);
           localStorage.setItem('teacherName', result.data.fullName);
           localStorage.setItem('teacherEmail', result.data.email);
           localStorage.setItem('teacherId', result.data.employeeId);
           localStorage.setItem('teacherDept', result.data.department);
+          localStorage.setItem('teacherDivisions', JSON.stringify(result.data.divisions));
           localStorage.setItem('userRole', 'Teacher');
 
           alert('Profile setup successful! Redirecting to Dashboard...');
