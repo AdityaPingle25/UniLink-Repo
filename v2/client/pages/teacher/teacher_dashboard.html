@@ -890,8 +890,17 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
             });
-            if ((await res.json()).success) { alert('Assignment Posted!'); assignForm.reset(); fetchAssignments(); }
-          } catch(err) { alert('Error posting assignment'); }
+            const data = await res.json();
+            if (data.success) { 
+              alert('Assignment Posted!'); 
+              assignForm.reset(); 
+              fetchAssignments(); 
+            } else {
+              alert('Error posting assignment: ' + (data.message || 'Unknown server error'));
+            }
+          } catch(err) { 
+            alert('Error posting assignment/Network Error: ' + err.message); 
+          }
         });
       }
 

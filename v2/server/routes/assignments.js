@@ -52,6 +52,7 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({ success: true, data: assignment });
   } catch (err) {
+    console.error('Error posting assignment:', err);
     res.status(500).json({ success: false, message: 'Server Error: ' + err.message });
   }
 });
