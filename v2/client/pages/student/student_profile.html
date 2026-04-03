@@ -341,25 +341,16 @@
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
       </div>
 
-      <div class="search-bar">
-        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
-        <input type="text" placeholder="Search announcements, assignments, events...">
-      </div>
+      <div class="profile-area" style="margin-left: auto;">
+        <button class="icon-btn" id="themeToggleBtn"><i class="ph ph-moon"></i></button>
 
-      <div class="profile-area">
-        <button class="icon-btn">
-          <i class="ph ph-bell"></i>
-          <span class="notification-dot"></span>
-        </button>
-
-        <a href="student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
+        <div class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
           <div class="avatar" id="navAvatar">A</div>
           <div class="user-info">
             <span class="user-name" id="navUserName">Student</span>
             <span class="user-role">Student</span>
           </div>
-          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
-        </a>
+        </div>
       </div>
     </header>
 
@@ -482,6 +473,24 @@
       }
       if (year) document.getElementById('infoYear').innerText = yearMap[year] || year;
       if (division) document.getElementById('infoDivision').innerText = 'Division ' + division;
+
+      // --- Theme logic ---
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = themeToggleBtn.querySelector('i');
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.replace('ph-moon', 'ph-sun');
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark');
+          themeIcon.classList.replace('ph-moon', 'ph-sun');
+        } else {
+          localStorage.setItem('theme', 'light');
+          themeIcon.classList.replace('ph-sun', 'ph-moon');
+        }
+      });
 
       // --- Load saved avatar ---
       const savedAvatar = localStorage.getItem('userAvatar');

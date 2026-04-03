@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'announcements': loadAnnouncementsSection,
     'scholarships': loadScholarshipsSection,
     'internships': loadInternshipsSection,
+    'events': loadEventsSection,
   };
 
   // Fetch and render scholarships into a container element
@@ -105,6 +106,161 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Error fetching internships:', err);
       container.innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load internships from server.</p>';
+    }
+  }
+
+  // Fetch and render events into a container element
+  async function loadEventsSection(section) {
+    const container = section.querySelector('#eventsContainer');
+    if (!container) return;
+
+    // Move modal to body to prevent stacking context clipping from .page-section animations
+    let regModal = document.getElementById('regModal');
+    const sectionModal = section.querySelector('#regModal');
+    if (sectionModal) {
+      document.body.appendChild(sectionModal);
+      regModal = document.getElementById('regModal');
+    }
+
+    // Attach global event listener for the form once
+    const regForm = document.getElementById('regForm');
+    if (regForm && !regForm.hasAttribute('data-listener-attached')) {
+      regForm.setAttribute('data-listener-attached', 'true');
+      regForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const eventId = document.getElementById('regEventId').value;
+        const teamMembers = [];
+        document.querySelectorAll('#regModal .team-member-row').forEach(row => {
+          teamMembers.push({
+            name: row.querySelector('.tm-name').value,
+            email: row.querySelector('.tm-email').value,
+            phone: row.querySelector('.tm-phone').value
+          });
+        });
+
+        const payload = {
+          studentName: document.getElementById('regName').value,
+          studentEmail: document.getElementById('regEmail').value,
+          studentPhone: document.getElementById('regPhone').value,
+          teamMembers
+        };
+
+        try {
+          const res = await fetch(`http://localhost:3000/api/events/${eventId}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('Successfully registered!');
+            document.getElementById('regModal').classList.remove('active');
+            regForm.reset();
+            loadEventsSection(section); // reload after registration
+          } else {
+            alert(result.message || 'Registration failed');
+          }
+        } catch (err) {
+          alert('Error registering. Make sure server is running.');
+        }
+      });
+      
+      const cancelBtn = document.querySelector('#regModal .btn-cancel');
+      if (cancelBtn) {
+        cancelBtn.onclick = () => {
+          document.getElementById('regModal').classList.remove('active');
+          regForm.reset();
+        };
+      }
+    }
+
+    // Attach listener for dynamic register buttons
+    if (!container.hasAttribute('data-listener-attached')) {
+      container.setAttribute('data-listener-attached', 'true');
+      container.addEventListener('click', (e) => {
+        if (!document.getElementById('regModal')) return; // Sanity check
+        const btn = e.target.closest('.reg-btn');
+        if (btn) {
+          const eventId = btn.getAttribute('data-id');
+          const eventTitle = btn.getAttribute('data-title');
+          const teamSize = parseInt(btn.getAttribute('data-teamsize')) || 1;
+
+          document.getElementById('regEventId').value = eventId;
+          document.getElementById('modalTitle').innerText = 'Register: ' + eventTitle;
+          document.getElementById('modalSubtitle').innerText = teamSize > 1 ? `Team event — add ${teamSize - 1} team member(s)` : 'Individual registration';
+          
+          const teamSection = document.getElementById('teamSection');
+          const teamContainer = document.getElementById('teamMembersContainer');
+          teamContainer.innerHTML = '';
+
+          if (teamSize > 1) {
+            teamSection.style.display = 'block';
+            for (let i = 1; i < teamSize; i++) {
+              teamContainer.innerHTML += `
+                <div class="team-member-row">
+                  <h4>Member ${i + 1}</h4>
+                  <div class="form-group"><label>Name *</label><input type="text" class="tm-name" required placeholder="Full name"></div>
+                  <div class="form-group"><label>Email</label><input type="email" class="tm-email" placeholder="Email"></div>
+                  <div class="form-group"><label>Phone</label><input type="tel" class="tm-phone" placeholder="Phone"></div>
+                </div>
+              `;
+            }
+          } else {
+            teamSection.style.display = 'none';
+          }
+
+          document.getElementById('regModal').classList.add('active');
+        }
+      });
+    }
+
+    try {
+      const res = await fetch('http://localhost:3000/api/events');
+      const data = await res.json();
+      container.innerHTML = '';
+
+      if (data.success && data.data.length > 0) {
+        for (const ev of data.data) {
+          try {
+            const countRes = await fetch(`http://localhost:3000/api/events/${ev._id}/count`);
+            const countData = await countRes.json();
+            const regCount = countData.count || 0;
+            const spotsLeft = ev.maxRegistrations - regCount;
+
+            const categoryColors = { 'Technical': 'bg-purple', 'Cultural': 'bg-rose', 'Workshop': 'bg-sky', 'Sports': 'bg-emerald', 'Seminar': 'bg-amber' };
+            const colorClass = categoryColors[ev.category] || 'bg-indigo';
+
+            const eventDate = new Date(ev.eventDate);
+            const month = eventDate.toLocaleString('default', { month: 'short' }).toUpperCase();
+            const day = eventDate.getDate();
+
+            container.innerHTML += `
+              <div class="event-card">
+                <div class="event-date-box ${colorClass}">
+                  <span class="month">${month}</span>
+                  <span class="day">${day}</span>
+                </div>
+                <div class="event-content">
+                  <div class="event-header">
+                    <h3>${ev.title}</h3>
+                    <span class="badge ${colorClass}-light color-${colorClass.replace('bg-','')}">${ev.category}</span>
+                  </div>
+                  <p class="event-details"><i class="ph ph-map-pin"></i> ${ev.venue} • <i class="ph ph-clock"></i> ${ev.eventTime}${ev.teamSize > 1 ? ' • <i class="ph ph-users"></i> Team of ' + ev.teamSize : ''}</p>
+                  <p class="event-desc">${ev.description}</p>
+                </div>
+                <div class="event-action">
+                  <div class="spots-left" ${spotsLeft <= 5 ? 'style="color: #e11d48;"' : ''}>${spotsLeft > 0 ? spotsLeft + ' Spots Left' : 'Event Full'}</div>
+                  ${spotsLeft > 0 ? `<button class="primary-btn reg-btn" data-id="${ev._id}" data-title="${ev.title.replace(/"/g, '&quot;')}" data-teamsize="${ev.teamSize}">Register</button>` : '<button class="primary-btn" disabled style="opacity: 0.5;">Full</button>'}
+                </div>
+              </div>
+            `;
+          } catch(e) {}
+        }
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No events available right now. Check back soon!</p>';
+      }
+    } catch (err) {
+      document.getElementById('eventsContainer').innerHTML = '<p style="color: #e11d48; text-align: center; padding: 40px 0;">Failed to load events. Make sure the server is running.</p>';
     }
   }
 

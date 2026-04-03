@@ -7,23 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
-  <style>
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-overlay.active { display: flex; }
-    .modal { background: white; border-radius: 16px; padding: 32px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; }
-    .modal h2 { margin: 0 0 8px; font-size: 20px; }
-    .modal p.subtitle { color: var(--text-muted); font-size: 14px; margin: 0 0 24px; }
-    .modal .form-group { margin-bottom: 16px; }
-    .modal .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-    .modal .form-group input { width: 100%; padding: 10px 14px; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; }
-    .modal .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
-    .team-member-row { background: #f8f9fd; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
-    .team-member-row h4 { margin: 0 0 8px; font-size: 13px; color: var(--primary); }
-    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-    .modal-actions button { flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; }
-    .btn-cancel { background: #f1f5f9; color: var(--text-main); }
-    .btn-submit { background: var(--primary); color: white; }
-  </style>
 </head>
 <body>
 
@@ -76,38 +59,37 @@
     <div class="events-list" id="eventsContainer">
       <p style="color: var(--text-muted); padding: 40px 0; text-align: center;">Loading events...</p>
     </div>
-  </main>
-
-  <!-- Registration Modal -->
-  <div class="modal-overlay" id="regModal">
-    <div class="modal">
-      <h2 id="modalTitle">Register for Event</h2>
-      <p class="subtitle" id="modalSubtitle">Fill in your details to register</p>
-      <form id="regForm">
-        <input type="hidden" id="regEventId">
-        <div class="form-group">
-          <label>Your Full Name *</label>
-          <input type="text" id="regName" required placeholder="e.g. Aditya Pingle">
-        </div>
-        <div class="form-group">
-          <label>Email Address *</label>
-          <input type="email" id="regEmail" required placeholder="e.g. aditya@college.edu">
-        </div>
-        <div class="form-group">
-          <label>Phone Number *</label>
-          <input type="tel" id="regPhone" required placeholder="e.g. 9876543210">
-        </div>
-        <div id="teamSection" style="display: none;">
-          <h4 style="font-size: 14px; margin: 16px 0 8px; color: var(--text-main);">Team Members</h4>
-          <div id="teamMembersContainer"></div>
-        </div>
-        <div class="modal-actions">
+    <!-- Registration Modal -->
+    <div class="modal-overlay" id="regModal">
+      <div class="modal">
+        <h2 id="modalTitle">Register for Event</h2>
+        <p class="subtitle" id="modalSubtitle">Fill in your details to register</p>
+        <form id="regForm">
+          <input type="hidden" id="regEventId">
+          <div class="form-group">
+            <label>Your Full Name *</label>
+            <input type="text" id="regName" required placeholder="e.g. Aditya Pingle">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="regEmail" required placeholder="e.g. aditya@college.edu">
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="regPhone" required placeholder="e.g. 9876543210">
+          </div>
+          <div id="teamSection" style="display: none;">
+            <h4 style="font-size: 14px; margin: 16px 0 8px; color: var(--text-main);">Team Members</h4>
+            <div id="teamMembersContainer"></div>
+          </div>
+          <div class="modal-actions">
           <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn-submit">Register</button>
         </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script src="../../assets/js/app.js"></script>
   <script>
