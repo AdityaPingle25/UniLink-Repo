@@ -278,8 +278,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!colDueSoon || !colUpcoming) return;
 
     try {
-      const response = await fetch('http://localhost:3000/api/assignments');
+      const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
+      const [response, subResponse] = await Promise.all([
+        fetch('http://localhost:3000/api/assignments'),
+        fetch(`http://localhost:3000/api/assignments/student/${encodeURIComponent(studentName)}/submissions`)
+      ]);
       const data = await response.json();
+      let mySubmissions = {};
+      try {
+        const subData = await subResponse.json();
+        if (subData.success) {
+          subData.data.forEach(s => {
+            mySubmissions[s.assignmentId] = s.submissionLink;
+          });
+        }
+      } catch(e) {}
       
       colDueSoon.innerHTML = '';
       colUpcoming.innerHTML = '';
@@ -304,6 +317,10 @@ document.addEventListener('DOMContentLoaded', () => {
           else if (isDueSoon) colorClass = 'class="task-date color-rose"';
           else colorClass = 'class="task-date"';
 
+          const existingLink = mySubmissions[item._id];
+          const btnText = existingLink ? 'Edit Submission' : 'Submit Assignment';
+          const btnStyle = existingLink ? 'background: #059669; border-color: #059669;' : '';
+
           const cardHtml = `
             <div class="task-card ${isDueSoon ? 'urgent' : ''}" ${isPast ? 'style="opacity: 0.6;"' : ''}>
               <div style="display: flex; justify-content: space-between;">
@@ -315,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span ${colorClass}>${timeIcon} ${isPast ? 'Past Due (' : ''}${formattedDate}${isPast ? ')' : ''}</span>
                 ${teamBadge}
               </div>
-              ${!isPast ? `<button onclick="window.submitAssignment('${item._id}')" class="primary-btn" style="width: 100%; margin-top: 10px; justify-content: center; font-size: 13px;">Submit Assignment</button>` : ''}
+              ${!isPast ? `<button onclick="window.submitAssignment('${item._id}', '${existingLink || ''}')" class="primary-btn" style="width: 100%; margin-top: 10px; justify-content: center; font-size: 13px; ${btnStyle}">${btnText}</button>` : ''}
             </div>
           `;
 
@@ -469,9 +486,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Global function for submitting assignments
-  window.submitAssignment = async (id) => {
-    const link = prompt("Enter your submission link (Drive, Github, etc):");
+  window.submitAssignment = async (id, existingLink = '') => {
+    const link = prompt("Enter your submission link (Drive, Github, etc):", existingLink);
     if (link !== null) {
+      if (link.trim() === '') {
+         alert('Submission link cannot be empty.');
+         return;
+      }
       try {
         const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
         const res = await fetch(`http://localhost:3000/api/assignments/${id}/submit`, {
@@ -482,6 +503,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await res.json();
         if (data.success) {
           alert('Assignment submitted successfully!');
+          const deadlinesSection = document.getElementById('deadlines');
+          if (deadlinesSection) {
+            loadDeadlinesSection(deadlinesSection);
+          }
         } else {
           alert('Submission failed: ' + data.message);
         }

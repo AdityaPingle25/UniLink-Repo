@@ -80,14 +80,22 @@ router.post('/:id/submit', async (req, res) => {
       return res.status(404).json({ success: false, message: 'Assignment not found' });
     }
 
-    const submission = new AssignmentSubmission({
-      assignmentId: req.params.id,
-      studentName: studentName || 'Student',
-      submissionLink: submissionLink || ''
-    });
-
-    await submission.save();
-    res.status(201).json({ success: true, message: 'Assignment submitted successfully' });
+    let submission = await AssignmentSubmission.findOne({ assignmentId: req.params.id, studentName: studentName });
+    
+    if (submission) {
+      submission.submissionLink = submissionLink;
+      submission.submittedAt = Date.now();
+      await submission.save();
+      return res.status(200).json({ success: true, message: 'Assignment submission updated successfully' });
+    } else {
+      submission = new AssignmentSubmission({
+        assignmentId: req.params.id,
+        studentName: studentName || 'Student',
+        submissionLink: submissionLink || ''
+      });
+      await submission.save();
+      res.status(201).json({ success: true, message: 'Assignment submitted successfully' });
+    }
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server Error: ' + err.message });
   }
@@ -97,6 +105,16 @@ router.post('/:id/submit', async (req, res) => {
 router.get('/:id/submissions', async (req, res) => {
   try {
     const submissions = await AssignmentSubmission.find({ assignmentId: req.params.id }).sort({ submittedAt: -1 });
+    res.json({ success: true, data: submissions });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server Error: ' + err.message });
+  }
+});
+
+// Get submissions by a specific student for all assignments
+router.get('/student/:studentName/submissions', async (req, res) => {
+  try {
+    const submissions = await AssignmentSubmission.find({ studentName: req.params.studentName });
     res.json({ success: true, data: submissions });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server Error: ' + err.message });

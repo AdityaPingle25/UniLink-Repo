@@ -166,27 +166,28 @@
           <p style="color: var(--text-muted); font-size: 15px;">Here is your faculty overview for today.</p>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="dashboard-grid" id="dashboardOverviewGrid">
           <div class="card">
             <div class="card-header">
               <div class="card-icon bg-indigo"><i class="ph ph-users-three"></i></div>
               <h2 class="card-title">My Students</h2>
             </div>
-            <p class="card-desc">You are currently advising and teaching 120 students across 3 courses.</p>
+            <p class="card-desc" id="overviewStudentsDesc">Loading student details...</p>
             <div class="card-meta">
-              <span class="badge">120 Students</span>
+              <span class="badge" id="overviewStudentsCount">...</span>
+              <span class="badge" style="cursor:pointer;" onclick="document.querySelector('.nav-item[data-target=\'student-list\']').click()">Go to Students</span>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
               <div class="card-icon bg-rose"><i class="ph ph-exam"></i></div>
-              <h2 class="card-title">Pending Grading</h2>
+              <h2 class="card-title">Assignments Posted</h2>
             </div>
-            <p class="card-desc">You have 45 assignments remaining to be graded for the CS301 midterms.</p>
+            <p class="card-desc" id="overviewAssignmentsDesc">Loading assignment details...</p>
             <div class="card-meta">
-              <span class="badge" style="color: #e11d48; background: #ffe4e6;">45 Ungraded</span>
-              <span class="badge">Go to Assignments</span>
+              <span class="badge" style="color: #e11d48; background: #ffe4e6;" id="overviewAssignmentsCount">...</span>
+              <span class="badge" style="cursor:pointer;" onclick="document.querySelector('.nav-item[data-target=\'manage-assignments\']').click()">Go to Assignments</span>
             </div>
           </div>
 
@@ -195,9 +196,10 @@
               <div class="card-icon bg-emerald"><i class="ph ph-megaphone-simple"></i></div>
               <h2 class="card-title">Recent Announcements</h2>
             </div>
-            <p class="card-desc">Your latest post: "Guest Lecture next Wednesday" reached 90% of students.</p>
+            <p class="card-desc" id="overviewAnnouncementsDesc">Loading announcements...</p>
             <div class="card-meta">
-              <span class="badge">View Stats</span>
+              <span class="badge" id="overviewAnnouncementsCount">...</span>
+              <span class="badge" style="cursor:pointer;" onclick="document.querySelector('.nav-item[data-target=\'post-announcement\']').click()">Go to Announcements</span>
             </div>
           </div>
         </section>
@@ -500,6 +502,53 @@
       if (dept) {
         document.getElementById('navTeacherDept').innerText = `Dept. of ${dept}`;
       }
+
+      // 0. Fetch Dashboard Stats
+      async function fetchDashboardStats() {
+        try {
+          // Fetch Students
+          const resStudents = await fetch('http://localhost:3000/api/students');
+          const dataStudents = await resStudents.json();
+          if (dataStudents.success) {
+            const count = dataStudents.data.length;
+            document.getElementById('overviewStudentsDesc').innerText = `You are currently advising and teaching ${count} registered students.`;
+            document.getElementById('overviewStudentsCount').innerText = `${count} Students`;
+          }
+
+          // Fetch Assignments
+          const resAssignments = await fetch('http://localhost:3000/api/assignments');
+          const dataAssignments = await resAssignments.json();
+          if (dataAssignments.success) {
+            const count = dataAssignments.data.length;
+            document.getElementById('overviewAssignmentsDesc').innerText = `You have posted ${count} active assignments for grading.`;
+            document.getElementById('overviewAssignmentsCount').innerText = `${count} Active`;
+          }
+
+          // Fetch Announcements
+          const resAnnouncements = await fetch('http://localhost:3000/api/announcements');
+          const dataAnnouncements = await resAnnouncements.json();
+          if (dataAnnouncements.success) {
+            let count = dataAnnouncements.data.length;
+            let myAnnouncements = dataAnnouncements.data;
+            let teacherName = localStorage.getItem('teacherName');
+            if (teacherName) {
+                myAnnouncements = myAnnouncements.filter(a => a.postedBy === teacherName);
+                count = myAnnouncements.length;
+            }
+            if (count > 0) {
+              const latest = myAnnouncements[0];
+              document.getElementById('overviewAnnouncementsDesc').innerText = `Your latest post: "${latest.title}". You have ${count} total posts.`;
+            } else {
+              document.getElementById('overviewAnnouncementsDesc').innerText = `You haven't posted any announcements yet.`;
+            }
+            document.getElementById('overviewAnnouncementsCount').innerText = `${count} Posts`;
+          }
+
+        } catch (error) {
+          console.error("Failed to load dashboard stats", error);
+        }
+      }
+      fetchDashboardStats();
 
       // Theme logic
       const themeToggleBtn = document.getElementById('themeToggleBtn');
