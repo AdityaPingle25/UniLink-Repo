@@ -992,4 +992,155 @@ body.dark-theme .team-member-row {
 }
 body.dark-theme .btn-cancel {
   background: rgba(255,255,255,0.05);
+}
+
+/* Typography-focused static blog styling */
+.static-blog-article {
+  max-width: 760px;
+  margin: 40px auto;
+  padding: 0 24px 80px 24px;
+}
+
+.article-header {
+  margin-bottom: 32px;
+}
+
+.article-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+  background: rgba(79, 70, 229, 0.1);
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-main);
+  margin-bottom: 28px;
+  letter-spacing: -1px;
+  font-family: 'Inter', sans-serif;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  margin-top: 24px;
+}
+
+.author-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.author-info strong {
+  font-size: 16px;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.author-info span {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.article-image {
+  margin: 40px 0;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.article-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.article-image:hover img {
+  transform: scale(1.02);
+}
+
+.article-content {
+  font-size: 19px;
+  line-height: 1.8;
+  color: var(--text-main);
+  font-family: 'Merriweather', serif; /* Serif font for long-form readability */
+}
+
+.article-content p {
+  margin-bottom: 28px;
+}
+
+.article-content h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 56px 0 24px;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+.article-content ul {
+  margin-bottom: 32px;
+  padding-left: 24px;
+}
+
+.article-content li {
+  margin-bottom: 16px;
+  padding-left: 8px;
+}
+
+.article-content li strong {
+  color: var(--text-main);
+}
+
+.article-content blockquote {
+  font-style: italic;
+  font-size: 24px;
+  color: var(--text-main);
+  border-left: 4px solid var(--primary);
+  margin: 48px 0;
+  padding: 10px 0 10px 32px;
+  line-height: 1.6;
+  background: linear-gradient(to right, rgba(79, 70, 229, 0.05), transparent);
+}
+
+.dropcap {
+  float: left;
+  font-size: 72px;
+  line-height: 0.8;
+  padding-top: 8px;
+  padding-right: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  color: var(--primary);
 }

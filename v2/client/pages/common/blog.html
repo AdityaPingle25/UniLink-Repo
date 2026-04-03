@@ -3,79 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog - UniLink</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>About UniLink - Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
   <style>
-    .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
+    /* Typography-focused static blog styling */
+    .static-blog-article {
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 0 24px 80px 24px;
     }
-    .blog-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 16px;
-      padding: 24px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
+
+    .article-header {
+      margin-bottom: 32px;
     }
-    .blog-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    }
-    .blog-card .blog-tag {
+
+    .article-tag {
       display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-    }
-    .blog-card h3 {
-      font-size: 17px;
-      font-weight: 700;
-      margin: 0 0 8px;
-      line-height: 1.4;
-    }
-    .blog-card .blog-excerpt {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 16px;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .blog-card .blog-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-size: 13px;
-      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+      background: rgba(79, 70, 229, 0.1);
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
     }
-    .blog-card .blog-author {
-      font-weight: 600;
+
+    .article-title {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.2;
       color: var(--text-main);
+      margin-bottom: 28px;
+      letter-spacing: -1px;
+      font-family: 'Inter', sans-serif;
     }
-    .blog-full-content {
-      display: none;
-      margin-top: 16px;
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
       padding-top: 16px;
       border-top: 1px solid rgba(0,0,0,0.08);
-      font-size: 15px;
-      line-height: 1.7;
+      margin-top: 24px;
+    }
+
+    .author-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #a855f7);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .author-info strong {
+      font-size: 16px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .author-info span {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .article-image {
+      margin: 40px 0;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .article-image img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .article-image:hover img {
+      transform: scale(1.02);
+    }
+
+    .article-content {
+      font-size: 19px;
+      line-height: 1.8;
+      color: #374151;
+      font-family: 'Merriweather', serif; /* Serif font for long-form readability */
+    }
+
+    .article-content p {
+      margin-bottom: 28px;
+    }
+
+    .article-content h2 {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 56px 0 24px;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .article-content ul {
+      margin-bottom: 32px;
+      padding-left: 24px;
+    }
+
+    .article-content li {
+      margin-bottom: 16px;
+      padding-left: 8px;
+    }
+
+    .article-content li strong {
       color: var(--text-main);
     }
-    .blog-card.expanded .blog-excerpt { display: none; }
-    .blog-card.expanded .blog-full-content { display: block; }
-    .blog-card.expanded .read-toggle { content: 'Read Less'; }
+
+    .article-content blockquote {
+      font-style: italic;
+      font-size: 24px;
+      color: var(--text-main);
+      border-left: 4px solid var(--primary);
+      margin: 48px 0;
+      padding: 10px 0 10px 32px;
+      line-height: 1.6;
+      background: linear-gradient(to right, rgba(79, 70, 229, 0.05), transparent);
+    }
+
+    .dropcap {
+      float: left;
+      font-size: 72px;
+      line-height: 0.8;
+      padding-top: 8px;
+      padding-right: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      color: var(--primary);
+    }
   </style>
 </head>
 <body>
@@ -85,19 +167,16 @@
       <div class="logo-text">UniLink</div>
     </div>
     <nav class="nav-items">
-      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
-      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Announcements</span></a>
-      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Deadlines</span></a>
-      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
-      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Events</span></a>
-      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
-      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News</span></a>
-      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+      <a href="../../pages/student/student_dashboard.html#dashboard" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/student/student_dashboard.html#announcements" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/student_dashboard.html#deadlines" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="../../pages/student/student_dashboard.html#internships" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/student/student_dashboard.html#events" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="../../pages/student/student_dashboard.html#scholarships" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
       <a href="../../pages/common/blog.html" class="nav-item active"><i class="ph ph-article"></i> <span>Blog</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      <a href="../../index.html" class="nav-item"><i class="ph ph-house"></i> <span>Home</span></a>
-      
+      <a href="#" class="nav-item text-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> <span style="color: #e11d48;">Log Out</span></a>
     </nav>
   </aside>
 
@@ -105,107 +184,95 @@
     <header class="top-nav">
       <div style="display: flex; align-items: center; gap: 16px;">
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
-      </div>
-      <div class="search-bar">
-        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
-        <input type="text" placeholder="Search blog posts..." id="blogSearch">
+        <h2 style="font-size: 18px; font-weight: 600; color: var(--text-main);">About Our Project</h2>
       </div>
       <div class="profile-area">
         <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
         <div class="user-profile">
-          <div class="avatar" id="navAvatar">S</div>
+          <div class="avatar" id="navAvatar">U</div>
           <div class="user-info">
-            <span class="user-name" id="navUserName">Student</span>
-            <span class="user-role">Student</span>
+            <span class="user-name" id="navUserName">User</span>
           </div>
         </div>
       </div>
     </header>
 
-    <section class="welcome-section">
-      <h1 class="welcome-title">UniLink Blog</h1>
-      <p style="color: var(--text-muted); font-size: 15px;">Read the latest insights, campus stories, and student life tips.</p>
-    </section>
+    <article class="static-blog-article">
+      <header class="article-header">
+        <span class="article-tag">Project Vision</span>
+        <h1 class="article-title">Welcome to UniLink: Bridging the Gap Between Students & Teachers</h1>
+        
+        <div class="article-meta">
+          <div class="author-avatar">U</div>
+          <div class="author-info">
+            <strong>UniLink Development Team</strong>
+            <span>April 3, 2026 · 4 min read</span>
+          </div>
+        </div>
+      </header>
 
-    <div class="blog-grid" id="blogContainer">
-      <p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 40px 0;">Loading blog posts...</p>
-    </div>
+      <div class="article-image">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" alt="Students collaborating on campus">
+      </div>
+
+      <div class="article-content">
+        <p><span class="dropcap">U</span>niLink is a centralized, digital collaborative workspace designed to solve a significant and persistent pain point in modern academic institutions: fragmented communication.</p>
+        
+        <p>For too long, the essential flow of information on college campuses has been broken. Whether it's a vital update about a lecture, a time-sensitive assignment deadline, or a life-changing internship opportunity, students often find themselves sifting through a chaotic mix of WhatsApp groups, endless email threads, and physical notice boards to find what they need.</p>
+
+        <h2>The Problem We're Solving</h2>
+        <p>In many institutions across the globe, information is scattered. A teacher might announce an assignment deadline in class, post it on Google Classroom, and simultaneously send a representative to message a WhatsApp group. Meanwhile, the placement cell might send an email about a hackathon that gets instantly buried under dozens of promotional emails.</p>
+        <p>This disorganized ecosystem leads to <strong>missed deadlines</strong>, <strong>high stress levels</strong>, and a severe <strong>lack of awareness</strong> among the student body regarding crucial opportunities.</p>
+
+        <blockquote>
+          "Our goal is to create a seamless, unified digital companion for every student's academic journey. No more missed announcements, no more scattered deadlines."
+        </blockquote>
+
+        <h2>Our Vision & Solution</h2>
+        <p>UniLink acts as a single, organized hub where teachers and administrators can post critical updates, and students can consume them in a structured, clean, and entirely digital interface.</p>
+        <p>We believe that technology should reduce friction, not create more of it. By providing a dedicated platform for academic and extracurricular communication, we allow students to focus on what actually matters—their education and growth—rather than worrying about finding the right WhatsApp chat.</p>
+        
+        <h2>Key Features of UniLink</h2>
+        <ul>
+          <li><strong>Dynamic, Role-Based Dashboards:</strong> Dedicated, optimized views tailored specifically for Students and Teachers, ensuring relevant information is always front and center.</li>
+          <li><strong>Integrated Assignment Tracking:</strong> A visual, Kanban-style board allowing students to effortlessly track ongoing, submitted, and overdue assignments at a single glance.</li>
+          <li><strong>The Opportunities Hub:</strong> Centralized, easy-to-filter listings for Internships, Hackathons, and Scholarships—so you never miss an opportunity to advance your career.</li>
+          <li><strong>Real-time Announcements & Events:</strong> Direct channels for campus news and event registrations, ensuring the community is always connected.</li>
+          <li><strong>Automated Email Notifications:</strong> Seamless Brevo API integration that automatically dispatches emails the moment a teacher posts a new assignment or opportunity.</li>
+        </ul>
+
+        <h2>Looking to the Future</h2>
+        <p>UniLink is not just a project; it's a foundation for a more connected campus. We are continuously evolving our platform, gathering feedback from the academic community, and implementing features that make campus life more manageable and productive.</p>
+        <p>Thank you for being a part of UniLink. Together, we are redefining academic collaboration.</p>
+      </div>
+    </article>
   </main>
 
   <script src="../../assets/js/app.js"></script>
   <script>
     (function() {
+      // Set Name/Avatar in Nav
       const storedName = localStorage.getItem('userName') || localStorage.getItem('teacherName');
       const navUserName = document.getElementById('navUserName');
       const navAvatar = document.getElementById('navAvatar');
-      if (storedName && navUserName) navUserName.innerText = storedName;
-      if (storedName && navAvatar) navAvatar.innerText = storedName.charAt(0).toUpperCase();
-
-      let allBlogs = [];
-
-      function renderBlogs(items) {
-        const container = document.getElementById('blogContainer');
-        container.innerHTML = '';
-        if (items.length > 0) {
-          const tagColors = [
-            { bg: '#eef2ff', color: '#4f46e5' },
-            { bg: '#ecfdf5', color: '#059669' },
-            { bg: '#fff1f2', color: '#e11d48' },
-            { bg: '#fefce8', color: '#ca8a04' },
-            { bg: '#f0f9ff', color: '#0284c7' },
-            { bg: '#faf5ff', color: '#7c3aed' }
-          ];
-
-          items.forEach((item, i) => {
-            const tc = tagColors[i % tagColors.length];
-            const excerpt = item.excerpt || (item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content);
-            const dateStr = new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-
-            container.innerHTML += `
-              <div class="blog-card" id="blog-${item._id}">
-                <span class="blog-tag" style="background: ${tc.bg}; color: ${tc.color};">${item.readTime}</span>
-                <h3>${item.title}</h3>
-                <p class="blog-excerpt">${excerpt}</p>
-                <div class="blog-full-content">${item.content}</div>
-                <div class="blog-meta">
-                  <span><span class="blog-author">${item.author}</span> · ${dateStr}</span>
-                  <button class="read-toggle" onclick="toggleBlog('${item._id}')" style="background: none; border: none; color: var(--primary); font-weight: 600; cursor: pointer; font-size: 13px;">Read More</button>
-                </div>
-              </div>
-            `;
-          });
-        } else {
-          container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No blog posts available.</p>';
-        }
+      
+      if (storedName && navUserName) {
+        navUserName.innerText = storedName;
+      }
+      if (storedName && navAvatar) {
+        navAvatar.innerText = storedName.charAt(0).toUpperCase();
       }
 
-      window.toggleBlog = function(id) {
-        const card = document.getElementById('blog-' + id);
-        const btn = card.querySelector('.read-toggle');
-        card.classList.toggle('expanded');
-        btn.textContent = card.classList.contains('expanded') ? 'Read Less' : 'Read More';
-      };
-
-      fetch('http://localhost:3000/api/blogs')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            allBlogs = data.data;
-            renderBlogs(allBlogs);
-          } else {
-            document.getElementById('blogContainer').innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No blog posts available.</p>';
-          }
-        })
-        .catch(() => {
-          document.getElementById('blogContainer').innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load blog posts. Make sure the server is running.</p>';
+      // Logout logic
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userToken');
+          window.location.href = '../../pages/auth/student_login.html';
         });
-
-      // Search
-      document.getElementById('blogSearch').addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        if (!q) { renderBlogs(allBlogs); return; }
-        renderBlogs(allBlogs.filter(b => b.title.toLowerCase().includes(q) || b.content.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)));
-      });
+      }
     })();
   </script>
 </body>

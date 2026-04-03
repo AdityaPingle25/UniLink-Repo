@@ -88,7 +88,7 @@
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="testimonials" id="support">
+  <section class="testimonials">
     <h2 class="section-title">Trusted by Thousands</h2>
     <p class="section-subtitle">See what students are saying about UniLink.</p>
 
@@ -131,6 +131,54 @@
     </div>
   </section>
 
+  <!-- FAQ / SUPPORT -->
+  <section class="faq-section" id="support">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-subtitle">Need help? Here are some of our most common support questions.</p>
+
+    <div class="faq-container">
+      <div class="faq-item">
+        <button class="faq-question">
+          How do I register for an internship?
+          <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Navigate to the "Internships & Hackathons" tab from your dashboard. You can filter opportunities by type, and click the "Apply Now" button on any listing to be redirected to the official application form.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why am I not receiving assignment emails?
+          <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Please check your Spam or Junk folder, as automated emails from our Brevo integration might sometimes be filtered. Verify that the email address linked to your UniLink student account is spelled correctly.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Can I change my registered email ID?
+          <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Currently, the registered Email and PRN cannot be modified manually through the student dashboard. If you need to make changes, please contact your department coordinator or the system administrator.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How do teachers post an announcement?
+          <i class="ph ph-caret-down"></i>
+        </button>
+        <div class="faq-answer">
+          <p>Teachers can log into the Teacher Dashboard, select the "Announcements" section, and fill out the details (Title, Audience, Description). An email will automatically be dispatched to all relevant students once saved.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta">
     <div class="cta-box">
@@ -148,5 +196,24 @@
     <p>© 2026 UniLink • Smart Campus Platform. Built for excellence.</p>
   </footer>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        questionBtn.addEventListener('click', () => {
+          // Close all other open items (optional, but good for UX)
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          item.classList.toggle('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>

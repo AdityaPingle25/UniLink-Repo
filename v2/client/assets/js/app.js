@@ -383,10 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   navItems.forEach(item => {
     item.addEventListener('click', async (e) => {
-      e.preventDefault();
-      
       const targetId = item.getAttribute('data-target');
       if (!targetId || targetId === 'settings') return; // Skip settings/hash links for now
+      
+      e.preventDefault();
 
       // Update active nav item
       navItems.forEach(nav => nav.classList.remove('active'));
