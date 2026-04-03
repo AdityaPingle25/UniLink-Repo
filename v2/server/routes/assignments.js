@@ -83,15 +83,17 @@ router.post('/:id/submit', async (req, res) => {
     let submission = await AssignmentSubmission.findOne({ assignmentId: req.params.id, studentName: studentName });
     
     if (submission) {
-      submission.submissionLink = submissionLink;
-      submission.submittedAt = Date.now();
-      await submission.save();
-      return res.status(200).json({ success: true, message: 'Assignment submission updated successfully' });
+      return res.status(400).json({ success: false, message: 'Assignment already submitted. Resubmissions are not allowed.' });
     } else {
+      const now = new Date();
+      const status = (now > new Date(assignment.deadline)) ? 'Late' : 'Submitted';
+
       submission = new AssignmentSubmission({
         assignmentId: req.params.id,
         studentName: studentName || 'Student',
-        submissionLink: submissionLink || ''
+        submissionLink: submissionLink || '',
+        status: status,
+        submittedAt: now
       });
       await submission.save();
       res.status(201).json({ success: true, message: 'Assignment submitted successfully' });

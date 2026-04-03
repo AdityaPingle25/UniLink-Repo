@@ -271,11 +271,13 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadDeadlinesSection(section) {
     const colDueSoon = section.querySelector('#colDueSoon');
     const colUpcoming = section.querySelector('#colUpcoming');
+    const colDone = section.querySelector('#colDone');
     const countDueSoon = section.querySelector('#countDueSoon');
     const countUpcoming = section.querySelector('#countUpcoming');
+    const countDone = section.querySelector('#countDone');
     
     // Only proceed if columns exist (i.e. 'deadlines' section active)
-    if (!colDueSoon || !colUpcoming) return;
+    if (!colDueSoon || !colUpcoming || !colDone) return;
 
     try {
       const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
@@ -289,15 +291,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const subData = await subResponse.json();
         if (subData.success) {
           subData.data.forEach(s => {
-            mySubmissions[s.assignmentId] = s.submissionLink;
+            mySubmissions[s.assignmentId] = s;
           });
         }
       } catch(e) {}
       
       colDueSoon.innerHTML = '';
       colUpcoming.innerHTML = '';
+      colDone.innerHTML = '';
       let dueSoonCount = 0;
       let upcomingCount = 0;
+      let doneCount = 0;
 
       if (data.success && data.data.length > 0) {
         const now = new Date();
@@ -305,52 +309,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.data.forEach(item => {
           const deadline = new Date(item.deadline);
-          const isDueSoon = (deadline - now) > 0 && (deadline - now) <= threeDaysMs;
           const isPast = deadline < now;
+          const isDueSoon = !isPast && (deadline - now) <= threeDaysMs;
 
-          const teamBadge = item.isTeamProject ? `<span class="badge">Team Project</span>` : '';
-          const timeIcon = isDueSoon || isPast ? '<i class="ph ph-clock"></i>' : '<i class="ph ph-calendar"></i>';
+          const submission = mySubmissions[item._id];
+          const isDone = !!submission;
+
+          const teamBadge = item.isTeamProject ? `<span class="badge" style="margin-left: 8px;">Team Project</span>` : '';
           const formattedDate = deadline.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+          let timeIcon = '<i class="ph ph-calendar"></i>';
+          let colorClass = 'class="task-date"';
           
-          let colorClass = '';
-          if (isPast) colorClass = 'style="color: var(--text-muted); text-decoration: line-through;"';
-          else if (isDueSoon) colorClass = 'class="task-date color-rose"';
-          else colorClass = 'class="task-date"';
-
-          const existingLink = mySubmissions[item._id];
-          const btnText = existingLink ? 'Edit Submission' : 'Submit Assignment';
-          const btnStyle = existingLink ? 'background: #059669; border-color: #059669;' : '';
+          let statusBadge = '';
+          
+          if (isDone) {
+            statusBadge = submission.status === 'Late' ? `<span class="badge bg-amber-light" style="color: #d97706; margin-left: 8px;">Done Late</span>` : `<span class="badge bg-emerald-light" style="color: #059669; margin-left: 8px;">Turned In</span>`;
+          } else {
+            if (isPast) {
+               statusBadge = `<span class="badge bg-rose-light color-rose" style="margin-left: 8px;">Missing</span>`;
+               colorClass = 'class="task-date color-rose"';
+               timeIcon = '<i class="ph ph-warning-circle"></i>';
+            } else if (isDueSoon) {
+               colorClass = 'class="task-date color-rose"';
+               timeIcon = '<i class="ph ph-clock"></i>';
+            }
+          }
 
           const cardHtml = `
-            <div class="task-card ${isDueSoon ? 'urgent' : ''}" ${isPast ? 'style="opacity: 0.6;"' : ''}>
+            <div class="task-card ${isDueSoon && !isDone ? 'urgent' : ''}" ${(isPast && !isDone) ? 'style="border-left: 4px solid #e11d48;"' : ''}>
               <div style="display: flex; justify-content: space-between;">
                 <div class="task-subject">${item.subject}</div>
                 <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">By: ${item.postedBy}</div>
               </div>
-              <h4 class="task-title" ${isPast ? 'style="text-decoration: line-through;"' : ''}>${item.title}</h4>
-              <div class="task-footer">
-                <span ${colorClass}>${timeIcon} ${isPast ? 'Past Due (' : ''}${formattedDate}${isPast ? ')' : ''}</span>
-                ${teamBadge}
+              <h4 class="task-title" ${isDone ? 'style="text-decoration: line-through; opacity: 0.7;"' : ''}>${item.title}</h4>
+              <div class="task-footer" style="padding-bottom: ${!isDone ? '10px' : '0'}; display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <span ${colorClass}>${timeIcon} ${isPast && !isDone ? 'Past Due (' : ''}${formattedDate}${isPast && !isDone ? ')' : ''}</span>
+                <div style="display: flex; align-items: center;">
+                  ${statusBadge} ${teamBadge}
+                </div>
               </div>
-              ${!isPast ? `<button onclick="window.submitAssignment('${item._id}', '${existingLink || ''}')" class="primary-btn" style="width: 100%; margin-top: 10px; justify-content: center; font-size: 13px; ${btnStyle}">${btnText}</button>` : ''}
+              ${!isDone ? `<button onclick="window.submitAssignment('${item._id}')" class="primary-btn" style="width: 100%; justify-content: center; font-size: 13px;">Submit Assignment</button>` : ''}
             </div>
           `;
 
-          if (isDueSoon || isPast) {
-            colDueSoon.innerHTML += cardHtml;
-            dueSoonCount++;
+          if (isDone) {
+             colDone.innerHTML += cardHtml;
+             doneCount++;
+          } else if (isDueSoon || isPast) {
+             colDueSoon.innerHTML += cardHtml;
+             dueSoonCount++;
           } else {
-            colUpcoming.innerHTML += cardHtml;
-            upcomingCount++;
+             colUpcoming.innerHTML += cardHtml;
+             upcomingCount++;
           }
         });
       }
 
       if (dueSoonCount === 0) colDueSoon.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No immediate tasks!</p>';
       if (upcomingCount === 0) colUpcoming.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No upcoming tasks yet.</p>';
+      if (doneCount === 0) colDone.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No completed tasks.</p>';
 
       if (countDueSoon) countDueSoon.innerText = dueSoonCount;
       if (countUpcoming) countUpcoming.innerText = upcomingCount;
+      if (countDone) countDone.innerText = doneCount;
       
     } catch (err) {
       console.error('Error fetching assignments:', err);
@@ -486,8 +507,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Global function for submitting assignments
-  window.submitAssignment = async (id, existingLink = '') => {
-    const link = prompt("Enter your submission link (Drive, Github, etc):", existingLink);
+  window.submitAssignment = async (id) => {
+    const link = prompt("Enter your submission link (Drive, Github, etc):");
     if (link !== null) {
       if (link.trim() === '') {
          alert('Submission link cannot be empty.');
