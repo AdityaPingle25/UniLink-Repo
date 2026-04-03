@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About UniLink - Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .landing-blog-nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .landing-blog-nav a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .blog-container {
+      max-width: 800px;
+      margin: 60px auto;
+      background: white;
+      padding: 64px;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="landing-blog-nav">
+    <div style="font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px;">UniLink</div>
+    <a href="../../index.html"><i class="ph ph-arrow-left"></i> Back to Home</a>
+  </nav>
+
+  <main style="padding: 0 20px;">
+    <article class="static-blog-article blog-container">
+      <header class="article-header">
+        <span class="article-tag">Project Vision</span>
+        <h1 class="article-title">Welcome to UniLink: Bridging the Gap Between Students & Teachers</h1>
+        
+        <div class="article-meta">
+          <div class="author-avatar">U</div>
+          <div class="author-info">
+            <strong>UniLink Development Team</strong>
+            <span>April 3, 2026 · 4 min read</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="article-image">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop" alt="Students collaborating on campus">
+      </div>
+
+      <div class="article-content">
+        <p><span class="dropcap">U</span>niLink is a centralized, digital collaborative workspace designed to solve a significant and persistent pain point in modern academic institutions: fragmented communication.</p>
+        
+        <p>For too long, the essential flow of information on college campuses has been broken. Whether it's a vital update about a lecture, a time-sensitive assignment deadline, or a life-changing internship opportunity, students often find themselves sifting through a chaotic mix of WhatsApp groups, endless email threads, and physical notice boards to find what they need.</p>
+
+        <h2>The Problem We're Solving</h2>
+        <p>In many institutions across the globe, information is scattered. A teacher might announce an assignment deadline in class, post it on Google Classroom, and simultaneously send a representative to message a WhatsApp group. Meanwhile, the placement cell might send an email about a hackathon that gets instantly buried under dozens of promotional emails.</p>
+        <p>This disorganized ecosystem leads to <strong>missed deadlines</strong>, <strong>high stress levels</strong>, and a severe <strong>lack of awareness</strong> among the student body regarding crucial opportunities.</p>
+
+        <blockquote>
+          "Our goal is to create a seamless, unified digital companion for every student's academic journey. No more missed announcements, no more scattered deadlines."
+        </blockquote>
+
+        <h2>Our Vision & Solution</h2>
+        <p>UniLink acts as a single, organized hub where teachers and administrators can post critical updates, and students can consume them in a structured, clean, and entirely digital interface.</p>
+        <p>We believe that technology should reduce friction, not create more of it. By providing a dedicated platform for academic and extracurricular communication, we allow students to focus on what actually matters—their education and growth—rather than worrying about finding the right WhatsApp chat.</p>
+        
+        <h2>Key Features of UniLink</h2>
+        <ul>
+          <li><strong>Dynamic, Role-Based Dashboards:</strong> Dedicated, optimized views tailored specifically for Students and Teachers, ensuring relevant information is always front and center.</li>
+          <li><strong>Integrated Assignment Tracking:</strong> A visual, Kanban-style board allowing students to effortlessly track ongoing, submitted, and overdue assignments at a single glance.</li>
+          <li><strong>The Opportunities Hub:</strong> Centralized, easy-to-filter listings for Internships, Hackathons, and Scholarships—so you never miss an opportunity to advance your career.</li>
+          <li><strong>Real-time Announcements & Events:</strong> Direct channels for campus news and event registrations, ensuring the community is always connected.</li>
+          <li><strong>Automated Email Notifications:</strong> Seamless Brevo API integration that automatically dispatches emails the moment a teacher posts a new assignment or opportunity.</li>
+        </ul>
+
+        <h2>Looking to the Future</h2>
+        <p>UniLink is not just a project; it's a foundation for a more connected campus. We are continuously evolving our platform, gathering feedback from the academic community, and implementing features that make campus life more manageable and productive.</p>
+        <p>Thank you for being a part of UniLink. Together, we are redefining academic collaboration.</p>
+
+        <hr style="margin: 48px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+        
+        <h2>Meet the Developers</h2>
+        <p>UniLink was passionately engineered and designed by our founding team. We'd love to connect!</p>
+        <ul style="list-style-type: none; padding-left: 0; display: flex; gap: 24px; flex-wrap: wrap; margin-top: 24px;">
+          <li style="margin-bottom: 0; padding-left: 0;">
+            <a href="https://www.linkedin.com/in/aditya-pingle-a16bb7302/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--primary); background: rgba(79, 70, 229, 0.05); padding: 12px 20px; border-radius: 12px; transition: all 0.2s;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">AP</div>
+              Aditya Pingle
+            </a>
+          </li>
+          <li style="margin-bottom: 0; padding-left: 0;">
+            <a href="https://www.linkedin.com/in/adityaptkr/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--primary); background: rgba(79, 70, 229, 0.05); padding: 12px 20px; border-radius: 12px; transition: all 0.2s;">
+              <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">AP</div>
+              Aditya Patekar
+            </a>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+</body>
+</html>
