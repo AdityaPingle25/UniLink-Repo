@@ -19,8 +19,17 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 const authRoutes = require('./routes/auth');
 const announcementRoutes = require('./routes/announcements');
+const scholarshipRoutes = require('./routes/scholarships');
+const internshipRoutes = require('./routes/internships');
+const blogRoutes = require('./routes/blogs');
+const eventRoutes = require('./routes/events');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/scholarships', scholarshipRoutes);
+app.use('/api/internships', internshipRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/events', eventRoutes);
 
 // Serve the static frontend files from 'v2/client'
 app.use(express.static(path.join(__dirname, '../client')));

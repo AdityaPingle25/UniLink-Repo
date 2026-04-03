@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - UniLink</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+  <style>
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .blog-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .blog-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .blog-card .blog-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .blog-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      line-height: 1.4;
+    }
+    .blog-card .blog-excerpt {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .blog-card .blog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .blog-card .blog-author {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .blog-full-content {
+      display: none;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+    .blog-card.expanded .blog-excerpt { display: none; }
+    .blog-card.expanded .blog-full-content { display: block; }
+    .blog-card.expanded .read-toggle { content: 'Read Less'; }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-text">UniLink</div>
+    </div>
+    <nav class="nav-items">
+      <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Deadlines</span></a>
+      <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Events</span></a>
+      <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="../../pages/common/news.html" class="nav-item"><i class="ph ph-newspaper"></i> <span>Campus News</span></a>
+      <a href="../../pages/student/ask_seniors.html" class="nav-item"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
+      <a href="../../pages/common/blog.html" class="nav-item active"><i class="ph ph-article"></i> <span>Blog</span></a>
+    </nav>
+    <nav class="nav-items" style="margin-top: auto;">
+      <a href="../../index.html" class="nav-item"><i class="ph ph-house"></i> <span>Home</span></a>
+      <a href="#" class="nav-item"><i class="ph ph-gear"></i> <span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-wrapper">
+    <header class="top-nav">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
+      </div>
+      <div class="search-bar">
+        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
+        <input type="text" placeholder="Search blog posts..." id="blogSearch">
+      </div>
+      <div class="profile-area">
+        <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
+        <div class="user-profile">
+          <div class="avatar" id="navAvatar">S</div>
+          <div class="user-info">
+            <span class="user-name" id="navUserName">Student</span>
+            <span class="user-role">Student</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-section">
+      <h1 class="welcome-title">UniLink Blog</h1>
+      <p style="color: var(--text-muted); font-size: 15px;">Read the latest insights, campus stories, and student life tips.</p>
+    </section>
+
+    <div class="blog-grid" id="blogContainer">
+      <p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 40px 0;">Loading blog posts...</p>
+    </div>
+  </main>
+
+  <script src="../../assets/js/app.js"></script>
+  <script>
+    (function() {
+      const storedName = localStorage.getItem('userName') || localStorage.getItem('teacherName');
+      const navUserName = document.getElementById('navUserName');
+      const navAvatar = document.getElementById('navAvatar');
+      if (storedName && navUserName) navUserName.innerText = storedName;
+      if (storedName && navAvatar) navAvatar.innerText = storedName.charAt(0).toUpperCase();
+
+      let allBlogs = [];
+
+      function renderBlogs(items) {
+        const container = document.getElementById('blogContainer');
+        container.innerHTML = '';
+        if (items.length > 0) {
+          const tagColors = [
+            { bg: '#eef2ff', color: '#4f46e5' },
+            { bg: '#ecfdf5', color: '#059669' },
+            { bg: '#fff1f2', color: '#e11d48' },
+            { bg: '#fefce8', color: '#ca8a04' },
+            { bg: '#f0f9ff', color: '#0284c7' },
+            { bg: '#faf5ff', color: '#7c3aed' }
+          ];
+
+          items.forEach((item, i) => {
+            const tc = tagColors[i % tagColors.length];
+            const excerpt = item.excerpt || (item.content.length > 120 ? item.content.substring(0, 120) + '...' : item.content);
+            const dateStr = new Date(item.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            container.innerHTML += `
+              <div class="blog-card" id="blog-${item._id}">
+                <span class="blog-tag" style="background: ${tc.bg}; color: ${tc.color};">${item.readTime}</span>
+                <h3>${item.title}</h3>
+                <p class="blog-excerpt">${excerpt}</p>
+                <div class="blog-full-content">${item.content}</div>
+                <div class="blog-meta">
+                  <span><span class="blog-author">${item.author}</span> · ${dateStr}</span>
+                  <button class="read-toggle" onclick="toggleBlog('${item._id}')" style="background: none; border: none; color: var(--primary); font-weight: 600; cursor: pointer; font-size: 13px;">Read More</button>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No blog posts available.</p>';
+        }
+      }
+
+      window.toggleBlog = function(id) {
+        const card = document.getElementById('blog-' + id);
+        const btn = card.querySelector('.read-toggle');
+        card.classList.toggle('expanded');
+        btn.textContent = card.classList.contains('expanded') ? 'Read Less' : 'Read More';
+      };
+
+      fetch('http://localhost:3000/api/blogs')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            allBlogs = data.data;
+            renderBlogs(allBlogs);
+          } else {
+            document.getElementById('blogContainer').innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No blog posts available.</p>';
+          }
+        })
+        .catch(() => {
+          document.getElementById('blogContainer').innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load blog posts. Make sure the server is running.</p>';
+        });
+
+      // Search
+      document.getElementById('blogSearch').addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        if (!q) { renderBlogs(allBlogs); return; }
+        renderBlogs(allBlogs.filter(b => b.title.toLowerCase().includes(q) || b.content.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)));
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UniLink Student Dashboard</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
 </head>
-
 <body>
 
   <aside class="sidebar">
@@ -20,22 +15,14 @@
       <div class="logo-text">UniLink</div>
     </div>
     <nav class="nav-items">
-      <a href="#dashboard" class="nav-item active" data-target="dashboard"><i class="ph ph-squares-four"></i>
-        <span>Dashboard</span></a>
-      <a href="#announcements" class="nav-item" data-target="announcements"><i class="ph ph-megaphone"></i>
-        <span>Important Announcements</span></a>
-      <a href="#deadlines" class="nav-item" data-target="deadlines"><i class="ph ph-calendar-check"></i>
-        <span>Assignment Deadlines</span></a>
-      <a href="#internships" class="nav-item" data-target="internships"><i class="ph ph-rocket"></i> <span>Internships &
-          Hackathons</span></a>
-      <a href="#events" class="nav-item" data-target="events"><i class="ph ph-ticket"></i> <span>Event
-          Registration</span></a>
-      <a href="#scholarships" class="nav-item" data-target="scholarships"><i class="ph ph-graduation-cap"></i>
-        <span>Scholarships</span></a>
-      <a href="#news" class="nav-item" data-target="news"><i class="ph ph-newspaper"></i> <span>Campus News &
-          Community</span></a>
-      <a href="#ask-seniors" class="nav-item" data-target="ask-seniors"><i class="ph ph-users-three"></i> <span>Ask
-          Seniors</span></a>
+      <a href="#dashboard" class="nav-item active" data-target="dashboard"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
+      <a href="#announcements" class="nav-item" data-target="announcements"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="#deadlines" class="nav-item" data-target="deadlines"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
+      <a href="#internships" class="nav-item" data-target="internships"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+      <a href="#events" class="nav-item" data-target="events"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
+      <a href="#scholarships" class="nav-item" data-target="scholarships"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+      <a href="#news" class="nav-item" data-target="news"><i class="ph ph-newspaper"></i> <span>Campus News & Community</span></a>
+      <a href="#ask-seniors" class="nav-item" data-target="ask-seniors"><i class="ph ph-users-three"></i> <span>Ask Seniors</span></a>
       <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
@@ -44,23 +31,16 @@
   </aside>
 
   <main class="main-wrapper">
-
     <header class="top-nav">
       <div style="display: flex; align-items: center; gap: 16px;">
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
       </div>
-
       <div class="search-bar">
         <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
         <input type="text" placeholder="Search announcements, assignments, events...">
       </div>
-
       <div class="profile-area">
-        <button class="icon-btn">
-          <i class="ph ph-bell"></i>
-          <span class="notification-dot"></span>
-        </button>
-
+        <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
         <a href="student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
           <div class="avatar" id="navAvatar">A</div>
           <div class="user-info">
@@ -73,7 +53,6 @@
     </header>
 
     <div id="content-area">
-      <!-- Dashboard Section -->
       <div id="dashboard" class="page-section active">
         <section class="welcome-section">
           <h1 class="welcome-title">Hi Aditya, Ready to Stay Updated with Campus?</h1>
@@ -87,8 +66,7 @@
               <div class="card-icon bg-indigo"><i class="ph ph-megaphone-simple"></i></div>
               <h2 class="card-title">Important Announcements</h2>
             </div>
-            <p class="card-desc">Stay on top of new circulars, official university notices, and urgent administrative
-              updates.</p>
+            <p class="card-desc">Stay on top of new circulars, official university notices, and urgent administrative updates.</p>
             <div class="card-meta">
               <span class="badge" id="announcementBadge">Updating...</span>
             </div>
@@ -106,50 +84,45 @@
             </div>
           </div>
 
-          <div class="card">
+          <a href="../../pages/common/internships.html" class="card" style="text-decoration: none; color: inherit;">
             <div class="card-header">
               <div class="card-icon bg-emerald"><i class="ph ph-code"></i></div>
               <h2 class="card-title">Internships & Hackathons</h2>
             </div>
-            <p class="card-desc">Explore the latest internship openings, coding bootcamps, and hackathon registrations.
-            </p>
+            <p class="card-desc">Explore the latest internship openings and hackathon registrations.</p>
             <div class="card-meta">
-              <span class="badge">Apply Now</span>
-              <span class="badge">Tech Fest</span>
+              <span class="badge" id="internshipBadge">View Internships</span>
             </div>
-          </div>
+          </a>
 
-          <div class="card">
+          <a href="../../pages/common/events.html" class="card" style="text-decoration: none; color: inherit;">
             <div class="card-header">
               <div class="card-icon bg-amber"><i class="ph ph-confetti"></i></div>
               <h2 class="card-title">Event Registration</h2>
             </div>
-            <p class="card-desc">Book your spot for upcoming workshops, cultural festivals, and technical competitions.
-            </p>
+            <p class="card-desc">Book your spot for upcoming workshops, cultural festivals, and technical competitions.</p>
             <div class="card-meta">
-              <span class="badge">2 Workshops</span>
+              <span class="badge" id="eventBadge">Browse Events</span>
             </div>
-          </div>
+          </a>
 
-          <div class="card">
+          <a href="../../pages/common/scholarships.html" class="card" style="text-decoration: none; color: inherit;">
             <div class="card-header">
               <div class="card-icon bg-sky"><i class="ph ph-bank"></i></div>
-              <h2 class="card-title">Scholarship Section</h2>
+              <h2 class="card-title">Scholarships</h2>
             </div>
-            <p class="card-desc">Check your eligibility for government grants, college scholarships, and financial aid
-              deadlines.</p>
+            <p class="card-desc">Check your eligibility for government grants, college scholarships, and financial aid.</p>
             <div class="card-meta">
-              <span class="badge">Gov. Schemes</span>
+              <span class="badge" id="scholarshipBadge">Apply for Scholarships</span>
             </div>
-          </div>
+          </a>
 
           <div class="card">
             <div class="card-header">
               <div class="card-icon bg-purple"><i class="ph ph-users-three"></i></div>
               <h2 class="card-title">Campus Community</h2>
             </div>
-            <p class="card-desc">Ask seniors questions, check the Achievement Wall, access Lost & Found, and vote on new
-              campus ideas.</p>
+            <p class="card-desc">Ask seniors questions, check the Achievement Wall, access Lost & Found, and vote on new campus ideas.</p>
             <div class="card-meta">
               <span class="badge">Idea Voting</span>
               <span class="badge">Q&A Forum</span>
@@ -169,8 +142,41 @@
           </div>
         </section>
 
-      </div> <!-- End Dashboard Section -->
-    </div> <!-- End Content Area -->
+        <!-- RECENT SCHOLARSHIPS FEED -->
+        <section class="recent-scholarships" style="margin-top: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 700;">Recent Scholarships</h2>
+            <a href="../../pages/common/scholarships.html" style="color: var(--primary); font-size: 14px; font-weight: 500; text-decoration: none;">View All <i class="ph ph-arrow-right"></i></a>
+          </div>
+          <div class="announcement-list" id="dashboardScholarships" style="display: grid; gap: 16px;">
+            <p style="color: var(--text-muted); padding: 10px 0;">Loading recent scholarships...</p>
+          </div>
+        </section>
+
+        <!-- RECENT EVENTS FEED -->
+        <section class="recent-events" style="margin-top: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 700;">Upcoming Events</h2>
+            <a href="../../pages/common/events.html" style="color: var(--primary); font-size: 14px; font-weight: 500; text-decoration: none;">View All <i class="ph ph-arrow-right"></i></a>
+          </div>
+          <div class="job-grid" id="dashboardEvents" style="display: grid; gap: 16px;">
+            <p style="color: var(--text-muted); padding: 10px 0;">Loading upcoming events...</p>
+          </div>
+        </section>
+
+        <!-- RECENT INTERNSHIPS FEED -->
+        <section class="recent-internships" style="margin-top: 40px; margin-bottom: 40px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: 20px; font-weight: 700;">Internships & Hackathons</h2>
+            <a href="../../pages/common/internships.html" style="color: var(--primary); font-size: 14px; font-weight: 500; text-decoration: none;">View All <i class="ph ph-arrow-right"></i></a>
+          </div>
+          <div class="job-grid" id="dashboardInternships" style="display: grid; gap: 16px;">
+            <p style="color: var(--text-muted); padding: 10px 0;">Loading opportunities...</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
   </main>
 
   <div class="ai-widget">
@@ -184,34 +190,24 @@
       const storedName = localStorage.getItem('userName');
       if (storedName) {
         document.getElementById('navUserName').innerText = storedName;
-        // Also update the initials
         document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
-
-        // Also update the welcome message
         const welcomeTitle = document.querySelector('.welcome-title');
-        if (welcomeTitle) {
-          welcomeTitle.innerText = `Hi ${storedName}, Ready to Stay Updated with Campus?`;
-        }
+        if (welcomeTitle) welcomeTitle.innerText = `Hi ${storedName}, Ready to Stay Updated with Campus?`;
       }
 
-      // Fetch dynamic announcement count and feed
+      // Fetch announcements
       fetch('http://localhost:3000/api/announcements')
         .then(res => res.json())
         .then(result => {
           if (result.success) {
             const announcements = result.data;
             document.getElementById('announcementBadge').innerText = `${announcements.length} New Circulars`;
-
-            // Display top 2 or 3 announcements on dashboard
             const container = document.getElementById('dashboardAnnouncements');
             container.innerHTML = '';
-            
             if (announcements.length > 0) {
-              const topAnnouncements = announcements.slice(0, 3);
-              topAnnouncements.forEach(ann => {
+              announcements.slice(0, 3).forEach(ann => {
                 const dateStr = new Date(ann.createdAt).toLocaleDateString();
-
-                let cardHtml = `
+                container.innerHTML += `
                   <div class="announcement-card">
                     <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
                     <div class="announcement-content">
@@ -226,7 +222,6 @@
                     </div>
                   </div>
                 `;
-                container.innerHTML += cardHtml;
               });
             } else {
               container.innerHTML = '<p style="color: var(--text-muted);">No recent announcements.</p>';
@@ -234,12 +229,103 @@
           }
         })
         .catch(err => {
-          console.error('Failed to load announcements', err);
-          document.getElementById('announcementBadge').innerText = `View Circulars`;
+          document.getElementById('announcementBadge').innerText = 'View Circulars';
           document.getElementById('dashboardAnnouncements').innerHTML = '<p style="color: #e11d48;">Failed to load announcements.</p>';
+        });
+
+      // Fetch scholarships
+      fetch('http://localhost:3000/api/scholarships')
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            const container = document.getElementById('dashboardScholarships');
+            const schBadge = document.getElementById('scholarshipBadge');
+            container.innerHTML = '';
+            const scholarships = result.data.slice(0, 3);
+            if (schBadge) schBadge.innerText = `${result.data.length} Scholarships`;
+            if (scholarships.length > 0) {
+              scholarships.forEach(item => {
+                container.innerHTML += `
+                  <div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                      <h4 style="margin: 0; font-size: 16px;">${item.title} <span style="color: var(--primary); font-weight: 600; font-size: 14px;">${item.amount}</span></h4>
+                      <p style="margin: 4px 0 8px; font-size: 14px; color: var(--text-muted);">Due: ${new Date(item.deadline).toLocaleDateString()} • Category: ${item.category || 'General'}</p>
+                      <p style="margin: 0 0 12px; font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description}</p>
+                      <a href="${item.applyLink}" target="_blank" class="primary-btn secondary" style="text-decoration: none; display: inline-flex;">Apply Now</a>
+                    </div>
+                  </div>
+                `;
+              });
+            } else {
+              container.innerHTML = '<p style="color: var(--text-muted);">No recent scholarships.</p>';
+            }
+          }
+        })
+        .catch(err => {
+          document.getElementById('dashboardScholarships').innerHTML = '<p style="color: #e11d48;">Failed to load scholarships.</p>';
+        });
+
+      // Fetch internships
+      fetch('http://localhost:3000/api/internships')
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            const container = document.getElementById('dashboardInternships');
+            const intBadge = document.getElementById('internshipBadge');
+            container.innerHTML = '';
+            const internships = result.data.slice(0, 3);
+            if (intBadge) intBadge.innerText = `${result.data.length} Opportunities`;
+            if (internships.length > 0) {
+              internships.forEach(item => {
+                container.innerHTML += `
+                  <div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; border-left: 4px solid var(--primary);">
+                    <h4 style="margin: 0; font-size: 16px;">${item.title} <span style="font-weight: 500; font-size: 14px; color: var(--text-muted);">at ${item.company}</span></h4>
+                    <p style="margin: 4px 0 8px; font-size: 14px; color: var(--text-muted);">${item.type} • Deadline: ${new Date(item.deadline).toLocaleDateString()}</p>
+                    <p style="margin: 0 0 12px; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description}</p>
+                    <a href="${item.applyLink}" target="_blank" class="primary-btn secondary" style="text-decoration: none; display: inline-flex;">Apply Now</a>
+                  </div>
+                `;
+              });
+            } else {
+              container.innerHTML = '<p style="color: var(--text-muted);">No recent opportunities.</p>';
+            }
+          }
+        })
+        .catch(err => {
+          document.getElementById('dashboardInternships').innerHTML = '<p style="color: #e11d48;">Failed to load internships.</p>';
+        });
+
+      // Fetch events count and recent events feed
+      fetch('http://localhost:3000/api/events')
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            const badge = document.getElementById('eventBadge');
+            if (badge) badge.innerText = `${result.data.length} Events`;
+            
+            const eventsContainer = document.getElementById('dashboardEvents');
+            eventsContainer.innerHTML = '';
+            const events = result.data.slice(0, 3);
+            if (events.length > 0) {
+              events.forEach(item => {
+                eventsContainer.innerHTML += `
+                  <div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; border-left: 4px solid var(--amber);">
+                    <h4 style="margin: 0; font-size: 16px;">${item.title} <span style="font-size: 13px; font-weight: 500; color: var(--amber); margin-left: 8px;">${item.category}</span></h4>
+                    <p style="margin: 4px 0 8px; font-size: 14px; color: var(--text-muted);"><i class="ph ph-clock"></i> ${new Date(item.eventDate).toLocaleDateString()} at ${item.eventTime} • <i class="ph ph-map-pin"></i> ${item.venue}</p>
+                    <p style="margin: 0 0 12px; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description}</p>
+                    <a href="../../pages/common/events.html" class="primary-btn secondary" style="text-decoration: none; display: inline-flex;">View Details</a>
+                  </div>
+                `;
+              });
+            } else {
+              eventsContainer.innerHTML = '<p style="color: var(--text-muted);">No upcoming events.</p>';
+            }
+          }
+        })
+        .catch(() => {
+          document.getElementById('dashboardEvents').innerHTML = '<p style="color: #e11d48;">Failed to load events.</p>';
         });
     });
   </script>
 </body>
-
 </html>

@@ -9,7 +9,104 @@ document.addEventListener('DOMContentLoaded', () => {
   // These run after the section HTML has been injected into the DOM.
   const postLoadHandlers = {
     'announcements': loadAnnouncementsSection,
+    'scholarships': loadScholarshipsSection,
+    'internships': loadInternshipsSection,
   };
+
+  // Fetch and render scholarships into a container element
+  async function loadScholarshipsSection(section) {
+    const container = section.querySelector('#scholarshipsGrid');
+    if (!container) return;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/scholarships');
+      const data = await response.json();
+      container.innerHTML = '';
+
+      if (data.success && data.data.length > 0) {
+        data.data.forEach(item => {
+          const bgColors = ['bg-indigo', 'bg-emerald', 'bg-rose', 'bg-amber', 'bg-sky', 'bg-purple'];
+          const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+          container.innerHTML += `
+            <div class="card">
+              <div class="card-header">
+                <div class="card-icon ${randomBg}"><i class="ph ph-bank"></i></div>
+                <h2 class="card-title">${item.title}</h2>
+              </div>
+              <p class="card-desc">${item.description}</p>
+              <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+                  <span style="color: var(--text-muted);">Amount</span>
+                  <span style="font-weight: 600;">${item.amount}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+                  <span style="color: var(--text-muted);">Deadline</span>
+                  <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString()}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
+                  <span style="color: var(--text-muted);">Category</span>
+                  <span style="font-weight: 600; color: var(--primary);">${item.category}</span>
+                </div>
+                <a href="${item.applyLink}" target="_blank" class="primary-btn" style="width: 100%; justify-content: center; text-decoration: none;">Apply Now</a>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active scholarships found.</p>';
+      }
+    } catch (err) {
+      console.error('Error fetching scholarships:', err);
+      container.innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load scholarships from server.</p>';
+    }
+  }
+
+  // Fetch and render internships into a container element
+  async function loadInternshipsSection(section) {
+    const container = section.querySelector('#internshipsGrid');
+    if (!container) return;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/internships');
+      const data = await response.json();
+      container.innerHTML = '';
+
+      if (data.success && data.data.length > 0) {
+        data.data.forEach(item => {
+          const colors = ['#ea4335', '#0f9d58', '#4285f4', '#f4b400', '#000', '#6366f1'];
+          const cName = item.company ? item.company.charAt(0).toUpperCase() : 'C';
+          const randColor = colors[Math.floor(Math.random() * colors.length)];
+          let borderTop = item.type === 'Hackathon' ? 'border-top: 4px solid var(--primary);' : '';
+
+          container.innerHTML += `
+            <div class="job-card" style="${borderTop}">
+              <div class="job-header">
+                <div class="company-logo" style="background: ${randColor}; color: #fff;">${cName}</div>
+                <div class="job-titles">
+                  <h3>${item.title}</h3>
+                  <span class="company-name">${item.company}</span>
+                </div>
+              </div>
+              <div class="job-tags">
+                <span class="tag bg-indigo-light color-indigo">${item.type}</span>
+              </div>
+              <p class="job-desc">${item.description}</p>
+              <div class="job-footer">
+                <span class="apply-deadline">Deadline: ${new Date(item.deadline).toLocaleDateString()}</span>
+                <a href="${item.applyLink}" target="_blank" class="apply-btn" style="text-decoration: none; display: inline-flex; justify-content: center;">Apply Now</a>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active opportunities right now.</p>';
+      }
+    } catch (err) {
+      console.error('Error fetching internships:', err);
+      container.innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load internships from server.</p>';
+    }
+  }
 
   // Fetch and render announcements into a container element
   async function loadAnnouncementsSection(section) {
