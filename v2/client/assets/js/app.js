@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/scholarships');
+      const response = await fetch('/api/scholarships');
       const data = await response.json();
       if (data.success) {
         allScholarships = data.data;
@@ -153,7 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="job-footer">
                 <span class="apply-deadline">Deadline: ${new Date(item.deadline).toLocaleDateString()}</span>
                 <div style="display: flex; gap: 8px;">
-                  <button data-title="${item.title.replace(/"/g, '&quot;')}" data-desc="${item.description.replace(/"/g, '&quot;')}" class="primary-btn info-btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); cursor: pointer;">Details</button>
+                  <button 
+                    data-title="${item.title.replace(/"/g, '&quot;')}" 
+                    data-desc="${item.description.replace(/"/g, '&quot;')}" 
+                    data-fileurl="${item.fileUrl || ''}" 
+                    data-filename="${item.fileName || ''}"
+                    class="primary-btn info-btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); cursor: pointer;">Details</button>
                   <a href="${item.applyLink}" target="_blank" class="apply-btn" style="text-decoration: none; display: inline-flex; justify-content: center;">Apply Now</a>
                 </div>
               </div>
@@ -166,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/internships');
+      const response = await fetch('/api/internships');
       const data = await response.json();
 
       if (data.success) {
@@ -210,8 +215,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
       container.addEventListener('click', (e) => {
         if (e.target.classList.contains('info-btn')) {
-           section.querySelector('#infoModalTitle').textContent = e.target.getAttribute('data-title');
-           section.querySelector('#infoModalBody').textContent = e.target.getAttribute('data-desc');
+           const title = e.target.getAttribute('data-title');
+           const desc = e.target.getAttribute('data-desc');
+           const fileUrl = e.target.getAttribute('data-fileurl');
+           const fileName = e.target.getAttribute('data-filename');
+
+           section.querySelector('#infoModalTitle').textContent = title;
+           section.querySelector('#infoModalBody').textContent = desc;
+           
+           // Handle attachment download button
+           let footer = section.querySelector('.modal-footer-btns');
+           if (!footer) {
+             footer = document.createElement('div');
+             footer.className = 'modal-footer-btns';
+             section.querySelector('.modal-content').appendChild(footer);
+           }
+           
+           if (fileUrl) {
+             footer.innerHTML = `
+               <a href="${fileUrl}" download="${fileName}" class="attachment-btn">
+                 <i class="ph ph-file-arrow-down"></i> Download Attachment (${fileName})
+               </a>
+             `;
+             footer.style.display = 'flex';
+           } else {
+             footer.style.display = 'none';
+           }
+
            infoModal.style.display = 'flex';
         }
       });
@@ -255,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-          const res = await fetch(`http://localhost:3000/api/events/${eventId}/register`, {
+          const res = await fetch(`/api/events/${eventId}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -324,14 +354,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/api/events');
+      const res = await fetch('/api/events');
       const data = await res.json();
       container.innerHTML = '';
 
       if (data.success && data.data.length > 0) {
         for (const ev of data.data) {
           try {
-            const countRes = await fetch(`http://localhost:3000/api/events/${ev._id}/count`);
+            const countRes = await fetch(`/api/events/${ev._id}/count`);
             const countData = await countRes.json();
             const regCount = countData.count || 0;
             const spotsLeft = ev.maxRegistrations - regCount;
@@ -407,8 +437,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
       const [response, subResponse] = await Promise.all([
-        fetch('http://localhost:3000/api/assignments'),
-        fetch(`http://localhost:3000/api/assignments/student/${encodeURIComponent(studentName)}/submissions`)
+        fetch('/api/assignments'),
+        fetch(`/api/assignments/student/${encodeURIComponent(studentName)}/submissions`)
       ]);
       const data = await response.json();
       let mySubmissions = {};
@@ -641,7 +671,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       try {
         const studentName = document.getElementById('navUserName') ? document.getElementById('navUserName').innerText : localStorage.getItem('userName') || 'Student';
-        const res = await fetch(`http://localhost:3000/api/assignments/${id}/submit`, {
+        const res = await fetch(`/api/assignments/${id}/submit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentName, submissionLink: link })

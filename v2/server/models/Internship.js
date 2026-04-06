@@ -8,6 +8,8 @@ const internshipSchema = new mongoose.Schema({
   applyLink: { type: String, required: true },
   description: { type: String, required: true },
   postedBy: { type: String, required: true },
+  fileUrl: { type: String },
+  fileName: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 

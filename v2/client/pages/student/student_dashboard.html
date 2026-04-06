@@ -161,7 +161,7 @@
       });
 
       // Fetch announcements
-      fetch('http://localhost:3000/api/announcements')
+      fetch('/api/announcements')
         .then(res => res.json())
         .then(result => {
           if (result.success) {
@@ -173,7 +173,7 @@
         });
 
       // Fetch scholarships
-      fetch('http://localhost:3000/api/scholarships')
+      fetch('/api/scholarships')
         .then(res => res.json())
         .then(result => {
           if (result.success) {
@@ -184,7 +184,7 @@
         .catch(err => {});
 
       // Fetch internships
-      fetch('http://localhost:3000/api/internships')
+      fetch('/api/internships')
         .then(res => res.json())
         .then(result => {
           if (result.success) {
@@ -195,7 +195,7 @@
         .catch(err => {});
 
       // Fetch events count
-      fetch('http://localhost:3000/api/events')
+      fetch('/api/events')
         .then(res => res.json())
         .then(result => {
           if (result.success) {

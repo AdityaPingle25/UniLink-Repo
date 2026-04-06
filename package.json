@@ -1,0 +1,24 @@
+{
+  "name": "unilink-root",
+  "version": "1.0.0",
+  "description": "UniLink - Campus Connectivity Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "install-server": "npm install --prefix v2/server",
+    "postinstall": "npm install --prefix v2/server"
+  },
+  "dependencies": {
+    "@getbrevo/brevo": "^5.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.4",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -796,6 +796,11 @@ body {
   line-height: 1.6;
   margin-bottom: 24px;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .job-footer {
@@ -1149,4 +1154,40 @@ body.dark-theme .btn-cancel {
   font-family: 'Inter', sans-serif;
   font-weight: 800;
   color: var(--primary);
-}
+}
+
+/* Modal Detail & Attachment Styles */
+#infoModalBody {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--text-main);
+  font-size: 15px;
+}
+
+.modal-footer-btns {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
+}
+
+.attachment-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary);
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.attachment-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+}
+
