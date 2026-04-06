@@ -3,6 +3,9 @@
   --primary-hover: #4f46e5;
   --bg-start: #eef2ff;
   --bg-end: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-main: #f8fafc;
+  --border-color: rgba(0, 0, 0, 0.1);
   --card-bg: rgba(255, 255, 255, 0.85);
   --text-main: #1e293b;
   --text-muted: #64748b;
@@ -14,6 +17,9 @@
 body.dark-theme {
   --bg-start: #0f172a;
   --bg-end: #1e293b;
+  --bg-surface: #1e293b;
+  --bg-main: #0f172a;
+  --border-color: rgba(255, 255, 255, 0.1);
   --card-bg: rgba(30, 41, 59, 0.85);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;

@@ -241,9 +241,10 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="position: relative;">
             <label>Description</label>
-            <textarea id="annDesc" rows="5" placeholder="Write your full announcement here..." required></textarea>
+            <textarea id="annDesc" rows="5" maxlength="200" placeholder="Write your full announcement here..." required></textarea>
+            <div style="position: absolute; right: 20px; bottom: 15px; font-size: 12px; color: var(--text-muted); pointer-events: none; background: rgba(255,255,255,0.7); padding: 0 4px; border-radius: 4px;"><span id="annDescCount">0</span> / 200</div>
           </div>
           
           <div class="form-group">
@@ -506,21 +507,60 @@
       // 0. Fetch Dashboard Stats
       async function fetchDashboardStats() {
         try {
+          const teacherName = localStorage.getItem('teacherName') || '';
+          const teacherDept = localStorage.getItem('teacherDept') || '';
+
           // Fetch Students
           const resStudents = await fetch('http://localhost:3000/api/students');
           const dataStudents = await resStudents.json();
           if (dataStudents.success) {
-            const count = dataStudents.data.length;
-            document.getElementById('overviewStudentsDesc').innerText = `You are currently advising and teaching ${count} registered students.`;
+            let myStudents = dataStudents.data;
+            let isFiltered = false;
+            if (teacherDept) {
+               // Try to filter students roughly by matching department/branch prefixes
+               const tDeptLower = teacherDept.toLowerCase();
+               const filtered = myStudents.filter(s => {
+                  if (!s.branch) return false;
+                  const sBranchLower = s.branch.toLowerCase();
+                  return sBranchLower.includes(tDeptLower.substring(0,3)) || tDeptLower.includes(sBranchLower.substring(0,3));
+               });
+               if (filtered.length > 0) {
+                 myStudents = filtered;
+                 isFiltered = true;
+               }
+            }
+            
+            const count = myStudents.length;
+            document.getElementById('overviewStudentsDesc').innerText = `You have ${count} registered students${isFiltered ? ` in ${teacherDept}` : ' globally'}.`;
             document.getElementById('overviewStudentsCount').innerText = `${count} Students`;
           }
 
           // Fetch Assignments
           const resAssignments = await fetch('http://localhost:3000/api/assignments');
           const dataAssignments = await resAssignments.json();
+          let submissionsCount = 0;
           if (dataAssignments.success) {
-            const count = dataAssignments.data.length;
-            document.getElementById('overviewAssignmentsDesc').innerText = `You have posted ${count} active assignments for grading.`;
+            let myAssignments = dataAssignments.data;
+            if (teacherName) {
+              myAssignments = myAssignments.filter(a => a.postedBy === teacherName);
+            }
+            const count = myAssignments.length;
+            
+            // Dynamically count total submissions for this teacher's assignments
+            if (count > 0 && count < 10) {
+                for (let asg of myAssignments) {
+                    try {
+                        const subRes = await fetch(`http://localhost:3000/api/assignments/${asg._id}/submissions`);
+                        const subData = await subRes.json();
+                        if (subData.success) submissionsCount += subData.data.length;
+                    } catch(e) {}
+                }
+            }
+            
+            let desc = `You have posted ${count} active assignments.`;
+            if (submissionsCount > 0) desc += ` Received ${submissionsCount} total submissions for grading.`;
+            
+            document.getElementById('overviewAssignmentsDesc').innerText = desc;
             document.getElementById('overviewAssignmentsCount').innerText = `${count} Active`;
           }
 
@@ -528,16 +568,14 @@
           const resAnnouncements = await fetch('http://localhost:3000/api/announcements');
           const dataAnnouncements = await resAnnouncements.json();
           if (dataAnnouncements.success) {
-            let count = dataAnnouncements.data.length;
             let myAnnouncements = dataAnnouncements.data;
-            let teacherName = localStorage.getItem('teacherName');
             if (teacherName) {
                 myAnnouncements = myAnnouncements.filter(a => a.postedBy === teacherName);
-                count = myAnnouncements.length;
             }
+            const count = myAnnouncements.length;
             if (count > 0) {
               const latest = myAnnouncements[0];
-              document.getElementById('overviewAnnouncementsDesc').innerText = `Your latest post: "${latest.title}". You have ${count} total posts.`;
+              document.getElementById('overviewAnnouncementsDesc').innerText = `Your latest post: "${latest.title}".`;
             } else {
               document.getElementById('overviewAnnouncementsDesc').innerText = `You haven't posted any announcements yet.`;
             }
@@ -567,6 +605,15 @@
           themeIcon.classList.replace('ph-sun', 'ph-moon');
         }
       });
+
+      // Character Counter Logic for Announcement Description
+      const annDesc = document.getElementById('annDesc');
+      const annDescCount = document.getElementById('annDescCount');
+      if(annDesc && annDescCount) {
+        annDesc.addEventListener('input', () => {
+          annDescCount.textContent = annDesc.value.length;
+        });
+      }
 
       // 2. Handle Announcement Submission
       const annForm = document.getElementById('announcementForm');

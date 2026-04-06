@@ -21,15 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = section.querySelector('#scholarshipsGrid');
     if (!container) return;
 
-    try {
-      const response = await fetch('http://localhost:3000/api/scholarships');
-      const data = await response.json();
-      container.innerHTML = '';
+    let allScholarships = [];
 
-      if (data.success && data.data.length > 0) {
-        data.data.forEach(item => {
+    function renderScholarships(items) {
+      container.innerHTML = '';
+      if (items.length > 0) {
+        items.forEach(item => {
           const bgColors = ['bg-indigo', 'bg-emerald', 'bg-rose', 'bg-amber', 'bg-sky', 'bg-purple'];
           const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
+          const category = item.category || item.department || 'General';
 
           container.innerHTML += `
             <div class="card">
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
                   <span style="color: var(--text-muted);">Deadline</span>
-                  <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString('en-GB')}</span>
+                  <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString()}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
                   <span style="color: var(--text-muted);">Category</span>
-                  <span style="font-weight: 600; color: var(--primary);">${item.category}</span>
+                  <span style="font-weight: 600; color: var(--primary);">${category}</span>
                 </div>
                 <a href="${item.applyLink}" target="_blank" class="primary-btn" style="width: 100%; justify-content: center; text-decoration: none;">Apply Now</a>
               </div>
@@ -59,9 +59,65 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active scholarships found.</p>';
       }
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/scholarships');
+      const data = await response.json();
+      if (data.success) {
+        allScholarships = data.data;
+        renderScholarships(allScholarships);
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active scholarships found.</p>';
+      }
     } catch (err) {
       console.error('Error fetching scholarships:', err);
       container.innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load scholarships from server.</p>';
+    }
+
+    // Filter tabs
+    const filterTabs = section.querySelectorAll('#categoryFilters .filter-tab');
+    if (filterTabs.length > 0 && !section.hasAttribute('data-filters-attached')) {
+      section.setAttribute('data-filters-attached', 'true');
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const filter = tab.dataset.filter;
+          if (filter === 'All') {
+            renderScholarships(allScholarships);
+          } else {
+            renderScholarships(allScholarships.filter(s => (s.category || s.department) === filter));
+          }
+        });
+      });
+    }
+
+    // Currency Converter Logic
+    const convBtn = section.querySelector('#convBtn');
+    if (convBtn && !convBtn.hasAttribute('data-listener-attached')) {
+      convBtn.setAttribute('data-listener-attached', 'true');
+      convBtn.addEventListener('click', async () => {
+        const amt = section.querySelector('#convAmt').value;
+        const from = section.querySelector('#convFrom').value;
+        const to = section.querySelector('#convTo').value;
+        const resEl = section.querySelector('#convRes');
+        
+        if(from === to) { resEl.textContent = 'Select different currencies'; return; }
+        resEl.textContent = 'Converting...';
+        
+        try {
+          const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+          const data = await res.json();
+          if(data.rates && data.rates[to]) {
+            resEl.textContent = `${amt} ${from} = ${(amt * data.rates[to]).toFixed(2)} ${to}`;
+          } else {
+            resEl.textContent = 'Conversion error';
+          }
+        } catch(e) {
+          resEl.textContent = 'Network Error';
+        }
+      });
     }
   }
 
@@ -70,13 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = section.querySelector('#internshipsGrid');
     if (!container) return;
 
-    try {
-      const response = await fetch('http://localhost:3000/api/internships');
-      const data = await response.json();
-      container.innerHTML = '';
+    let allInternships = [];
 
-      if (data.success && data.data.length > 0) {
-        data.data.forEach(item => {
+    function renderInternships(items) {
+      container.innerHTML = '';
+      if (items.length > 0) {
+        items.forEach(item => {
           const colors = ['#ea4335', '#0f9d58', '#4285f4', '#f4b400', '#000', '#6366f1'];
           const cName = item.company ? item.company.charAt(0).toUpperCase() : 'C';
           const randColor = colors[Math.floor(Math.random() * colors.length)];
@@ -97,7 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
               <p class="job-desc">${item.description}</p>
               <div class="job-footer">
                 <span class="apply-deadline">Deadline: ${new Date(item.deadline).toLocaleDateString()}</span>
-                <a href="${item.applyLink}" target="_blank" class="apply-btn" style="text-decoration: none; display: inline-flex; justify-content: center;">Apply Now</a>
+                <div style="display: flex; gap: 8px;">
+                  <button data-title="${item.title.replace(/"/g, '&quot;')}" data-desc="${item.description.replace(/"/g, '&quot;')}" class="primary-btn info-btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); cursor: pointer;">Details</button>
+                  <a href="${item.applyLink}" target="_blank" class="apply-btn" style="text-decoration: none; display: inline-flex; justify-content: center;">Apply Now</a>
+                </div>
               </div>
             </div>
           `;
@@ -105,9 +163,58 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active opportunities right now.</p>';
       }
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/internships');
+      const data = await response.json();
+
+      if (data.success) {
+        allInternships = data.data;
+        renderInternships(allInternships);
+      } else {
+        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 40px 0;">No active opportunities right now.</p>';
+      }
     } catch (err) {
       console.error('Error fetching internships:', err);
       container.innerHTML = '<p style="color: #e11d48; grid-column: 1 / -1; text-align: center; padding: 40px 0;">Failed to load internships from server.</p>';
+    }
+
+    // Filter tabs
+    const typeFilters = section.querySelectorAll('#typeFilters .filter-tab');
+    if (typeFilters.length > 0 && !section.hasAttribute('data-internship-filters-attached')) {
+      section.setAttribute('data-internship-filters-attached', 'true');
+      typeFilters.forEach(tab => {
+        tab.addEventListener('click', () => {
+          typeFilters.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const filter = tab.dataset.filter;
+          if (filter === 'All') {
+            renderInternships(allInternships);
+          } else {
+            renderInternships(allInternships.filter(i => i.type === filter));
+          }
+        });
+      });
+    }
+
+    // Modal Logic
+    const infoModal = section.querySelector('#infoModal');
+    if (infoModal && !section.hasAttribute('data-modal-attached')) {
+      section.setAttribute('data-modal-attached', 'true');
+      const closeInfoModal = section.querySelector('#closeInfoModal');
+      if (closeInfoModal) {
+        closeInfoModal.addEventListener('click', () => infoModal.style.display = 'none');
+      }
+      infoModal.addEventListener('click', (e) => { if (e.target === infoModal) infoModal.style.display = 'none'; });
+
+      container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('info-btn')) {
+           section.querySelector('#infoModalTitle').textContent = e.target.getAttribute('data-title');
+           section.querySelector('#infoModalBody').textContent = e.target.getAttribute('data-desc');
+           infoModal.style.display = 'flex';
+        }
+      });
     }
   }
 
@@ -264,6 +371,24 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Error fetching events:', err);
       document.getElementById('eventsContainer').innerHTML = '<p style="color: #e11d48; text-align: center; padding: 40px 0;">Failed to load events. Make sure the server is running.</p>';
+    }
+
+    // Image Grid Filtering Logic
+    const gFilters = section.querySelectorAll('#galleryFilters .filter-tab');
+    const gItems = section.querySelectorAll('.g-item');
+    if(gFilters.length > 0 && !section.hasAttribute('data-gallery-filters-attached')) {
+      section.setAttribute('data-gallery-filters-attached', 'true');
+      gFilters.forEach(btn => {
+        btn.addEventListener('click', () => {
+          gFilters.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.getAttribute('data-gfilter');
+          gItems.forEach(item => {
+            if(filter === 'all' || item.classList.contains(filter)) item.style.display = '';
+            else item.style.display = 'none';
+          });
+        });
+      });
     }
   }
 

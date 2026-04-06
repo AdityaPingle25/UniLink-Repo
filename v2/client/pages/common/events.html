@@ -54,9 +54,31 @@
       <p style="color: var(--text-muted); font-size: 15px;">Discover and register for upcoming campus events.</p>
     </section>
 
-    <div class="events-list" id="eventsContainer">
+    <div class="events-list" id="eventsContainer" style="margin-bottom: 40px;">
       <p style="color: var(--text-muted); padding: 40px 0; text-align: center;">Loading events...</p>
     </div>
+
+    <!-- Image Grid with Filtering (Past Highlights) -->
+    <section style="margin-bottom: 40px;">
+      <h2 style="font-size: 18px; margin-bottom: 16px;">Past Event Highlights</h2>
+      <div class="filter-tabs" id="galleryFilters" style="margin-bottom: 20px;">
+        <button class="filter-tab active" data-gfilter="all">All</button>
+        <button class="filter-tab" data-gfilter="tech">Technical</button>
+        <button class="filter-tab" data-gfilter="cultural">Cultural</button>
+      </div>
+      <div class="image-grid" id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000105514.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Technical Expo"></div>
+        <div class="g-item cultural" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000126471.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Musical Performance"></div>
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000105511.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Project Display"></div>
+        <div class="g-item cultural" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000126473.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Traditional Performance"></div>
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000105512.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Winner Celebration"></div>
+        <div class="g-item cultural" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000126475.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Stage Performance"></div>
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000105513.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Team Work"></div>
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000105515.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="Technical Symposium"></div>
+        <div class="g-item tech" style="border-radius: 8px; overflow: hidden; aspect-ratio: 1;"><img src="../../assets/img/1000126469.jpg" style="width: 100%; height: 100%; object-fit: cover;" alt="ACM India Award"></div>
+      </div>
+    </section>
+
     <!-- Registration Modal -->
     <div class="modal-overlay" id="regModal">
       <div class="modal">
@@ -222,6 +244,23 @@
     }
 
     loadEvents();
+
+    // Image Grid Filtering Logic
+    const gFilters = document.querySelectorAll('#galleryFilters .filter-tab');
+    const gItems = document.querySelectorAll('.g-item');
+    if(gFilters.length > 0) {
+      gFilters.forEach(btn => {
+        btn.addEventListener('click', () => {
+          gFilters.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.getAttribute('data-gfilter');
+          gItems.forEach(item => {
+            if(filter === 'all' || item.classList.contains(filter)) item.style.display = '';
+            else item.style.display = 'none';
+          });
+        });
+      });
+    }
   </script>
 </body>
 </html>

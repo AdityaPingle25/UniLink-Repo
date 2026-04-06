@@ -54,6 +54,21 @@
       <p style="color: var(--text-muted); font-size: 15px;">Browse scholarships by category and apply before deadlines.</p>
     </section>
 
+    <!-- Currency Converter Component -->
+    <div class="currency-converter-widget" style="background: var(--bg-surface); padding: 16px 20px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-color);">
+        <span style="font-weight: 500; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 6px;"><i class="ph ph-currency-circle-dollar" style="font-size: 18px; color: var(--primary);"></i> Quick Converter:</span>
+        <input type="number" id="convAmt" value="1000" min="0" style="width: 90px; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
+        <select id="convFrom" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
+          <option>USD</option><option>EUR</option><option>GBP</option><option>INR</option><option>AUD</option>
+        </select>
+        <span style="color: var(--text-muted); font-size: 14px;">to</span>
+        <select id="convTo" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
+          <option selected>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AUD</option>
+        </select>
+        <button id="convBtn" class="primary-btn" style="padding: 8px 16px; min-height: unset; height: auto;">Convert</button>
+        <span id="convRes" style="font-weight: 600; color: var(--primary); margin-left: auto; font-size: 15px;"></span>
+    </div>
+
     <div class="filter-tabs" id="categoryFilters">
       <button class="filter-tab active" data-filter="All">All</button>
       <button class="filter-tab" data-filter="SC/ST">SC/ST</button>
@@ -139,6 +154,65 @@
           }
         });
       });
+
+      // Currency Converter Logic
+      const convBtn = document.getElementById('convBtn');
+      const convFrom = document.getElementById('convFrom');
+      const convTo = document.getElementById('convTo');
+      const resEl = document.getElementById('convRes');
+      const amtEl = document.getElementById('convAmt');
+
+      // 1. Fetch all available currencies and populate selects
+      async function setupConverter() {
+        try {
+          const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+          const data = await res.json();
+          if (data.rates) {
+            const currencies = Object.keys(data.rates).sort();
+            convFrom.innerHTML = '';
+            convTo.innerHTML = '';
+            
+            currencies.forEach(curr => {
+              const opt1 = document.createElement('option');
+              opt1.value = curr;
+              opt1.textContent = curr;
+              if (curr === 'USD') opt1.selected = true;
+              convFrom.appendChild(opt1);
+
+              const opt2 = document.createElement('option');
+              opt2.value = curr;
+              opt2.textContent = curr;
+              if (curr === 'INR') opt2.selected = true;
+              convTo.appendChild(opt2);
+            });
+          }
+        } catch (e) { console.error('Failed to load currencies', e); }
+      }
+      
+      setupConverter();
+
+      if (convBtn) {
+        convBtn.addEventListener('click', async () => {
+          const amt = amtEl.value;
+          const from = convFrom.value;
+          const to = convTo.value;
+          
+          if(from === to) { resEl.textContent = 'Select different currencies'; return; }
+          resEl.textContent = 'Converting...';
+          
+          try {
+            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+            const data = await res.json();
+            if(data.rates && data.rates[to]) {
+              resEl.textContent = `${amt} ${from} = ${(amt * data.rates[to]).toFixed(2)} ${to}`;
+            } else {
+              resEl.textContent = 'Conversion error';
+            }
+          } catch(e) {
+            resEl.textContent = 'Network Error';
+          }
+        });
+      }
     });
   </script>
 </body>
