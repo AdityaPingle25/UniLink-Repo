@@ -40,7 +40,7 @@ app.use('/api/assignments', assignmentRoutes);
 app.use('/api/students', studentRoutes);
 
 // Catch-all to serve v2/client/index.html for any unknown route (enables client-side routing)
-app.get('*', (req, res) => {
+app.get('{*path}', (req, res) => {
     res.sendFile(path.join(__dirname, 'v2/client/index.html'));
 });
 
