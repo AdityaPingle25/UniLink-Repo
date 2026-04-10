@@ -4,7 +4,7 @@
   "description": "UniLink - Campus Connectivity Platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node v2/server/server.js",
     "install-server": "npm install --prefix v2/server",
     "postinstall": "npm install --prefix v2/server"
   },
