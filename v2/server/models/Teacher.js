@@ -9,7 +9,8 @@ const teacherSchema = new mongoose.Schema({
   divisions: [{ type: String }],
   phone: { type: String, default: 'Not set' },
   college: { type: String, default: 'PCCOE, Pune' },
-  role: { type: String, default: 'Teacher' }
+  role: { type: String, default: 'Teacher' },
+  socialLinks: [{ platform: String, url: String }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Teacher', teacherSchema);

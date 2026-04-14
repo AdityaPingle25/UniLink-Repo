@@ -43,6 +43,7 @@ const internshipRoutes = require('./routes/internships');
 const eventRoutes = require('./routes/events');
 const assignmentRoutes = require('./routes/assignments');
 const studentRoutes = require('./routes/students');
+const teacherRoutes = require('./routes/teachers');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/announcements', announcementRoutes);
@@ -51,6 +52,7 @@ app.use('/api/internships', internshipRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/teachers', teacherRoutes);
 
 // Catch-all to serve v2/client/index.html for any unknown GET request (enables client-side routing)
 app.use((req, res, next) => {

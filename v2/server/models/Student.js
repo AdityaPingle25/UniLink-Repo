@@ -8,7 +8,9 @@ const studentSchema = new mongoose.Schema({
   division: { type: String, required: true },
   year: { type: String, required: true },
   branch: { type: String, required: true },
-  role: { type: String, default: 'Student' } // Added role to clearly identify user type
+  phone: { type: String, default: 'Not set' },
+  role: { type: String, default: 'Student' },
+  socialLinks: [{ platform: String, url: String }]
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);

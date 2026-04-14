@@ -159,6 +159,70 @@
     body.dark-theme .form-group label {
       color: #f8fafc;
     }
+
+    /* Student Portfolio Modal CSS */
+    .portfolio-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15,23,42,0.55); backdrop-filter: blur(10px);
+      z-index: 300; align-items: center; justify-content: center;
+    }
+    .portfolio-modal-overlay.active { display: flex; }
+    .portfolio-modal {
+      background: white; border-radius: 24px;
+      padding: 0; width: 520px; max-width: 94vw;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    }
+    .portfolio-modal-hero {
+      padding: 32px 32px 24px;
+      background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+      border-radius: 24px 24px 0 0;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; text-align: center; position: relative;
+    }
+    .portfolio-modal-hero.student-hero {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    }
+    .portfolio-close {
+      position: absolute; top: 14px; right: 16px;
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      font-size: 18px; display: flex; align-items: center; justify-content: center;
+    }
+    .portfolio-hero-avatar {
+      width: 90px; height: 90px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.5);
+      object-fit: cover; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    .portfolio-hero-name { font-size: 22px; font-weight: 800; color: white; }
+    .portfolio-hero-role {
+      font-size: 13px; color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.15); padding: 4px 14px;
+      border-radius: 20px; font-weight: 500;
+    }
+    .portfolio-body { padding: 24px 28px; }
+    .portfolio-section-title {
+      font-size: 12px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;
+    }
+    .portfolio-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .portfolio-info-item { display: flex; flex-direction: column; gap: 3px; }
+    .portfolio-info-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .portfolio-info-value { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .portfolio-social-list { display: flex; flex-direction: column; gap: 8px; }
+    .portfolio-social-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px;
+      background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.1);
+      text-decoration: none; transition: all 0.2s;
+    }
+    .portfolio-social-item:hover { background: rgba(99,102,241,0.12); }
+    .portfolio-social-icon { font-size: 20px; flex-shrink: 0; }
+    .portfolio-social-name { font-size: 13px; font-weight: 700; color: var(--text-main); }
+    .portfolio-social-url { font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    body.dark-theme .portfolio-modal { background: #1e293b; }
+    body.dark-theme .portfolio-info-value { color: #f8fafc; }
+    body.dark-theme .portfolio-social-item { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.15); }
+    body.dark-theme .portfolio-social-name { color: #f8fafc; }
   </style>
 
 </head>
@@ -1424,7 +1488,9 @@
             data.data.forEach(stud => {
               const bgColors = ['#6366F1', '#e11d48', '#059669', '#d97706', '#8b5cf6'];
               const col = bgColors[stud.fullName.length % bgColors.length];
-              list.innerHTML += `<div class="student-item" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+              // Ensure safe JSON string for onclick
+              const safeStudJSON = JSON.stringify(stud).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+              list.innerHTML += `<div class="student-item" style="border-bottom: 1px solid rgba(0,0,0,0.05); cursor: pointer;" onclick="openStudentPortfolio(${safeStudJSON})">
                 <div class="student-info">
                   <div class="student-avatar" style="background: ${col};">${stud.fullName.charAt(0).toUpperCase()}</div>
                   <div>
@@ -1432,6 +1498,7 @@
                     <div style="font-size: 13px; color: var(--text-muted);">Div: ${stud.division} • PRN: ${stud.prn}</div>
                   </div>
                 </div>
+                <i class="ph ph-caret-right" style="margin-left:auto; color:var(--primary); font-size:16px;"></i>
               </div>`;
             });
           } else {
@@ -1450,6 +1517,69 @@
       fetchAssignments();
       fetchMyStudents();
       fetchAnnouncements();
+
+      // Student Portfolio Handle
+      const STUDENT_SOCIAL_PLATFORMS = {
+        linkedin: { icon: 'ph-linkedin-logo', color: '#0077B5', label: 'LinkedIn' },
+        leetcode: { icon: 'ph-code', color: '#FFA116', label: 'LeetCode' },
+        hackerrank: { icon: 'ph-terminal-window', color: '#00EA64', label: 'HackerRank' },
+        codechef: { icon: 'ph-cooking-pot', color: '#5B4638', label: 'CodeChef' },
+        geeksforgeeks: { icon: 'ph-leaf', color: '#2F8D46', label: 'GeeksForGeeks' },
+        github: { icon: 'ph-github-logo', color: '#181717', label: 'GitHub' },
+        twitter: { icon: 'ph-twitter-logo', color: '#1DA1F2', label: 'Twitter / X' },
+        instagram: { icon: 'ph-instagram-logo', color: '#E1306C', label: 'Instagram' },
+        portfolio: { icon: 'ph-globe', color: '#3b82f6', label: 'Portfolio' },
+        other: { icon: 'ph-link', color: '#64748b', label: 'Other' }
+      };
+
+      const yearMap = { '1': 'First Year (FE)', '2': 'Second Year (SE)', '3': 'Third Year (TE)', '4': 'Final Year (BE)' };
+      const branchMap = { 
+        'CS': 'Computer Science', 'IT': 'Information Technology', 
+        'CSE-AIML': 'CSE (AI & ML)', 'Civil': 'Civil Engineering',
+        'ENTC': 'Electronics & Telecom', 'Mech': 'Mechanical Engineering'
+      };
+
+      window.openStudentPortfolio = (student) => {
+        const bgColors = ['#6366F1', '#e11d48', '#059669', '#d97706', '#8b5cf6'];
+        const col = bgColors[student.fullName.length % bgColors.length];
+        const initial = student.fullName.charAt(0).toUpperCase();
+        
+        document.getElementById('spAvatar').src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.fullName)}&backgroundColor=${col.replace('#','')}&textColor=ffffff`;
+        document.getElementById('spName').textContent = student.fullName;
+        
+        const branchDisplay = branchMap[student.branch] || student.branch || '—';
+        document.getElementById('spRole').textContent = `Student · ${branchDisplay}`;
+        
+        document.getElementById('spEmail').textContent = student.email || '—';
+        document.getElementById('spPrn').textContent = student.prn || '—';
+        document.getElementById('spBranch').textContent = branchDisplay;
+        document.getElementById('spYear').textContent = yearMap[student.year] || student.year || '—';
+        document.getElementById('spDivision').textContent = student.division || '—';
+        document.getElementById('spPhone').textContent = student.phone || 'Not set';
+
+        const socialList = document.getElementById('spSocialList');
+        const links = student.socialLinks || [];
+        if (links.length) {
+          socialList.innerHTML = links.map(l => {
+            const meta = STUDENT_SOCIAL_PLATFORMS[l.platform] || STUDENT_SOCIAL_PLATFORMS.other;
+            return `<a href="${l.url}" target="_blank" class="portfolio-social-item">
+              <i class="ph ${meta.icon} portfolio-social-icon" style="color:${meta.color}"></i>
+              <div style="min-width:0;">
+                <div class="portfolio-social-name">${meta.label}</div>
+                <div class="portfolio-social-url">${l.url}</div>
+              </div>
+              <i class="ph ph-arrow-square-out" style="margin-left:auto;color:var(--text-muted);font-size:16px;"></i>
+            </a>`;
+          }).join('');
+        } else {
+          socialList.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">No social links added yet.</p>';
+        }
+        document.getElementById('studentPortfolioModal').classList.add('active');
+      };
+
+      document.getElementById('studentPortfolioModal').addEventListener('click', e => {
+        if (e.target === e.currentTarget) e.currentTarget.classList.remove('active');
+      });
     });
   </script>
 
@@ -1530,6 +1660,51 @@
           <button type="button" onclick="closeEditEventModal()" class="primary-btn secondary" style="flex: 0;">Cancel</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Student Portfolio Modal -->
+  <div class="portfolio-modal-overlay" id="studentPortfolioModal">
+    <div class="portfolio-modal">
+      <div class="portfolio-modal-hero student-hero">
+        <button class="portfolio-close" onclick="document.getElementById('studentPortfolioModal').classList.remove('active')"><i class="ph ph-x"></i></button>
+        <img class="portfolio-hero-avatar" id="spAvatar" src="" alt="Student Avatar">
+        <div class="portfolio-hero-name" id="spName">—</div>
+        <span class="portfolio-hero-role" id="spRole">Student</span>
+      </div>
+      <div class="portfolio-body">
+        <div class="portfolio-section-title"><i class="ph ph-identification-card"></i> Academic & Personal Details</div>
+        <div class="portfolio-info-grid">
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">Email</span>
+            <span class="portfolio-info-value" id="spEmail">—</span>
+          </div>
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">PRN</span>
+            <span class="portfolio-info-value" id="spPrn">—</span>
+          </div>
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">Branch</span>
+            <span class="portfolio-info-value" id="spBranch">—</span>
+          </div>
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">Academic Year</span>
+            <span class="portfolio-info-value" id="spYear">—</span>
+          </div>
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">Division</span>
+            <span class="portfolio-info-value" id="spDivision">—</span>
+          </div>
+          <div class="portfolio-info-item">
+            <span class="portfolio-info-label">Phone</span>
+            <span class="portfolio-info-value" id="spPhone">—</span>
+          </div>
+        </div>
+        <div class="portfolio-section-title"><i class="ph ph-share-network"></i> Social & Coding Profiles</div>
+        <div class="portfolio-social-list" id="spSocialList">
+          <p style="color: var(--text-muted); font-size: 13px;">No social links added.</p>
+        </div>
+      </div>
     </div>
   </div>
 
