@@ -730,7 +730,7 @@
             }
             myAnnouncements.forEach(item => {
               const fileHtml = item.fileName ? `<p style="margin: 4px 0 0; font-size: 13px;"><i class="ph ph-paperclip"></i> <a href="${item.fileUrl}" download="${item.fileName}" style="color: var(--primary);">${item.fileName}</a></p>` : '';
-              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="flex: 1;">
                   <h4 style="margin: 0; font-size: 16px;">${item.title}</h4>
                   <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.audience} • ${new Date(item.createdAt).toLocaleDateString()}</p>
@@ -841,7 +841,7 @@
           list.innerHTML = '';
           if(data.success && data.data.length > 0) {
             data.data.forEach(item => {
-              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                   <h4 style="margin: 0; font-size: 16px;">${item.title} <span style="font-size: 13px; font-weight: 500; color: var(--text-muted);">(${item.company})</span></h4>
                   <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.type} • Due: ${new Date(item.deadline).toLocaleDateString()}</p>
@@ -863,7 +863,7 @@
           list.innerHTML = '';
           if(data.success && data.data.length > 0) {
             data.data.forEach(item => {
-              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                   <h4 style="margin: 0; font-size: 16px;">${item.title}  <span style="font-size: 13px; font-weight: 500; color: var(--primary);">${item.amount}</span></h4>
                   <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">Category: ${item.category} • Due: ${new Date(item.deadline).toLocaleDateString()}</p>
@@ -1153,7 +1153,7 @@
               const countRes = await fetch('/api/events/' + item._id + '/count');
               const countData = await countRes.json();
               const regCount = countData.count || 0;
-              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px;">
                 ${item.bannerImage ? `<img src="${item.bannerImage}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">` : ''}
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
                   <div style="flex: 1; min-width: 200px;">
@@ -1226,7 +1226,7 @@
           list.innerHTML = '';
           if(data.success && data.data.length > 0) {
             data.data.forEach(item => {
-              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
                   <h4 style="margin: 0; font-size: 16px;">${item.subject} - ${item.title}</h4>
                   <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">Due: ${new Date(item.deadline).toLocaleString()}</p>

@@ -196,7 +196,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('../images/colorful_hero_doodle.png') center/cover no-repeat;
+  background: url('../images/minimalist_hero_doodle.png') center/cover no-repeat;
   opacity: 0.2; /* Subtle colorful doodle texture */
   z-index: 0;
   pointer-events: none;
