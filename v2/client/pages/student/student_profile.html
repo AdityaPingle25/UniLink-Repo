@@ -985,9 +985,41 @@
         const e = localStorage.getItem('userEmail');
         const p = localStorage.getItem('userPrn');
         const b = localStorage.getItem('userBranch');
+        const y = localStorage.getItem('userYear');
+        const d = localStorage.getItem('userDivision');
         const phoneStr = localStorage.getItem('userPhone');
+
+        if (n) {
+          document.getElementById('profileName').innerText = n;
+          document.getElementById('navUserName').innerText = n;
+          document.getElementById('navAvatar').innerText = n.charAt(0).toUpperCase();
+          document.getElementById('infoName').innerText = n;
+        }
+        if (e) document.getElementById('infoEmail').innerText = e;
+        if (p) document.getElementById('infoPrn').innerText = p;
+        if (b) {
+          const branchName = {
+            'CS': 'Computer Science',
+            'IT': 'Information Technology',
+            'CSE-AIML': 'CSE (AI & ML)',
+            'Civil': 'Civil Engineering',
+            'ENTC': 'Electronics & Telecom',
+            'Mechanical': 'Mechanical Engineering',
+            'Computer-regional': 'Computer (Regional)'
+          }[b] || b;
+          document.getElementById('infoBranch').innerText = branchName;
+          document.getElementById('profileRoleBadge').innerText = branchName + ' Student';
+        }
+        if (y) {
+          const yearName = {
+            '1': 'First Year (FE)', '2': 'Second Year (SE)', '3': 'Third Year (TE)', '4': 'Final Year (BE)'
+          }[y] || y;
+          document.getElementById('infoYear').innerText = yearName;
+        }
+        if (d) document.getElementById('infoDivision').innerText = 'Division ' + d;
         if (phoneStr) document.getElementById('infoPhone').innerText = phoneStr;
       }
+      refreshDisplay();
 
       window.saveProfile = async () => {
         const newPhone = document.getElementById('editPhone').value.trim();
