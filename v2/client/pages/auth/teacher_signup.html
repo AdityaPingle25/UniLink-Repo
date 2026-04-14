@@ -191,13 +191,15 @@
         const result = await response.json();
 
         if (result.success) {
-          // Store data in localStorage for dynamic UI update
           localStorage.setItem('teacherDbId', result.data.id);
           localStorage.setItem('teacherName', result.data.fullName);
           localStorage.setItem('teacherEmail', result.data.email);
           localStorage.setItem('teacherId', result.data.employeeId);
           localStorage.setItem('teacherDept', result.data.department);
           localStorage.setItem('teacherDivisions', JSON.stringify(result.data.divisions));
+          localStorage.setItem('teacherPhone', result.data.phone || 'Not set');
+          localStorage.setItem('teacherCollege', result.data.college || 'PCCOE, Pune');
+          localStorage.setItem('teacherSocialLinks', JSON.stringify([]));
           localStorage.setItem('userRole', 'Teacher');
 
           alert('Profile setup successful! Redirecting to Dashboard...');

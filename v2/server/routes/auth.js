@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
 const Teacher = require('../models/Teacher');
-const StudentProfile = require('../models/StudentProfile');
-const TeacherProfile = require('../models/TeacherProfile');
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
@@ -63,8 +61,6 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid password.' });
     }
 
-    const profile = await StudentProfile.findOne({ userId: student._id });
-
     res.json({
       success: true,
       data: {
@@ -76,8 +72,8 @@ router.post('/login', async (req, res) => {
         year: student.year,
         branch: student.branch,
         division: student.division,
-        phone: profile ? profile.phone : (student.phone || ''),
-        socialLinks: profile ? profile.socialLinks : (student.socialLinks || [])
+        phone: student.phone || 'Not set',
+        socialLinks: student.socialLinks || []
       }
     });
 
@@ -150,8 +146,6 @@ router.post('/teacher/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid password.' });
     }
 
-    const profile = await TeacherProfile.findOne({ userId: teacher._id });
-
     res.json({
       success: true,
       data: {
@@ -161,10 +155,10 @@ router.post('/teacher/login', async (req, res) => {
         employeeId: teacher.employeeId,
         department: teacher.department,
         divisions: teacher.divisions,
-        phone: profile ? profile.phone : (teacher.phone || ''),
+        phone: teacher.phone || 'Not set',
         college: teacher.college,
         role: teacher.role,
-        socialLinks: profile ? profile.socialLinks : (teacher.socialLinks || [])
+        socialLinks: teacher.socialLinks || []
       }
     });
 

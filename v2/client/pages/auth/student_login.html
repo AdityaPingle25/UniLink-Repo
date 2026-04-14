@@ -102,6 +102,8 @@
           if (result.data.year) localStorage.setItem('userYear', result.data.year);
           if (result.data.branch) localStorage.setItem('userBranch', result.data.branch);
           if (result.data.division) localStorage.setItem('userDivision', result.data.division);
+          if (result.data.phone) localStorage.setItem('userPhone', result.data.phone);
+          if (result.data.socialLinks) localStorage.setItem('userSocialLinks', JSON.stringify(result.data.socialLinks));
 
           window.location.href = '../student/student_dashboard.html';
         } else {

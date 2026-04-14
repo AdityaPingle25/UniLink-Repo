@@ -114,6 +114,8 @@
           localStorage.setItem('teacherId', result.data.employeeId);
           localStorage.setItem('teacherDept', result.data.department);
           localStorage.setItem('teacherDivisions', JSON.stringify(result.data.divisions || []));
+          if (result.data.phone) localStorage.setItem('teacherPhone', result.data.phone);
+          if (result.data.socialLinks) localStorage.setItem('teacherSocialLinks', JSON.stringify(result.data.socialLinks));
           localStorage.setItem('userRole', 'Teacher');
 
           window.location.href = '../teacher/teacher_dashboard.html';

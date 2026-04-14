@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
-const StudentProfile = require('../models/StudentProfile');
 
 // Get all students (optionally filter by divisions)
 router.get('/', async (req, res) => {
@@ -87,16 +86,15 @@ router.put('/:id', async (req, res) => {
 router.put('/:id/profile', async (req, res) => {
   try {
     const { phone, socialLinks } = req.body;
-    let profile = await StudentProfile.findOne({ userId: req.params.id });
-    if (!profile) {
-      profile = new StudentProfile({ userId: req.params.id });
-    }
-    if (phone !== undefined) profile.phone = phone;
-    if (socialLinks !== undefined) profile.socialLinks = socialLinks;
+    let student = await Student.findById(req.params.id);
+    if (!student) return res.status(404).json({ success: false, message: 'Student not found.' });
 
-    await profile.save();
+    if (phone !== undefined) student.phone = phone;
+    if (socialLinks !== undefined) student.socialLinks = socialLinks;
 
-    res.json({ success: true, data: profile });
+    await student.save();
+
+    res.json({ success: true, data: student });
   } catch (err) {
     console.error('Student Profile Update Error:', err);
     res.status(500).json({ success: false, message: 'Server error' });

@@ -199,12 +199,15 @@
         const result = await response.json();
 
         if (result.success) {
-          // Store data in localStorage for dynamic UI update
+          localStorage.setItem('userId', result.data.id);
           localStorage.setItem('userName', result.data.fullName);
           localStorage.setItem('userEmail', result.data.email);
           localStorage.setItem('userPrn', result.data.prn);
           localStorage.setItem('userYear', payload.year);
           localStorage.setItem('userBranch', payload.branch);
+          localStorage.setItem('userDivision', payload.division);
+          localStorage.setItem('userPhone', result.data.phone || 'Not set');
+          localStorage.setItem('userSocialLinks', JSON.stringify([]));
 
           alert('Profile setup successful! Redirecting to Dashboard...');
           window.location.href = '../student/student_dashboard.html';

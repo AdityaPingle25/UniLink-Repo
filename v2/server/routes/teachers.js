@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Teacher = require('../models/Teacher');
-const TeacherProfile = require('../models/TeacherProfile');
 
 // GET /api/teachers?division=A  — find teachers assigned to a division
 router.get('/', async (req, res) => {
@@ -10,17 +9,7 @@ router.get('/', async (req, res) => {
     if (req.query.division) {
       query.divisions = { $in: [req.query.division] };
     }
-    const teachers = await Teacher.find(query).select('-password').sort({ fullName: 1 }).lean();
-    
-    // Attach profile links to each teacher object
-    for (let i = 0; i < teachers.length; i++) {
-        const p = await TeacherProfile.findOne({ userId: teachers[i]._id });
-        if (p) {
-            teachers[i].phone = p.phone || teachers[i].phone;
-            teachers[i].socialLinks = p.socialLinks || teachers[i].socialLinks;
-        }
-    }
-
+    const teachers = await Teacher.find(query).select('-password').sort({ fullName: 1 });
     res.json({ success: true, data: teachers });
   } catch (err) {
     console.error('Error fetching teachers:', err);
@@ -43,13 +32,9 @@ router.get('/:id', async (req, res) => {
 router.put('/:id/social', async (req, res) => {
   try {
     const { socialLinks } = req.body;
-    let profile = await TeacherProfile.findOne({ userId: req.params.id });
-    if (!profile) {
-      profile = new TeacherProfile({ userId: req.params.id });
-    }
-    profile.socialLinks = socialLinks;
-    await profile.save();
-    res.json({ success: true, data: profile });
+    let teacher = await Teacher.findByIdAndUpdate(req.params.id, { socialLinks }, { new: true }).select('-password');
+    if (!teacher) return res.status(404).json({ success: false, message: 'Teacher not found' });
+    res.json({ success: true, data: teacher });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
@@ -59,14 +44,14 @@ router.put('/:id/social', async (req, res) => {
 router.put('/:id/profile', async (req, res) => {
   try {
     const { phone, socialLinks } = req.body;
-    let profile = await TeacherProfile.findOne({ userId: req.params.id });
-    if (!profile) {
-      profile = new TeacherProfile({ userId: req.params.id });
-    }
-    if (phone !== undefined) profile.phone = phone;
-    if (socialLinks !== undefined) profile.socialLinks = socialLinks;
-    await profile.save();
-    res.json({ success: true, data: profile });
+    let teacher = await Teacher.findById(req.params.id);
+    if (!teacher) return res.status(404).json({ success: false, message: 'Teacher not found' });
+    
+    if (phone !== undefined) teacher.phone = phone;
+    if (socialLinks !== undefined) teacher.socialLinks = socialLinks;
+    
+    await teacher.save();
+    res.json({ success: true, data: teacher });
   } catch (err) {
     console.error('Teacher Profile Update Error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
