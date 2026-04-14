@@ -564,50 +564,8 @@
       </div>
       <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
         <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Full Name</label>
-          <input type="text" id="editName" class="info-value-input" required>
-        </div>
-        <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Email</label>
-          <div class="info-value" id="editEmailDisplay" style="padding: 9px 12px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07); display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted);">
-            <i class="ph ph-lock" style="font-size: 15px;"></i>
-            <span id="editEmailVal"></span>
-            <em style="font-size: 12px; margin-left: auto;">(cannot be changed)</em>
-          </div>
-        </div>
-        <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Employee ID</label>
-          <input type="text" id="editPrn" class="info-value-input" required>
-        </div>
-        <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Department</label>
-          <select id="editDept" class="info-value-select" required>
-            <option value="">Select Department...</option>
-            <option value="Computer Science (CS)">Computer Science (CS)</option>
-            <option value="Information Technology (IT)">Information Technology (IT)</option>
-            <option value="CSE (AI &amp; ML)">CSE (AI &amp; ML)</option>
-            <option value="Civil Engineering">Civil Engineering</option>
-            <option value="Electronics &amp; Telecom (ENTC)">Electronics &amp; Telecom (ENTC)</option>
-            <option value="Mechanical Engineering">Mechanical Engineering</option>
-            <option value="Computer (Regional)">Computer (Regional)</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">Assigned Divisions</label>
-          <div class="division-checkboxes">
-            <label class="div-check-label"><input type="checkbox" value="A" id="divCheck_A"><span>Division A</span></label>
-            <label class="div-check-label"><input type="checkbox" value="B" id="divCheck_B"><span>Division B</span></label>
-            <label class="div-check-label"><input type="checkbox" value="C" id="divCheck_C"><span>Division C</span></label>
-            <label class="div-check-label"><input type="checkbox" value="D" id="divCheck_D"><span>Division D</span></label>
-          </div>
-        </div>
-        <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Phone</label>
           <input type="text" id="editPhone" class="info-value-input">
-        </div>
-        <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">College</label>
-          <input type="text" id="editCollege" class="info-value-input">
         </div>
       </form>
       <button class="save-btn" id="saveProfileBtn" style="width:100%; justify-content: center;">Save Changes</button>
@@ -681,56 +639,32 @@
       // --- Edit Profile ---
       const editModal = document.getElementById('editProfileModal');
       document.getElementById('openEditModal').addEventListener('click', () => {
-         document.getElementById('editName').value = name || '';
-         // Email is read-only — show in display element only
-         const emailSpan = document.getElementById('editEmailVal');
-         if (emailSpan) emailSpan.textContent = email || '';
-         document.getElementById('editPrn').value = prn || '';
-         document.getElementById('editDept').value = branch || '';
-         // Pre-tick division checkboxes
-         const existingDivs = [];
-         try { if (rawDivisions) JSON.parse(rawDivisions).forEach(d => existingDivs.push(d.trim())); } catch(e) {}
-         ['A','B','C','D'].forEach(d => {
-           const cb = document.getElementById('divCheck_' + d);
-           if (cb) cb.checked = existingDivs.includes(d);
-         });
          document.getElementById('editPhone').value = phone === 'Not set' ? '' : phone;
-         document.getElementById('editCollege').value = college;
          editModal.classList.add('active');
       });
       document.getElementById('closeEditModal').addEventListener('click', () => editModal.classList.remove('active'));
 
       document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-         const teacherId = localStorage.getItem('teacherId_db'); // Assuming we stored the MongoDB ID somewhere. Wait, in auth.js we returned `id`. We should store it.
-         // Since we don't have it explicitly stored across all users yet, let's just make the PUT request.
-         const _id = localStorage.getItem('teacherDbId');
-         if(!_id) { alert("Missing teacher ID in session. Please login again."); return; }
+         const _id = localStorage.getItem('teacherId_db') || localStorage.getItem('teacherDbId') || localStorage.getItem('userId');
+         if(!_id) { alert("Missing teacher ID in session. Local save only."); 
+            localStorage.setItem('teacherPhone', document.getElementById('editPhone').value);
+            window.location.reload();
+            return; 
+         }
 
          const payload = {
-            fullName: document.getElementById('editName').value,
-            // email intentionally excluded — cannot be changed
-            employeeId: document.getElementById('editPrn').value,
-            department: document.getElementById('editDept').value,
-            phone: document.getElementById('editPhone').value,
-            college: document.getElementById('editCollege').value,
-            divisions: ['A','B','C','D'].filter(d => document.getElementById('divCheck_' + d)?.checked)
+            phone: document.getElementById('editPhone').value
          };
 
          try {
-            const res = await fetch('http://localhost:3000/api/auth/teacher/' + _id, {
+            const res = await fetch('/api/teachers/' + _id + '/profile', {
                method: 'PUT',
                headers: { 'Content-Type': 'application/json' },
                body: JSON.stringify(payload)
             });
             const data = await res.json();
             if(data.success) {
-               localStorage.setItem('teacherName', data.data.fullName);
-               localStorage.setItem('teacherEmail', data.data.email);
-               localStorage.setItem('teacherId', data.data.employeeId);
-               localStorage.setItem('teacherDept', data.data.department);
-               localStorage.setItem('teacherPhone', data.data.phone);
-               localStorage.setItem('teacherCollege', data.data.college);
-               localStorage.setItem('teacherDivisions', JSON.stringify(data.data.divisions));
+               localStorage.setItem('teacherPhone', payload.phone);
                alert('Profile updated successfully!');
                window.location.reload();
             } else {
@@ -791,14 +725,38 @@
         document.getElementById('socialEditMode').style.display = 'none';
         document.getElementById('editSocialBtn').style.display = '';
       };
-      window.saveSocialLinks = () => {
+      window.saveSocialLinks = async () => {
         const rows = document.querySelectorAll('#socialLinksEditor .social-link-row');
         const links = [];
         rows.forEach(row => { const p = row.querySelector('select').value; const u = row.querySelector('input').value.trim(); if (p && u) links.push({ platform: p, url: u }); });
-        localStorage.setItem('teacherSocialLinks', JSON.stringify(links));
-        renderSocialLinks();
-        cancelEditSocial();
-        alert('Social links saved!');
+        
+        const _id = localStorage.getItem('teacherId_db') || localStorage.getItem('teacherDbId') || localStorage.getItem('userId');
+        if(!_id) {
+           localStorage.setItem('teacherSocialLinks', JSON.stringify(links));
+           renderSocialLinks();
+           cancelEditSocial();
+           alert('Social links saved to local storage!');
+           return;
+        }
+
+        try {
+          const res = await fetch('/api/teachers/' + _id + '/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ socialLinks: links })
+          });
+          const result = await res.json();
+          if (result.success) {
+            localStorage.setItem('teacherSocialLinks', JSON.stringify(links));
+            renderSocialLinks();
+            cancelEditSocial();
+            alert('Social links saved successfully!');
+          } else {
+            alert(result.message || 'Failed to update social links.');
+          }
+        } catch(e) {
+          alert('Error connecting to server.');
+        }
       };
 
       // --- Standard Initial Avatar ---

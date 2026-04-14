@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
+const StudentProfile = require('../models/StudentProfile');
 
 // Get all students (optionally filter by divisions)
 router.get('/', async (req, res) => {
@@ -79,6 +80,26 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     console.error('Student Update Error:', err);
     res.status(500).json({ success: false, message: 'Server error during update.' });
+  }
+});
+
+// Update or merge Student Profile specifically (phone, socialLinks)
+router.put('/:id/profile', async (req, res) => {
+  try {
+    const { phone, socialLinks } = req.body;
+    let profile = await StudentProfile.findOne({ userId: req.params.id });
+    if (!profile) {
+      profile = new StudentProfile({ userId: req.params.id });
+    }
+    if (phone !== undefined) profile.phone = phone;
+    if (socialLinks !== undefined) profile.socialLinks = socialLinks;
+
+    await profile.save();
+
+    res.json({ success: true, data: profile });
+  } catch (err) {
+    console.error('Student Profile Update Error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

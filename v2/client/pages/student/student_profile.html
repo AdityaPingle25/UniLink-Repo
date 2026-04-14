@@ -644,6 +644,9 @@
         <button class="change-avatar-btn" id="openAvatarModal">
           <i class="ph ph-camera"></i> Change Avatar
         </button>
+        <button class="change-avatar-btn" id="logoutBtn" style="border-color: #e11d48; color: #e11d48; width: 100%; justify-content: center; margin-top: auto;">
+          <i class="ph ph-sign-out"></i> Log Out
+        </button>
 
         <!-- Allocated Faculty Section -->
         <div class="faculty-card-mini" id="allocatedFacultySection">
@@ -692,7 +695,7 @@
             <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">Full Name</span>
-                <input type="text" class="info-value-input" id="editName">
+                <span class="info-value" id="editNameVal" style="font-size:15px; color: var(--text-muted); padding: 8px 0;"></span>
               </div>
               <div class="info-item">
                 <span class="info-label">Email Address</span>
@@ -700,11 +703,15 @@
               </div>
               <div class="info-item">
                 <span class="info-label">Student ID (PRN)</span>
-                <input type="text" class="info-value-input" id="editPrn">
+                <span class="info-value" id="editPrnVal" style="font-size:15px; color: var(--text-muted); padding: 8px 0;"></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone</span>
+                <input type="text" class="info-value-input" id="editPhone" placeholder="Enter phone number">
               </div>
             </div>
             <div class="edit-actions active">
-              <button class="save-btn" onclick="saveProfile()"><i class="ph ph-floppy-disk"></i> Save Changes</button>
+              <button class="save-btn" onclick="saveProfile()"><i class="ph ph-floppy-disk"></i> Save Phone</button>
               <button class="cancel-edit-btn" onclick="cancelEditPersonal()">Cancel</button>
             </div>
           </div>
@@ -714,9 +721,6 @@
         <div class="info-card">
           <div class="info-card-title">
             <i class="ph ph-graduation-cap"></i> Academic Details
-            <div class="info-card-actions">
-              <button class="edit-btn" id="editAcademicBtn" onclick="toggleEditAcademic()"><i class="ph ph-pencil-simple"></i> Edit</button>
-            </div>
           </div>
 
           <!-- View Mode -->
@@ -738,51 +742,6 @@
                 <span class="info-label">College</span>
                 <span class="info-value">PCCOE, Pune</span>
               </div>
-            </div>
-          </div>
-
-          <!-- Edit Mode -->
-          <div id="academicEditMode" style="display: none;">
-            <div class="info-grid">
-              <div class="info-item">
-                <span class="info-label">Branch / Department</span>
-                <select class="info-value-select" id="editBranch">
-                  <option value="CS">Computer Science</option>
-                  <option value="IT">Information Technology</option>
-                  <option value="CSE-AIML">CSE (AI & ML)</option>
-                  <option value="Civil">Civil Engineering</option>
-                  <option value="ENTC">Electronics & Telecom</option>
-                  <option value="Mechanical">Mechanical Engineering</option>
-                  <option value="Computer-regional">Computer (Regional)</option>
-                </select>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Academic Year</span>
-                <select class="info-value-select" id="editYear">
-                  <option value="1">First Year (FE)</option>
-                  <option value="2">Second Year (SE)</option>
-                  <option value="3">Third Year (TE)</option>
-                  <option value="4">Final Year (BE)</option>
-                </select>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Division</span>
-                <select class="info-value-select" id="editDivision">
-                  <option value="">Select Division...</option>
-                  <option value="A">Division A</option>
-                  <option value="B">Division B</option>
-                  <option value="C">Division C</option>
-                  <option value="D">Division D</option>
-                </select>
-              </div>
-              <div class="info-item">
-                <span class="info-label">College</span>
-                <span class="info-value">PCCOE, Pune</span>
-              </div>
-            </div>
-            <div class="edit-actions active">
-              <button class="save-btn" onclick="saveAcademics()"><i class="ph ph-floppy-disk"></i> Save Changes</button>
-              <button class="cancel-edit-btn" onclick="cancelEditAcademic()">Cancel</button>
             </div>
           </div>
         </div>
@@ -998,39 +957,21 @@
         }
       });
 
-      // --- Edit Profile Logic ---
       window.toggleEditPersonal = () => {
         document.getElementById('personalViewMode').style.display = 'none';
         document.getElementById('personalEditMode').style.display = 'block';
         document.getElementById('editPersonalBtn').style.display = 'none';
         // Pre-fill inputs
-        document.getElementById('editName').value = localStorage.getItem('userName') || '';
-        // Email is read-only — just display it
-        const emailSpan = document.getElementById('editEmailVal');
-        if (emailSpan) emailSpan.textContent = localStorage.getItem('userEmail') || '';
-        document.getElementById('editPrn').value = localStorage.getItem('userPrn') || '';
+        document.getElementById('editNameVal').textContent = localStorage.getItem('userName') || '';
+        document.getElementById('editEmailVal').textContent = localStorage.getItem('userEmail') || '';
+        document.getElementById('editPrnVal').textContent = localStorage.getItem('userPrn') || '';
+        document.getElementById('editPhone').value = localStorage.getItem('userPhone') || '';
       };
 
       window.cancelEditPersonal = () => {
         document.getElementById('personalViewMode').style.display = 'block';
         document.getElementById('personalEditMode').style.display = 'none';
         document.getElementById('editPersonalBtn').style.display = '';
-      };
-
-      window.toggleEditAcademic = () => {
-        document.getElementById('academicViewMode').style.display = 'none';
-        document.getElementById('academicEditMode').style.display = 'block';
-        document.getElementById('editAcademicBtn').style.display = 'none';
-        // Pre-fill
-        document.getElementById('editBranch').value = localStorage.getItem('userBranch') || 'CS';
-        document.getElementById('editYear').value = localStorage.getItem('userYear') || '1';
-        document.getElementById('editDivision').value = localStorage.getItem('userDivision') || '';
-      };
-
-      window.cancelEditAcademic = () => {
-        document.getElementById('academicViewMode').style.display = 'block';
-        document.getElementById('academicEditMode').style.display = 'none';
-        document.getElementById('editAcademicBtn').style.display = '';
       };
 
       function showSuccess() {
@@ -1044,41 +985,15 @@
         const e = localStorage.getItem('userEmail');
         const p = localStorage.getItem('userPrn');
         const b = localStorage.getItem('userBranch');
-        const y = localStorage.getItem('userYear');
-        const d = localStorage.getItem('userDivision');
-
-        if (n) {
-          document.getElementById('profileName').innerText = n;
-          document.getElementById('navUserName').innerText = n;
-          document.getElementById('navAvatar').innerText = n.charAt(0).toUpperCase();
-          document.getElementById('infoName').innerText = n;
-        }
-        if (e) document.getElementById('infoEmail').innerText = e;
-        if (p) document.getElementById('infoPrn').innerText = p;
-        if (b) {
-          document.getElementById('infoBranch').innerText = branchMap[b] || b;
-          document.getElementById('profileRoleBadge').innerText = (branchMap[b] || b) + ' Student';
-        }
-        if (y) document.getElementById('infoYear').innerText = yearMap[y] || y;
-        if (d) document.getElementById('infoDivision').innerText = 'Division ' + d;
+        const phoneStr = localStorage.getItem('userPhone');
+        if (phoneStr) document.getElementById('infoPhone').innerText = phoneStr;
       }
 
       window.saveProfile = async () => {
-        const newName = document.getElementById('editName').value.trim();
-        const newPrn = document.getElementById('editPrn').value.trim();
-        // Email cannot be changed — always use stored value
-        const newEmail = localStorage.getItem('userEmail') || '';
-
-        if (!newName || !newPrn) {
-          alert('Name and PRN are required.');
-          return;
-        }
-
+        const newPhone = document.getElementById('editPhone').value.trim();
+        
         if (!userId) {
-          // No userId — save to localStorage only
-          localStorage.setItem('userName', newName);
-          localStorage.setItem('userEmail', newEmail);
-          localStorage.setItem('userPrn', newPrn);
+          localStorage.setItem('userPhone', newPhone);
           refreshDisplay();
           cancelEditPersonal();
           showSuccess();
@@ -1086,60 +1001,16 @@
         }
 
         try {
-          const res = await fetch('/api/students/' + userId, {
+          const res = await fetch('/api/students/' + userId + '/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fullName: newName, email: newEmail, prn: newPrn })
+            body: JSON.stringify({ phone: newPhone })
           });
           const result = await res.json();
           if (result.success) {
-            localStorage.setItem('userName', newName);
-            localStorage.setItem('userEmail', newEmail);
-            localStorage.setItem('userPrn', newPrn);
+            localStorage.setItem('userPhone', newPhone);
             refreshDisplay();
             cancelEditPersonal();
-            showSuccess();
-          } else {
-            alert(result.message || 'Update failed. Try again.');
-          }
-        } catch(err) {
-          alert('Error updating profile. Make sure the server is running.');
-        }
-      };
-
-      window.saveAcademics = async () => {
-        const newBranch = document.getElementById('editBranch').value;
-        const newYear = document.getElementById('editYear').value;
-        const newDivision = document.getElementById('editDivision').value.trim();
-
-        if (!newDivision) {
-          alert('Division is required.');
-          return;
-        }
-
-        if (!userId) {
-          localStorage.setItem('userBranch', newBranch);
-          localStorage.setItem('userYear', newYear);
-          localStorage.setItem('userDivision', newDivision);
-          refreshDisplay();
-          cancelEditAcademic();
-          showSuccess();
-          return;
-        }
-
-        try {
-          const res = await fetch('/api/students/' + userId, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ branch: newBranch, year: newYear, division: newDivision })
-          });
-          const result = await res.json();
-          if (result.success) {
-            localStorage.setItem('userBranch', newBranch);
-            localStorage.setItem('userYear', newYear);
-            localStorage.setItem('userDivision', newDivision);
-            refreshDisplay();
-            cancelEditAcademic();
             showSuccess();
           } else {
             alert(result.message || 'Update failed. Try again.');
@@ -1222,7 +1093,7 @@
         document.getElementById('editSocialBtn').style.display = '';
       };
 
-      window.saveSocialLinks = () => {
+      window.saveSocialLinks = async () => {
         const rows = document.querySelectorAll('#socialLinksEditor .social-link-row');
         const links = [];
         rows.forEach(row => {
@@ -1230,10 +1101,33 @@
           const url = row.querySelector('input').value.trim();
           if (platform && url) links.push({ platform, url });
         });
-        localStorage.setItem('userSocialLinks', JSON.stringify(links));
-        renderSocialLinks();
-        cancelEditSocial();
-        showSuccess();
+        
+        if (!userId) {
+          localStorage.setItem('userSocialLinks', JSON.stringify(links));
+          renderSocialLinks();
+          cancelEditSocial();
+          showSuccess();
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/students/' + userId + '/profile', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ socialLinks: links })
+          });
+          const result = await res.json();
+          if (result.success) {
+            localStorage.setItem('userSocialLinks', JSON.stringify(links));
+            renderSocialLinks();
+            cancelEditSocial();
+            showSuccess();
+          } else {
+            alert(result.message || 'Failed to update social links.');
+          }
+        } catch(e) {
+          alert('Error connecting to server.');
+        }
       };
 
       // ---- Allocated Faculty Logic ----
@@ -1250,7 +1144,7 @@
         other: { icon: 'ph-link', color: '#64748b', label: 'Other' }
       };
 
-      function openFacultyPortfolio(teacher) {
+      window.openFacultyPortfolio = (teacher) => {
         const avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(teacher.fullName)}&backgroundColor=059669&textColor=ffffff&fontSize=42`;
         document.getElementById('fpAvatar').src = avatarUrl;
         document.getElementById('fpName').textContent = teacher.fullName;
@@ -1318,6 +1212,17 @@
         }
       }
       loadAllocatedFaculty();
+
+      // Logout handler
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          if (confirm('Are you sure you want to log out?')) {
+            localStorage.clear();
+            window.location.href = '../../index.html';
+          }
+        });
+      }
     });
   </script>
 
