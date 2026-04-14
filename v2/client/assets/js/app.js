@@ -561,14 +561,17 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           container.innerHTML += `
-            <div class="announcement-card unread" onclick="this.classList.toggle('expanded')">
+            <div class="announcement-card unread">
               <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
               <div class="announcement-content">
                 <div class="announcement-header">
                   <h3 class="announcement-title">${ann.title}</h3>
                   <span class="announcement-date">${dateStr}</span>
                 </div>
-                <p class="announcement-desc">${ann.description}</p>
+                <div class="desc-wrapper" style="position: relative;">
+                  <p class="announcement-desc">${ann.description}</p>
+                  <span onclick="this.parentElement.classList.toggle('expanded'); this.innerText = this.parentElement.classList.contains('expanded') ? 'Read Less' : 'Read More';" style="color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-block; margin-bottom: 12px;">Read More</span>
+                </div>
                 ${fileHtml}
                 <div class="announcement-meta">
                   <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department || ''})</span>
