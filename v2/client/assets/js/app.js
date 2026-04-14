@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="desc-wrapper" style="position: relative;">
                   <p class="announcement-desc">${ann.description}</p>
-                  <span onclick="this.parentElement.classList.toggle('expanded'); this.innerText = this.parentElement.classList.contains('expanded') ? 'Read Less' : 'Read More';" style="color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-block; margin-bottom: 12px;">Read More</span>
+                  <span onclick="const p = this.previousElementSibling; if(p.style.display === 'block'){ p.style.display = '-webkit-box'; this.innerText = 'Read More'; } else { p.style.display = 'block'; this.innerText = 'Read Less'; }" style="color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-block; margin-bottom: 12px; padding: 6px 12px; background: rgba(99, 102, 241, 0.1); border-radius: 6px; border: 1px solid rgba(99, 102, 241, 0.2);">Read More</span>
                 </div>
                 ${fileHtml}
                 <div class="announcement-meta">
