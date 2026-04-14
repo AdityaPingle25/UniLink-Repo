@@ -315,8 +315,15 @@
             <div id="audienceDivBox" style="display:none;">
               <select id="annAudienceDiv">
                 <option value="">Select Division...</option>
+                <optgroup label="Standard Divisions">
+                  <option value="A">Division A</option>
+                  <option value="B">Division B</option>
+                  <option value="C">Division C</option>
+                  <option value="D">Division D</option>
+                </optgroup>
+                <optgroup label="My Assigned Divisions" id="teacherDivOptgroup"></optgroup>
               </select>
-              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;"><i class="ph ph-info"></i> Only your registered divisions are shown.</p>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;"><i class="ph ph-info"></i> Select a standard division or one of your registered divisions.</p>
             </div>
           </div>
 
@@ -733,17 +740,19 @@
         const deptBox = document.getElementById('audienceDeptBox');
         const divBox  = document.getElementById('audienceDivBox');
 
-        // Pre-populate Division dropdown from teacher's assigned divisions
+        // Pre-populate "My Assigned Divisions" optgroup from teacher's registered divisions
         const divisionsStr = localStorage.getItem('teacherDivisions');
         if (divisionsStr) {
           try {
             const divs = JSON.parse(divisionsStr);
-            const divSel = document.getElementById('annAudienceDiv');
-            divs.forEach(d => {
-              const opt = document.createElement('option');
-              opt.value = d; opt.textContent = d;
-              divSel.appendChild(opt);
-            });
+            const divOptgroup = document.getElementById('teacherDivOptgroup');
+            if (divOptgroup && divs.length > 0) {
+              divs.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d; opt.textContent = d;
+                divOptgroup.appendChild(opt);
+              });
+            }
           } catch(e) {}
         }
 
