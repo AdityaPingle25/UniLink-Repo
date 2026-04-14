@@ -9,6 +9,47 @@
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
   <style>
+    /* Audience Pill Selector */
+    .audience-pill {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .audience-pill span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1.5px solid rgba(5, 150, 105, 0.3);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: transparent;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .audience-pill input[type="radio"]:checked + span {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+    }
+    .audience-pill:hover span {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .audience-pill input[type="radio"]:checked + span:hover {
+      color: white;
+    }
+    body.dark-theme .audience-pill span {
+      border-color: rgba(5, 150, 105, 0.4);
+      color: rgba(248,250,252,0.55);
+    }
+    body.dark-theme .audience-pill input[type="radio"]:checked + span {
+      color: white;
+    }
+
     /* Theme override for Faculty (Emerald) */
     :root {
       --primary: #059669; /* Emerald 600 */
@@ -221,27 +262,62 @@
             <input type="text" id="annTitle" placeholder="e.g., Change in schedule for Lab 4" required>
           </div>
 
-          <div class="form-group">
+          <!-- TARGET AUDIENCE - 3 Separate Options -->
+          <div class="form-group" id="audienceGroup">
             <label>Target Audience</label>
-            <select id="annAudience" required>
-              <option value="">Select Audience...</option>
-              <option value="All Students">All Students (University-wide)</option>
-              <optgroup label="By Branch">
+
+            <!-- Audience Type Pills -->
+            <div id="audienceTypePills" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+              <label class="audience-pill" id="pill-all">
+                <input type="radio" name="audienceType" value="all" checked style="display:none;">
+                <span><i class="ph ph-globe-hemisphere-west"></i> All Students</span>
+              </label>
+              <label class="audience-pill" id="pill-year">
+                <input type="radio" name="audienceType" value="year" style="display:none;">
+                <span><i class="ph ph-calendar-blank"></i> By Year</span>
+              </label>
+              <label class="audience-pill" id="pill-dept">
+                <input type="radio" name="audienceType" value="dept" style="display:none;">
+                <span><i class="ph ph-buildings"></i> By Department</span>
+              </label>
+              <label class="audience-pill" id="pill-div">
+                <input type="radio" name="audienceType" value="div" style="display:none;">
+                <span><i class="ph ph-users-three"></i> Allotted Division</span>
+              </label>
+            </div>
+
+            <!-- By Year Sub-select -->
+            <div id="audienceYearBox" style="display:none;">
+              <select id="annAudienceYear">
+                <option value="">Select Year...</option>
+                <option value="FE">First Year (FE)</option>
+                <option value="SE">Second Year (SE)</option>
+                <option value="TE">Third Year (TE)</option>
+                <option value="BE">Final Year (BE/BTech)</option>
+              </select>
+            </div>
+
+            <!-- By Department Sub-select -->
+            <div id="audienceDeptBox" style="display:none;">
+              <select id="annAudienceDept">
+                <option value="">Select Department...</option>
                 <option value="Computer Science (CS)">Computer Science (CS)</option>
                 <option value="Information Technology (IT)">Information Technology (IT)</option>
-                <option value="CSE (AI & ML)">CSE (AI & ML)</option>
+                <option value="CSE (AI &amp; ML)">CSE (AI &amp; ML)</option>
                 <option value="Civil Engineering">Civil Engineering</option>
-                <option value="Electronics & Telecom (ENTC)">Electronics & Telecom (ENTC)</option>
+                <option value="Electronics &amp; Telecom (ENTC)">Electronics &amp; Telecom (ENTC)</option>
                 <option value="Mechanical Engineering">Mechanical Engineering</option>
                 <option value="Computer (Regional)">Computer (Regional)</option>
-              </optgroup>
-              <optgroup label="By Year">
-                <option value="First Year (FE)">First Year (FE)</option>
-                <option value="Second Year (SE)">Second Year (SE)</option>
-                <option value="Third Year (TE)">Third Year (TE)</option>
-                <option value="Final Year (BE/BTech)">Final Year (BE/BTech)</option>
-              </optgroup>
-            </select>
+              </select>
+            </div>
+
+            <!-- By Division Sub-select -->
+            <div id="audienceDivBox" style="display:none;">
+              <select id="annAudienceDiv">
+                <option value="">Select Division...</option>
+              </select>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;"><i class="ph ph-info"></i> Only your registered divisions are shown.</p>
+            </div>
           </div>
 
           <div class="form-group" style="position: relative;">
@@ -650,6 +726,37 @@
         });
       }
 
+      // Audience pill toggle logic
+      (function setupAudiencePills() {
+        const radios = document.querySelectorAll('input[name="audienceType"]');
+        const yearBox = document.getElementById('audienceYearBox');
+        const deptBox = document.getElementById('audienceDeptBox');
+        const divBox  = document.getElementById('audienceDivBox');
+
+        // Pre-populate Division dropdown from teacher's assigned divisions
+        const divisionsStr = localStorage.getItem('teacherDivisions');
+        if (divisionsStr) {
+          try {
+            const divs = JSON.parse(divisionsStr);
+            const divSel = document.getElementById('annAudienceDiv');
+            divs.forEach(d => {
+              const opt = document.createElement('option');
+              opt.value = d; opt.textContent = d;
+              divSel.appendChild(opt);
+            });
+          } catch(e) {}
+        }
+
+        function syncBoxes() {
+          const val = document.querySelector('input[name="audienceType"]:checked')?.value || 'all';
+          yearBox.style.display = val === 'year' ? 'block' : 'none';
+          deptBox.style.display = val === 'dept' ? 'block' : 'none';
+          divBox.style.display  = val === 'div'  ? 'block' : 'none';
+        }
+        radios.forEach(r => r.addEventListener('change', syncBoxes));
+        syncBoxes();
+      })();
+
       // 2. Handle Announcement Submission
       const annForm = document.getElementById('announcementForm');
       if (annForm) {
@@ -665,10 +772,27 @@
             fileUrl = await fileToBase64(file);
           }
 
+          // Build audience string from the 3-option selector
+          const audienceType = document.querySelector('input[name="audienceType"]:checked')?.value || 'all';
+          let audienceValue = 'All Students';
+          if (audienceType === 'year') {
+            const y = document.getElementById('annAudienceYear').value;
+            if (!y) { alert('Please select a Year for the target audience.'); return; }
+            audienceValue = 'Year:' + y;
+          } else if (audienceType === 'dept') {
+            const d = document.getElementById('annAudienceDept').value;
+            if (!d) { alert('Please select a Department for the target audience.'); return; }
+            audienceValue = 'Dept:' + d;
+          } else if (audienceType === 'div') {
+            const dv = document.getElementById('annAudienceDiv').value;
+            if (!dv) { alert('Please select a Division for the target audience.'); return; }
+            audienceValue = 'Division:' + dv;
+          }
+
           const payload = {
             title: document.getElementById('annTitle').value,
             description: document.getElementById('annDesc').value,
-            audience: document.getElementById('annAudience').value,
+            audience: audienceValue,
             postedBy: localStorage.getItem('teacherName') || 'Unknown Teacher',
             department: localStorage.getItem('teacherDept') || 'Unknown',
             fileUrl,
@@ -691,6 +815,9 @@
             if (result.success) {
               alert('Announcement posted successfully!');
               annForm.reset();
+              // Reset audience pill to "All Students"
+              const allRadio = document.querySelector('input[name="audienceType"][value="all"]');
+              if (allRadio) { allRadio.checked = true; allRadio.dispatchEvent(new Event('change')); }
               fetchAnnouncements();
             } else {
               alert('Failed to post announcement: ' + result.message);
@@ -730,10 +857,16 @@
             }
             myAnnouncements.forEach(item => {
               const fileHtml = item.fileName ? `<p style="margin: 4px 0 0; font-size: 13px;"><i class="ph ph-paperclip"></i> <a href="${item.fileUrl}" download="${item.fileName}" style="color: var(--primary);">${item.fileName}</a></p>` : '';
+              // Format audience label for display
+              let audienceLabel = item.audience || 'All Students';
+              if (audienceLabel.startsWith('Year:')) audienceLabel = '📅 Year: ' + audienceLabel.slice(5);
+              else if (audienceLabel.startsWith('Dept:')) audienceLabel = '🏛️ Dept: ' + audienceLabel.slice(5);
+              else if (audienceLabel.startsWith('Division:')) audienceLabel = '👥 Division: ' + audienceLabel.slice(9);
+              else audienceLabel = '🌐 ' + audienceLabel;
               list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div style="flex: 1;">
                   <h4 style="margin: 0; font-size: 16px;">${item.title}</h4>
-                  <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.audience} • ${new Date(item.createdAt).toLocaleDateString()}</p>
+                  <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${audienceLabel} • ${new Date(item.createdAt).toLocaleDateString()}</p>
                   <div class="desc-wrapper" style="position: relative; margin-top: 12px;">
                     <p class="announcement-desc" style="margin: 0;">${item.description}</p>
                     <span onclick="const p = this.previousElementSibling; if(p.style.display === 'block'){ p.style.display = '-webkit-box'; this.innerText = 'Read More'; } else { p.style.display = 'block'; this.innerText = 'Read Less'; }" style="color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; display: inline-block; margin-top: 8px; padding: 6px 12px; background: rgba(99, 102, 241, 0.1); border-radius: 6px; border: 1px solid rgba(99, 102, 241, 0.2);">Read More</span>

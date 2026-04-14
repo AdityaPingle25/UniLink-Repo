@@ -96,7 +96,7 @@
         });
       }
 
-      // Fetch Announcements
+      // Fetch Announcements — filtered to the student's profile
       async function loadAnnouncements() {
         try {
           const response = await fetch('/api/announcements');
@@ -106,8 +106,46 @@
           container.innerHTML = '';
 
           if (result.success && result.data.length > 0) {
-            result.data.forEach(ann => {
+            // Student profile from localStorage
+            const studentYear     = (localStorage.getItem('userYear') || '').trim();
+            const studentBranch   = (localStorage.getItem('userBranch') || '').trim();
+            const studentDivision = (localStorage.getItem('userDivision') || '').trim();
+
+            // Filter: show if audience matches student OR is "All Students"
+            const visible = result.data.filter(ann => {
+              const aud = (ann.audience || '').trim();
+              if (!aud || aud === 'All Students') return true;
+              if (aud.startsWith('Year:')) {
+                const target = aud.slice(5).trim().toUpperCase();
+                return studentYear.toUpperCase() === target;
+              }
+              if (aud.startsWith('Dept:')) {
+                const target = aud.slice(5).trim().toLowerCase();
+                return studentBranch.toLowerCase() === target;
+              }
+              if (aud.startsWith('Division:')) {
+                const target = aud.slice(9).trim().toLowerCase();
+                return studentDivision.toLowerCase() === target;
+              }
+              // Legacy plain audience string — show to everyone
+              return true;
+            });
+
+            if (visible.length === 0) {
+              container.innerHTML = '<p style="color: var(--text-muted); padding: 20px;">No announcements for your profile right now.</p>';
+              return;
+            }
+
+            visible.forEach(ann => {
               const dateStr = new Date(ann.createdAt).toLocaleDateString();
+
+              // Format audience badge
+              let audienceBadge = ann.audience || 'All Students';
+              if (audienceBadge.startsWith('Year:')) audienceBadge = '📅 Year: ' + audienceBadge.slice(5);
+              else if (audienceBadge.startsWith('Dept:')) audienceBadge = '🏛️ Dept: ' + audienceBadge.slice(5);
+              else if (audienceBadge.startsWith('Division:')) audienceBadge = '👥 Division: ' + audienceBadge.slice(9);
+              else audienceBadge = '🌐 ' + audienceBadge;
+
               let fileHtml = '';
               if (ann.fileName && ann.fileUrl) {
                 // Determine file type icon
@@ -150,7 +188,7 @@
                     ${fileHtml}
                     <div class="announcement-meta">
                       <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department || ''})</span>
-                      <span class="badge" style="background: rgba(0,0,0,0.05)">To: ${ann.audience}</span>
+                      <span class="badge" style="background: rgba(0,0,0,0.05)">${audienceBadge}</span>
                     </div>
                   </div>
                 </div>
