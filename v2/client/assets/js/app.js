@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
 
           container.innerHTML += `
-            <div class="announcement-card unread">
+            <div class="announcement-card unread" onclick="this.classList.toggle('expanded')">
               <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
               <div class="announcement-content">
                 <div class="announcement-header">

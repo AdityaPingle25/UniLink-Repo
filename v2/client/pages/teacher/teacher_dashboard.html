@@ -730,10 +730,11 @@
             }
             myAnnouncements.forEach(item => {
               const fileHtml = item.fileName ? `<p style="margin: 4px 0 0; font-size: 13px;"><i class="ph ph-paperclip"></i> <a href="${item.fileUrl}" download="${item.fileName}" style="color: var(--primary);">${item.fileName}</a></p>` : '';
-              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+              list.innerHTML += `<div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer;" onclick="this.classList.toggle('expanded')">
                 <div style="flex: 1;">
                   <h4 style="margin: 0; font-size: 16px;">${item.title}</h4>
                   <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.audience} • ${new Date(item.createdAt).toLocaleDateString()}</p>
+                  <p class="announcement-desc" style="margin-top: 12px;">${item.description}</p>
                   ${fileHtml}
                 </div>
                 <button onclick="deleteAnnouncement('${item._id}')" class="primary-btn" style="background: #e11d48; color: white; padding: 6px 12px; font-size: 13px; flex-shrink: 0;">Delete</button>

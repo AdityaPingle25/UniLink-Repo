@@ -573,6 +573,21 @@ body.dark-theme .doodle-bg {
   color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 16px;
+  white-space: pre-wrap; /* Preserve spaces and linebreaks */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Truncate by default */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.expanded .announcement-desc {
+  -webkit-line-clamp: unset !important;
+  display: block;
+}
+
+.announcement-card {
+  cursor: pointer;
 }
 
 .announcement-meta {
