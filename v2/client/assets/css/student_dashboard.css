@@ -582,8 +582,7 @@ body.dark-theme .doodle-bg {
 }
 
 .expanded .announcement-desc {
-  -webkit-line-clamp: unset !important;
-  display: block;
+  -webkit-line-clamp: 9999 !important;
 }
 
 .announcement-card {
