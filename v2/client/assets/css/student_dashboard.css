@@ -1,30 +1,32 @@
 :root {
-  --primary: #6366F1;
-  --primary-hover: #4f46e5;
-  --bg-start: #eef2ff;
-  --bg-end: #f8fafc;
+  --primary: #4f46e5; /* Electric Indigo */
+  --primary-hover: #4338ca;
+  --bg-start: #f1f5f9;
+  --bg-end: #e2e8f0;
   --bg-surface: #ffffff;
   --bg-main: #f8fafc;
   --border-color: rgba(0, 0, 0, 0.1);
   --card-bg: rgba(255, 255, 255, 0.85);
-  --text-main: #1e293b;
+  --text-main: #0f172a;
   --text-muted: #64748b;
   --radius: 20px;
-  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-  --shadow-hover: 0 20px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.05);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 16px 40px rgba(79, 70, 229, 0.15);
 }
 
 body.dark-theme {
-  --bg-start: #0f172a;
-  --bg-end: #1e293b;
-  --bg-surface: #1e293b;
-  --bg-main: #0f172a;
+  --primary: #2dd4bf; /* Neon Teal */
+  --primary-hover: #14b8a6;
+  --bg-start: #020617;
+  --bg-end: #0f172a;
+  --bg-surface: #0f172a;
+  --bg-main: #020617;
   --border-color: rgba(255, 255, 255, 0.1);
   --card-bg: rgba(30, 41, 59, 0.85);
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 20px 25px -5px rgba(99, 102, 241, 0.2), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+  --text-muted: #cbd5e1;
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 16px 40px rgba(45, 212, 191, 0.2);
 }
 
 body.dark-theme .sidebar { background: rgba(30, 41, 59, 0.6); border-right: 1px solid rgba(255, 255, 255, 0.1); }
@@ -44,6 +46,13 @@ body.dark-theme .filter-tab { background: rgba(30, 41, 59, 0.5); border: 1px sol
 body.dark-theme .filter-tab:hover { background: #334155; color: #f8fafc; }
 body.dark-theme .filter-tab.active { background: #f8fafc; color: #0f172a; border-color: #f8fafc; }
 
+/* Dark mode explicit fixes for readability */
+body.dark-theme .job-tags .tag { background: rgba(255, 255, 255, 0.15); color: #e2e8f0; }
+body.dark-theme .task-count { background: rgba(255, 255, 255, 0.15); color: #cbd5e1; }
+body.dark-theme .bg-emerald-light { background: rgba(16, 185, 129, 0.2) !important; }
+body.dark-theme .color-emerald { color: #34d399; }
+body.dark-theme .badge { background: rgba(255, 255, 255, 0.15); color: #e2e8f0; }
+
 * {
   margin: 0;
   padding: 0;
@@ -57,6 +66,24 @@ body {
   min-height: 100vh;
   display: flex;
   overflow-x: hidden;
+  position: relative;
+}
+
+.doodle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('../images/colorful_hero_doodle.png') center/cover no-repeat;
+  opacity: 0.1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.dark-theme .doodle-bg {
+  opacity: 0.05;
+  filter: saturate(1.5) contrast(1.2);
 }
 
 /* --- Left Sidebar --- */
