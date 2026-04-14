@@ -9,6 +9,9 @@ const eventSchema = new mongoose.Schema({
   category: { type: String, required: true },
   teamSize: { type: Number, default: 1 },
   maxRegistrations: { type: Number, default: 100 },
+  bannerImage: { type: String, default: '' },
+  prizePool: { type: String, default: '' },
+  prizePoolCurrency: { type: String, default: 'INR' },
   postedBy: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });

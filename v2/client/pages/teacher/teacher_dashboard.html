@@ -6,6 +6,7 @@
   <title>Faculty Dashboard - UniLink</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
   <style>
     /* Theme override for Faculty (Emerald) */
@@ -249,11 +250,18 @@
           
           <div class="form-group">
              <label>Attach File (Optional)</label>
-             <input type="file">
+             <input type="file" id="annFile">
           </div>
 
           <button type="submit" class="primary-btn"><i class="ph ph-paper-plane-tilt"></i> Post Announcement</button>
         </form>
+
+        <div style="margin-top: 40px; margin-bottom: 40px;">
+           <h3 style="margin-bottom: 16px; font-size: 18px;">Posted Announcements</h3>
+           <div id="announcementList" style="display: grid; gap: 16px;">
+              <p style="color: var(--text-muted);">Loading announcements...</p>
+           </div>
+        </div>
       </div> <!-- End Post Announcement -->
 
       <!-- MANAGE ASSIGNMENTS SECTION -->
@@ -468,6 +476,27 @@
               <input type="number" id="evtMaxReg" min="1" value="100" required>
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prize Pool (e.g. ₹50,000)</label>
+              <input type="text" id="evtPrizePool" placeholder="e.g. ₹50,000">
+            </div>
+            <div class="form-group">
+              <label>Prize Pool Currency</label>
+              <select id="evtPrizePoolCurrency">
+                <option value="INR" selected>INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="AUD">AUD (A$)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Banner Image (Optional)</label>
+            <input type="file" id="evtBanner" accept="image/*">
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Recommended: 1200×400px landscape image</p>
+          </div>
           <div class="form-group">
             <label>Description</label>
             <textarea id="evtDesc" rows="3" placeholder="Event details..." required></textarea>
@@ -625,17 +654,27 @@
         annForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           
+          let fileUrl = '';
+          let fileName = '';
+          const annFileInput = document.getElementById('annFile');
+          if (annFileInput && annFileInput.files.length > 0) {
+            const file = annFileInput.files[0];
+            fileName = file.name;
+            fileUrl = await fileToBase64(file);
+          }
+
           const payload = {
             title: document.getElementById('annTitle').value,
             description: document.getElementById('annDesc').value,
             audience: document.getElementById('annAudience').value,
             postedBy: localStorage.getItem('teacherName') || 'Unknown Teacher',
-            department: localStorage.getItem('teacherDept') || 'Unknown'
+            department: localStorage.getItem('teacherDept') || 'Unknown',
+            fileUrl,
+            fileName
           };
 
           try {
             const btn = annForm.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
             btn.innerHTML = 'Posting...';
             btn.disabled = true;
 
@@ -650,17 +689,12 @@
             if (result.success) {
               alert('Announcement posted successfully!');
               annForm.reset();
+              fetchAnnouncements();
             } else {
               alert('Failed to post announcement: ' + result.message);
             }
           } catch (err) {
             console.error('Error:', err);
-            alert('A network error occurred: ' + err.message + '\nMake sure you are using http://localhost:3000');
-            const btn = annForm.querySelector('button[type="submit"]');
-            if (btn) {
-               btn.innerHTML = '<i class="ph ph-paper-plane-tilt"></i> Post Announcement';
-               btn.disabled = false;
-            }
             alert('Server error while posting. Make sure the backend is running.');
           } finally {
             const btn = annForm.querySelector('button[type="submit"]');
@@ -668,6 +702,45 @@
             btn.disabled = false;
           }
         });
+      }
+
+      // Fetch & display announcements with delete
+      window.deleteAnnouncement = async (id) => {
+        if (confirm('Delete this announcement?')) {
+          await fetch('/api/announcements/' + id, { method: 'DELETE' });
+          fetchAnnouncements();
+        }
+      };
+
+      async function fetchAnnouncements() {
+        try {
+          const res = await fetch('/api/announcements');
+          const data = await res.json();
+          const list = document.getElementById('announcementList');
+          if (!list) return;
+          list.innerHTML = '';
+          if (data.success && data.data.length > 0) {
+            const teacherName = localStorage.getItem('teacherName') || '';
+            const myAnnouncements = teacherName ? data.data.filter(a => a.postedBy === teacherName) : data.data;
+            if (myAnnouncements.length === 0) {
+              list.innerHTML = '<p style="color: var(--text-muted);">No announcements posted yet.</p>';
+              return;
+            }
+            myAnnouncements.forEach(item => {
+              const fileHtml = item.fileName ? `<p style="margin: 4px 0 0; font-size: 13px;"><i class="ph ph-paperclip"></i> <a href="${item.fileUrl}" download="${item.fileName}" style="color: var(--primary);">${item.fileName}</a></p>` : '';
+              list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="flex: 1;">
+                  <h4 style="margin: 0; font-size: 16px;">${item.title}</h4>
+                  <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.audience} • ${new Date(item.createdAt).toLocaleDateString()}</p>
+                  ${fileHtml}
+                </div>
+                <button onclick="deleteAnnouncement('${item._id}')" class="primary-btn" style="background: #e11d48; color: white; padding: 6px 12px; font-size: 13px; flex-shrink: 0;">Delete</button>
+              </div>`;
+            });
+          } else {
+            list.innerHTML = '<p style="color: var(--text-muted);">No announcements posted yet.</p>';
+          }
+        } catch(e) {}
       }
 
       // 3. Handle Internships
@@ -803,10 +876,25 @@
       }
 
       // 5. Handle Events
+      // Helper: convert file to base64
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
       const evtForm = document.getElementById('eventForm');
       if (evtForm) {
         evtForm.addEventListener('submit', async (e) => {
           e.preventDefault();
+          let bannerImage = '';
+          const bannerFile = document.getElementById('evtBanner').files[0];
+          if (bannerFile) {
+            bannerImage = await fileToBase64(bannerFile);
+          }
           const payload = {
             title: document.getElementById('evtTitle').value,
             description: document.getElementById('evtDesc').value,
@@ -816,16 +904,33 @@
             category: document.getElementById('evtCategory').value,
             teamSize: parseInt(document.getElementById('evtTeamSize').value) || 1,
             maxRegistrations: parseInt(document.getElementById('evtMaxReg').value) || 100,
+            prizePool: document.getElementById('evtPrizePool').value,
+            prizePoolCurrency: document.getElementById('evtPrizePoolCurrency').value,
+            bannerImage,
             postedBy: localStorage.getItem('teacherName') || 'Unknown Teacher'
           };
           try {
+            const btn = evtForm.querySelector('button[type="submit"]');
+            btn.disabled = true; btn.innerHTML = 'Creating...';
             const res = await fetch('/api/events', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)
             });
-            if ((await res.json()).success) { alert('Event Created!'); evtForm.reset(); fetchEvents(); }
-          } catch(err) { alert('Error creating event'); }
+            const data = await res.json();
+            if (data.success) { 
+              alert('Event Created!'); 
+              evtForm.reset(); 
+              fetchEvents(); 
+            } else {
+              alert('Failed to create event: ' + (data.message || 'Unknown Server Error'));
+            }
+            btn.disabled = false; btn.innerHTML = '<i class="ph ph-calendar-plus"></i> Create Event';
+          } catch(err) { 
+            alert('Error creating event: ' + err.message); 
+            const btn = evtForm.querySelector('button[type="submit"]');
+            btn.disabled = false; btn.innerHTML = '<i class="ph ph-calendar-plus"></i> Create Event';
+          }
         });
       }
 
@@ -834,6 +939,125 @@
           await fetch('/api/events/' + id, { method: 'DELETE' });
           fetchEvents();
         }
+      };
+
+      // Edit Event
+      window.editEvent = async (id) => {
+        try {
+          const res = await fetch('/api/events/' + id);
+          const data = await res.json();
+          if (!data.success) { alert('Event not found'); return; }
+          const ev = data.data;
+
+          document.getElementById('editEvtId').value = ev._id;
+          document.getElementById('editEvtTitle').value = ev.title;
+          document.getElementById('editEvtDate').value = ev.eventDate;
+          document.getElementById('editEvtTime').value = ev.eventTime;
+          document.getElementById('editEvtVenue').value = ev.venue;
+          document.getElementById('editEvtCategory').value = ev.category;
+          document.getElementById('editEvtTeamSize').value = ev.teamSize;
+          document.getElementById('editEvtMaxReg').value = ev.maxRegistrations;
+          document.getElementById('editEvtPrizePool').value = ev.prizePool || '';
+          document.getElementById('editEvtPrizePoolCurrency').value = ev.prizePoolCurrency || 'INR';
+          document.getElementById('editEvtDesc').value = ev.description;
+
+          // Show banner preview
+          const preview = document.getElementById('editBannerPreview');
+          if (ev.bannerImage) {
+            preview.src = ev.bannerImage;
+            preview.style.display = 'block';
+          } else {
+            preview.style.display = 'none';
+          }
+
+          document.getElementById('editEventModal').style.display = 'flex';
+        } catch(e) { alert('Error loading event for editing'); }
+      };
+
+      window.closeEditEventModal = () => {
+        document.getElementById('editEventModal').style.display = 'none';
+      };
+
+      // Handle Edit Event Form
+      const editEvtForm = document.getElementById('editEventForm');
+      if (editEvtForm) {
+        editEvtForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const id = document.getElementById('editEvtId').value;
+
+          let bannerImage = undefined; // undefined means don't change
+          const bannerFile = document.getElementById('editEvtBanner').files[0];
+          if (bannerFile) {
+            bannerImage = await fileToBase64(bannerFile);
+          }
+
+          const payload = {
+            title: document.getElementById('editEvtTitle').value,
+            description: document.getElementById('editEvtDesc').value,
+            eventDate: document.getElementById('editEvtDate').value,
+            eventTime: document.getElementById('editEvtTime').value,
+            venue: document.getElementById('editEvtVenue').value,
+            category: document.getElementById('editEvtCategory').value,
+            teamSize: parseInt(document.getElementById('editEvtTeamSize').value) || 1,
+            maxRegistrations: parseInt(document.getElementById('editEvtMaxReg').value) || 100,
+            prizePool: document.getElementById('editEvtPrizePool').value,
+            prizePoolCurrency: document.getElementById('editEvtPrizePoolCurrency').value,
+          };
+          if (bannerImage !== undefined) payload.bannerImage = bannerImage;
+
+          try {
+            const btn = editEvtForm.querySelector('button[type="submit"]');
+            btn.disabled = true; btn.innerHTML = 'Saving...';
+            const res = await fetch('/api/events/' + id, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (result.success) {
+              alert('Event updated!');
+              closeEditEventModal();
+              fetchEvents();
+            } else {
+              alert('Error: ' + result.message);
+            }
+            btn.disabled = false; btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Save Changes';
+          } catch(err) { alert('Error updating event'); }
+        });
+      }
+
+      // Download registrations as Excel
+      window.downloadRegistrations = async (id, title) => {
+        try {
+          const res = await fetch('/api/events/' + id + '/registrations');
+          const data = await res.json();
+          if (!data.success || data.data.length === 0) {
+            alert('No registrations to download.'); return;
+          }
+
+          const rows = data.data.map((reg, idx) => {
+            const teamNames = (reg.teamMembers || []).map(tm => tm.name).join(', ');
+            const teamEmails = (reg.teamMembers || []).map(tm => tm.email).filter(Boolean).join(', ');
+            const teamPhones = (reg.teamMembers || []).map(tm => tm.phone).filter(Boolean).join(', ');
+            return {
+              '#': idx + 1,
+              'Student Name': reg.studentName,
+              'Email': reg.studentEmail,
+              'Phone': reg.studentPhone,
+              'Team Members': teamNames || 'N/A',
+              'Team Emails': teamEmails || 'N/A',
+              'Team Phones': teamPhones || 'N/A',
+              'Registered On': new Date(reg.registeredAt).toLocaleString()
+            };
+          });
+
+          const ws = XLSX.utils.json_to_sheet(rows);
+          // Auto-size columns
+          ws['!cols'] = Object.keys(rows[0]).map(k => ({ wch: Math.max(k.length, 20) }));
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
+          XLSX.writeFile(wb, `${title.replace(/[^a-zA-Z0-9]/g, '_')}_Registrations.xlsx`);
+        } catch(e) { alert('Error downloading registrations: ' + e.message); }
       };
 
       window.viewRegistrations = async (id, title) => {
@@ -924,18 +1148,21 @@
           list.innerHTML = '';
           if(data.success && data.data.length > 0) {
             for (const item of data.data) {
-              const countRes = await fetch('http://localhost:3000/api/events/' + item._id + '/count');
+              const countRes = await fetch('/api/events/' + item._id + '/count');
               const countData = await countRes.json();
               const regCount = countData.count || 0;
               list.innerHTML += `<div style="background: white; border: 1px solid rgba(0,0,0,0.1); padding: 16px; border-radius: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                  <div style="flex: 1;">
+                ${item.bannerImage ? `<img src="${item.bannerImage}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                  <div style="flex: 1; min-width: 200px;">
                     <h4 style="margin: 0; font-size: 16px;">${item.title} <span style="font-size: 13px; font-weight: 500; color: var(--primary);">${item.category}</span></h4>
                     <p style="margin: 4px 0; font-size: 14px; color: var(--text-muted);">${item.venue} • ${item.eventTime} • ${new Date(item.eventDate).toLocaleDateString()}${item.teamSize > 1 ? ' • Team of ' + item.teamSize : ''}</p>
-                    <p style="margin: 4px 0; font-size: 13px;"><strong>${regCount}</strong> / ${item.maxRegistrations} registered</p>
+                    <p style="margin: 4px 0; font-size: 13px;"><strong>${regCount}</strong> / ${item.maxRegistrations} registered${item.prizePool ? ' • <span style="color: #d97706; font-weight: 600;">Prize: ' + item.prizePool + '</span>' : ''}</p>
                   </div>
-                  <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                    <button onclick="viewRegistrations('${item._id}', '${item.title.replace(/'/g, "\\'")}')" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px;">View Registrations</button>
+                  <div style="display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap;">
+                    <button onclick="editEvent('${item._id}')" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px;"><i class="ph ph-pencil-simple"></i> Edit</button>
+                    <button onclick="viewRegistrations('${item._id}', '${item.title.replace(/'/g, "\\'")}')" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px;">Registrations</button>
+                    <button onclick="downloadRegistrations('${item._id}', '${item.title.replace(/'/g, "\\'")}')" class="primary-btn secondary" style="padding: 6px 12px; font-size: 13px; background: #059669; color: white;"><i class="ph ph-file-xls"></i> Excel</button>
                     <button onclick="deleteEvent('${item._id}')" class="primary-btn" style="background: #e11d48; color: white; padding: 6px 12px; font-size: 13px;">Delete</button>
                   </div>
                 </div>
@@ -1074,6 +1301,7 @@
       fetchEvents();
       fetchAssignments();
       fetchMyStudents();
+      fetchAnnouncements();
     });
   </script>
 
@@ -1096,6 +1324,64 @@
         <button onclick="closeSubModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
       </div>
       <div id="subDetailsContainer"></div>
+    </div>
+  </div>
+
+  <!-- Edit Event Modal -->
+  <div id="editEventModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto;">
+    <div style="background: var(--card-bg); border-radius: 16px; padding: 32px; max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto; color: var(--text-main); margin: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0; font-size: 20px;"><i class="ph ph-pencil-simple" style="color: var(--primary);"></i> Edit Event</h2>
+        <button onclick="closeEditEventModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+      <form id="editEventForm">
+        <input type="hidden" id="editEvtId">
+        <div class="form-group"><label>Event Title</label><input type="text" id="editEvtTitle" required></div>
+        <div class="form-row">
+          <div class="form-group"><label>Event Date</label><input type="date" id="editEvtDate" required></div>
+          <div class="form-group"><label>Event Time</label><input type="text" id="editEvtTime" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Venue</label><input type="text" id="editEvtVenue" required></div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="editEvtCategory" required>
+              <option value="Technical">Technical</option>
+              <option value="Cultural">Cultural</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Sports">Sports</option>
+              <option value="Seminar">Seminar</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Team Size</label><input type="number" id="editEvtTeamSize" min="1" max="10" value="1"></div>
+          <div class="form-group"><label>Max Registrations</label><input type="number" id="editEvtMaxReg" min="1" value="100"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Prize Pool</label><input type="text" id="editEvtPrizePool" placeholder="e.g. ₹50,000"></div>
+          <div class="form-group">
+            <label>Prize Pool Currency</label>
+            <select id="editEvtPrizePoolCurrency">
+              <option value="INR">INR (₹)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="AUD">AUD (A$)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Change Banner Image</label>
+          <img id="editBannerPreview" style="display: none; width: 100%; max-height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+          <input type="file" id="editEvtBanner" accept="image/*">
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="editEvtDesc" rows="4" required></textarea></div>
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+          <button type="submit" class="primary-btn" style="flex: 1;"><i class="ph ph-floppy-disk"></i> Save Changes</button>
+          <button type="button" onclick="closeEditEventModal()" class="primary-btn secondary" style="flex: 0;">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 

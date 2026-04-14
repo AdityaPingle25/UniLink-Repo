@@ -70,7 +70,8 @@ router.post('/login', async (req, res) => {
         prn: student.prn,
         role: student.role,
         year: student.year,
-        branch: student.branch
+        branch: student.branch,
+        division: student.division
       }
     });
 

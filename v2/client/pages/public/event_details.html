@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details - UniLink</title>
+  <meta name="description" content="View event details and register for campus events on UniLink.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #6366F1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.15);
+      --bg-main: #f0f2f8;
+      --bg-surface: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: rgba(0,0,0,0.08);
+      --radius: 16px;
+      --shadow-soft: 0 1px 3px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.04);
+      --shadow-hover: 0 8px 30px rgba(99,102,241,0.12);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation */
+    .top-bar {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-bar .logo {
+      font-size: 22px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6366F1, #8b5cf6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .top-bar .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .top-bar .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .top-bar .nav-links a:hover { color: var(--primary); }
+    .top-bar .register-nav-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .top-bar .register-nav-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Hero Banner */
+    .event-hero {
+      position: relative;
+      width: 100%;
+      min-height: 380px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .event-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #6366F1 0%, #8b5cf6 40%, #a78bfa 100%);
+      z-index: 0;
+    }
+    .event-hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+    .event-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.3) 50%, rgba(15,23,42,0.1) 100%);
+      z-index: 1;
+    }
+    .event-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 60px 40px 40px;
+      animation: heroSlideUp 0.6s ease;
+    }
+    @keyframes heroSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .event-category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .event-hero-title {
+      font-size: 42px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .event-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+      align-items: center;
+    }
+    .event-hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .event-hero-meta i { font-size: 18px; }
+
+    /* Main Content Layout */
+    .event-body {
+      max-width: 1100px;
+      margin: -40px auto 60px;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Cards */
+    .detail-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+    .detail-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+    .detail-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+    }
+    .detail-card-title i { color: var(--primary); font-size: 22px; }
+
+    /* Description */
+    .event-description {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #475569;
+      white-space: pre-wrap;
+    }
+
+    /* Info Grid */
+    .info-facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .info-fact {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .info-fact-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .info-fact-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Prize Pool */
+    .prize-pool-display {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #fbbf24;
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .prize-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .prize-info { flex: 1; }
+    .prize-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #92400e;
+    }
+    .prize-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #78350f;
+      letter-spacing: -0.5px;
+    }
+
+    /* Currency Converter */
+    .converter-widget {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+    .converter-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+    .converter-title i { color: var(--primary); }
+    .converter-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .converter-row input,
+    .converter-row select {
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      background: white;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .converter-row input:focus,
+    .converter-row select:focus {
+      border-color: var(--primary);
+    }
+    .converter-row input[type="number"] { width: 100px; }
+    .converter-row select { width: 80px; }
+    .converter-row .arrow-icon {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    .convert-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .convert-btn:hover { background: var(--primary-hover); }
+    .convert-result {
+      margin-top: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 15px;
+      min-height: 22px;
+    }
+
+    /* Sidebar Registration Card */
+    .reg-card {
+      position: sticky;
+      top: 92px;
+    }
+    .spots-bar {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      margin: 12px 0 8px;
+      overflow: hidden;
+    }
+    .spots-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 0.5s ease;
+    }
+    .spots-bar-fill.low { background: linear-gradient(90deg, #ef4444, #dc2626); }
+    .spots-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .spots-text strong { color: var(--text-main); }
+
+    .register-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .register-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99,102,241,0.3);
+    }
+    .register-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Registration Form Section */
+    .reg-form-section {
+      margin-top: 20px;
+      display: none;
+    }
+    .reg-form-section.active { display: block; }
+    .reg-form-section h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      background: #f8fafc;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+      background: white;
+    }
+    .team-member-block {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .team-member-block h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .submit-reg-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.2s;
+    }
+    .submit-reg-btn:hover { background: var(--primary-hover); }
+    .cancel-reg-btn {
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+    .cancel-reg-btn:hover { border-color: #e11d48; color: #e11d48; }
+
+    /* Footer */
+    .page-footer {
+      text-align: center;
+      padding: 32px 40px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border-color);
+    }
+    .page-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    /* Loading State */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 16px;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .event-body { grid-template-columns: 1fr; padding: 0 20px; }
+      .event-hero-title { font-size: 28px; }
+      .event-hero-content { padding: 40px 20px 32px; }
+      .top-bar { padding: 0 20px; }
+      .reg-card { position: static; }
+      .info-facts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <nav class="top-bar">
+    <a href="../../index.html" class="logo">UniLink</a>
+    <div class="nav-links">
+      <a href="../common/events.html">← All Events</a>
+      <a href="#register-section" class="register-nav-btn" id="scrollToRegBtn">Register Now</a>
+    </div>
+  </nav>
+
+  <!-- Content populated by JS -->
+  <div id="pageContent">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p style="color: var(--text-muted); font-size: 14px;">Loading event details...</p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('id');
+
+    if (!eventId) {
+      document.getElementById('pageContent').innerHTML = `
+        <div class="loading-state">
+          <i class="ph ph-warning" style="font-size: 48px; color: #f59e0b;"></i>
+          <p style="color: var(--text-muted);">No event ID provided. <a href="../common/events.html">Browse all events</a></p>
+        </div>`;
+    } else {
+      loadEventDetails();
+    }
+
+    async function loadEventDetails() {
+      try {
+        const res = await fetch(`/api/events/${eventId}`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+
+        const ev = data.data;
+
+        // Get registration count
+        const countRes = await fetch(`/api/events/${eventId}/count`);
+        const countData = await countRes.json();
+        const regCount = countData.count || 0;
+        const spotsLeft = ev.maxRegistrations - regCount;
+        const spotsPercent = ((ev.maxRegistrations - regCount) / ev.maxRegistrations) * 100;
+
+        const eventDate = new Date(ev.eventDate);
+        const formattedDate = eventDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        document.title = `${ev.title} - UniLink Events`;
+
+        // Build team member fields
+        let teamFieldsHtml = '';
+        if (ev.teamSize > 1) {
+          for (let i = 1; i < ev.teamSize; i++) {
+            teamFieldsHtml += `
+              <div class="team-member-block">
+                <h4>Team Member ${i + 1}</h4>
+                <div class="form-group"><label>Name *</label><input type="text" class="tm-name" required placeholder="Full name"></div>
+                <div class="form-group"><label>Email</label><input type="email" class="tm-email" placeholder="Email address"></div>
+                <div class="form-group"><label>Phone</label><input type="tel" class="tm-phone" placeholder="Phone number"></div>
+              </div>`;
+          }
+        }
+
+        // Build prize pool section
+        let prizePoolHtml = '';
+        if (ev.prizePool) {
+          prizePoolHtml = `
+            <div class="prize-pool-display">
+              <div class="prize-icon"><i class="ph ph-trophy"></i></div>
+              <div class="prize-info">
+                <div class="prize-label">Prize Pool</div>
+                <div class="prize-value">${ev.prizePool}</div>
+              </div>
+            </div>
+            
+            <!-- Currency Converter for Prize Pool -->
+            <div class="converter-widget">
+              <div class="converter-title"><i class="ph ph-currency-circle-dollar"></i> Prize Pool Currency Converter</div>
+              <div class="converter-row">
+                <input type="number" id="convAmt" value="${parseFloat(ev.prizePool.replace(/[^0-9.]/g, '')) || 1000}" min="0">
+                <select id="convFrom"><option>INR</option></select>
+                <span class="arrow-icon"><i class="ph ph-arrows-left-right"></i></span>
+                <select id="convTo"><option>USD</option></select>
+                <button class="convert-btn" id="convBtn">Convert</button>
+              </div>
+              <div class="convert-result" id="convRes"></div>
+            </div>`;
+        }
+
+        const content = `
+          <!-- Hero Banner -->
+          <div class="event-hero">
+            <div class="event-hero-bg">
+              ${ev.bannerImage ? `<img src="${ev.bannerImage}" alt="${ev.title}">` : ''}
+            </div>
+            <div class="event-hero-overlay"></div>
+            <div class="event-hero-content">
+              <span class="event-category-badge"><i class="ph ph-tag"></i> ${ev.category}</span>
+              <h1 class="event-hero-title">${ev.title}</h1>
+              <div class="event-hero-meta">
+                <span><i class="ph ph-calendar"></i> ${formattedDate}</span>
+                <span><i class="ph ph-clock"></i> ${ev.eventTime}</span>
+                <span><i class="ph ph-map-pin"></i> ${ev.venue}</span>
+                ${ev.teamSize > 1 ? `<span><i class="ph ph-users-three"></i> Team of ${ev.teamSize}</span>` : '<span><i class="ph ph-user"></i> Individual</span>'}
+              </div>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="event-body">
+            <!-- Left Column -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+              <!-- Description -->
+              <div class="detail-card">
+                <div class="detail-card-title"><i class="ph ph-article"></i> About This Event</div>
+                <div class="event-description">${ev.description}</div>
+              </div>
+
+              <!-- Event Details Grid -->
+              <div class="detail-card">
+                <div class="detail-card-title"><i class="ph ph-info"></i> Event Details</div>
+                <div class="info-facts">
+                  <div class="info-fact">
+                    <div class="info-fact-label">Date</div>
+                    <div class="info-fact-value">${formattedDate}</div>
+                  </div>
+                  <div class="info-fact">
+                    <div class="info-fact-label">Time</div>
+                    <div class="info-fact-value">${ev.eventTime}</div>
+                  </div>
+                  <div class="info-fact">
+                    <div class="info-fact-label">Venue</div>
+                    <div class="info-fact-value">${ev.venue}</div>
+                  </div>
+                  <div class="info-fact">
+                    <div class="info-fact-label">Category</div>
+                    <div class="info-fact-value">${ev.category}</div>
+                  </div>
+                  <div class="info-fact">
+                    <div class="info-fact-label">Team Size</div>
+                    <div class="info-fact-value">${ev.teamSize > 1 ? 'Team of ' + ev.teamSize : 'Individual'}</div>
+                  </div>
+                  <div class="info-fact">
+                    <div class="info-fact-label">Max Capacity</div>
+                    <div class="info-fact-value">${ev.maxRegistrations} registrations</div>
+                  </div>
+                </div>
+              </div>
+
+              ${prizePoolHtml ? `<div class="detail-card">${prizePoolHtml}</div>` : ''}
+
+              <!-- Posted By -->
+              <div class="detail-card">
+                <div class="detail-card-title"><i class="ph ph-user-circle"></i> Organized By</div>
+                <p style="font-size: 15px; color: var(--text-muted);">Posted by <strong style="color: var(--text-main);">${ev.postedBy}</strong> on ${new Date(ev.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              </div>
+            </div>
+
+            <!-- Right Column: Registration -->
+            <div>
+              <div class="detail-card reg-card" id="register-section">
+                <div class="detail-card-title"><i class="ph ph-clipboard-text"></i> Registration</div>
+
+                <div class="spots-bar">
+                  <div class="spots-bar-fill ${spotsPercent <= 20 ? 'low' : ''}" style="width: ${spotsPercent}%"></div>
+                </div>
+                <div class="spots-text"><strong>${spotsLeft > 0 ? spotsLeft : 0}</strong> of ${ev.maxRegistrations} spots remaining</div>
+
+                ${spotsLeft > 0 ? `
+                  <button class="register-btn" id="showRegFormBtn" onclick="showRegForm()">
+                    <i class="ph ph-pencil-line"></i> Register Now
+                  </button>
+
+                  <div class="reg-form-section" id="regFormSection">
+                    <h3>${ev.teamSize > 1 ? 'Team Registration' : 'Registration Form'}</h3>
+                    <form id="regForm">
+                      <div class="form-group"><label>Your Full Name *</label><input type="text" id="regName" required placeholder="e.g. Aditya Pingle"></div>
+                      <div class="form-group"><label>Email Address *</label><input type="email" id="regEmail" required placeholder="e.g. aditya@college.edu"></div>
+                      <div class="form-group"><label>Phone Number *</label><input type="tel" id="regPhone" required placeholder="e.g. 9876543210"></div>
+                      ${teamFieldsHtml ? `<div style="margin-top: 16px;"><h4 style="font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--text-main);">Team Members</h4>${teamFieldsHtml}</div>` : ''}
+                      <button type="submit" class="submit-reg-btn"><i class="ph ph-check-circle"></i> Complete Registration</button>
+                      <button type="button" class="cancel-reg-btn" onclick="hideRegForm()">Cancel</button>
+                    </form>
+                  </div>
+                ` : `
+                  <button class="register-btn" disabled><i class="ph ph-prohibit"></i> Event Full</button>
+                `}
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <footer class="page-footer">
+            <p>© ${new Date().getFullYear()} <a href="../../index.html">UniLink</a> — Campus Events Platform</p>
+          </footer>
+        `;
+
+        document.getElementById('pageContent').innerHTML = content;
+
+        // Setup currency converter if prize pool exists
+        if (ev.prizePool) {
+          setupConverter(ev.prizePoolCurrency || 'INR');
+        }
+
+        // Setup registration form
+        const regForm = document.getElementById('regForm');
+        if (regForm) {
+          regForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const teamMembers = [];
+            document.querySelectorAll('.team-member-block').forEach(block => {
+              teamMembers.push({
+                name: block.querySelector('.tm-name').value,
+                email: block.querySelector('.tm-email').value,
+                phone: block.querySelector('.tm-phone').value
+              });
+            });
+
+            const payload = {
+              studentName: document.getElementById('regName').value,
+              studentEmail: document.getElementById('regEmail').value,
+              studentPhone: document.getElementById('regPhone').value,
+              teamMembers
+            };
+
+            try {
+              const res = await fetch(`/api/events/${eventId}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              const result = await res.json();
+              if (result.success) {
+                alert('🎉 Successfully registered! Check your email for confirmation.');
+                loadEventDetails(); // Reload
+              } else {
+                alert(result.message || 'Registration failed');
+              }
+            } catch (err) {
+              alert('Error registering. Please try again.');
+            }
+          });
+        }
+
+        // Scroll-to-register button
+        document.getElementById('scrollToRegBtn').addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('register-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+      } catch (err) {
+        document.getElementById('pageContent').innerHTML = `
+          <div class="loading-state">
+            <i class="ph ph-warning-circle" style="font-size: 48px; color: #e11d48;"></i>
+            <p style="color: var(--text-muted);">Failed to load event. <a href="../common/events.html">Browse all events</a></p>
+          </div>`;
+      }
+    }
+
+    function showRegForm() {
+      document.getElementById('regFormSection').classList.add('active');
+      document.getElementById('showRegFormBtn').style.display = 'none';
+    }
+    function hideRegForm() {
+      document.getElementById('regFormSection').classList.remove('active');
+      document.getElementById('showRegFormBtn').style.display = '';
+    }
+
+    // Currency Converter Setup
+    async function setupConverter(defaultCurrency) {
+      try {
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        const data = await res.json();
+        if (!data.rates) return;
+
+        const currencies = Object.keys(data.rates).sort();
+        const fromEl = document.getElementById('convFrom');
+        const toEl = document.getElementById('convTo');
+        if (!fromEl || !toEl) return;
+
+        fromEl.innerHTML = '';
+        toEl.innerHTML = '';
+
+        currencies.forEach(curr => {
+          const opt1 = document.createElement('option');
+          opt1.value = curr; opt1.textContent = curr;
+          if (curr === defaultCurrency) opt1.selected = true;
+          fromEl.appendChild(opt1);
+
+          const opt2 = document.createElement('option');
+          opt2.value = curr; opt2.textContent = curr;
+          if (curr === 'USD') opt2.selected = true;
+          toEl.appendChild(opt2);
+        });
+
+        const convBtn = document.getElementById('convBtn');
+        if (convBtn) {
+          convBtn.addEventListener('click', async () => {
+            const amt = document.getElementById('convAmt').value;
+            const from = fromEl.value;
+            const to = toEl.value;
+            const resEl = document.getElementById('convRes');
+
+            if (from === to) { resEl.textContent = 'Select different currencies'; return; }
+            resEl.textContent = 'Converting...';
+
+            try {
+              const r = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
+              const d = await r.json();
+              if (d.rates && d.rates[to]) {
+                resEl.textContent = `${Number(amt).toLocaleString()} ${from} = ${(amt * d.rates[to]).toLocaleString(undefined, {maximumFractionDigits: 2})} ${to}`;
+              } else {
+                resEl.textContent = 'Conversion error';
+              }
+            } catch (e) {
+              resEl.textContent = 'Network Error';
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load currencies', e);
+      }
+    }
+  </script>
+</body>
+</html>

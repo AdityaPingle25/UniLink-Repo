@@ -95,11 +95,13 @@
 
         if (result.success) {
           // Store data in localStorage for dynamic UI update
+          localStorage.setItem('userId', result.data.id);
           localStorage.setItem('userName', result.data.fullName);
           localStorage.setItem('userEmail', result.data.email);
           localStorage.setItem('userPrn', result.data.prn);
           if (result.data.year) localStorage.setItem('userYear', result.data.year);
           if (result.data.branch) localStorage.setItem('userBranch', result.data.branch);
+          if (result.data.division) localStorage.setItem('userDivision', result.data.division);
 
           window.location.href = '../student/student_dashboard.html';
         } else {

@@ -389,7 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="event-action">
                   <div class="spots-left" ${spotsLeft <= 5 ? 'style="color: #e11d48;"' : ''}>${spotsLeft > 0 ? spotsLeft + ' Spots Left' : 'Event Full'}</div>
-                  ${spotsLeft > 0 ? `<button class="primary-btn reg-btn" data-id="${ev._id}" data-title="${ev.title.replace(/"/g, '&quot;')}" data-teamsize="${ev.teamSize}">Register</button>` : '<button class="primary-btn" disabled style="opacity: 0.5;">Full</button>'}
+                  <a href="../public/event_details.html?id=${ev._id}" class="primary-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                    ${spotsLeft > 0 ? '<i class="ph ph-arrow-right"></i> View & Register' : '<i class="ph ph-eye"></i> View Details'}
+                  </a>
                 </div>
               </div>
             `;
@@ -548,6 +550,16 @@ document.addEventListener('DOMContentLoaded', () => {
         result.data.forEach(ann => {
           const dateStr = new Date(ann.createdAt).toLocaleDateString();
 
+          let fileHtml = '';
+          if (ann.fileName && ann.fileUrl) {
+            fileHtml = `<div class="announcement-attachment" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.05);">
+              <i class="ph ph-paperclip"></i>
+              <a href="${ann.fileUrl}" download="${ann.fileName}" style="color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 500;">
+                Download Attached File: ${ann.fileName}
+              </a>
+            </div>`;
+          }
+
           container.innerHTML += `
             <div class="announcement-card unread">
               <div class="announcement-icon bg-indigo"><i class="ph ph-megaphone"></i></div>
@@ -557,6 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   <span class="announcement-date">${dateStr}</span>
                 </div>
                 <p class="announcement-desc">${ann.description}</p>
+                ${fileHtml}
                 <div class="announcement-meta">
                   <span class="badge" style="background: rgba(0,0,0,0.05)">From: ${ann.postedBy} (${ann.department || ''})</span>
                   <span class="badge" style="background: rgba(0,0,0,0.05)">To: ${ann.audience}</span>

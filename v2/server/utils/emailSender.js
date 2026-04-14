@@ -24,8 +24,9 @@ async function sendNotificationToAllStudents(subject, text, html) {
         }
 
         const students = await Student.find({}, 'email fullName');
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const recipientList = students
-            .filter(s => s.email)
+            .filter(s => s.email && emailRegex.test(s.email))
             .map(s => ({ email: s.email, name: s.fullName || 'Student' }));
 
         if (recipientList.length === 0) {

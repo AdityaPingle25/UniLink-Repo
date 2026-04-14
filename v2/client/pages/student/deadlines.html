@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assignment Deadlines - UniLink</title>
-  
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
@@ -22,39 +21,28 @@
       <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
       <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
       <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
-
+      <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      
+      <a href="#" class="nav-item text-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> <span style="color: #e11d48;">Log Out</span></a>
     </nav>
   </aside>
 
   <main class="main-wrapper">
-    
     <header class="top-nav">
       <div style="display: flex; align-items: center; gap: 16px;">
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
       </div>
-      
-      <div class="search-bar">
-        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
-        <input type="text" placeholder="Search tasks, subjects...">
-      </div>
-
-      <div class="profile-area">
-        <button class="icon-btn">
-          <i class="ph ph-bell"></i>
-          <span class="notification-dot"></span>
-        </button>
-        
-        <div class="user-profile">
-          <div class="avatar">A</div>
+      <div class="profile-area" style="margin-left: auto;">
+        <button class="icon-btn" id="themeToggleBtn"><i class="ph ph-moon"></i></button>
+        <a href="../../pages/student/student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
+          <div class="avatar" id="navAvatar">S</div>
           <div class="user-info">
-            <span class="user-name">Aditya</span>
+            <span class="user-name" id="navUserName">Student</span>
             <span class="user-role">Student</span>
           </div>
           <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
-        </div>
+        </a>
       </div>
     </header>
 
@@ -63,7 +51,6 @@
         <h1 class="welcome-title">Assignment Deadlines</h1>
         <p style="color: var(--text-muted); font-size: 15px;">Track submissions, projects, and upcoming due dates.</p>
       </div>
-      <button class="primary-btn"><i class="ph ph-plus"></i> Add Personal Task</button>
     </section>
 
     <div class="kanban-board">
@@ -113,5 +100,185 @@
     </div>
 
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const storedName = localStorage.getItem('userName');
+      const navUserName = document.getElementById('navUserName');
+      const navAvatar = document.getElementById('navAvatar');
+      if (storedName && navUserName) navUserName.innerText = storedName;
+      if (storedName && navAvatar) navAvatar.innerText = storedName.charAt(0).toUpperCase();
+
+      // Theme logic
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = themeToggleBtn.querySelector('i');
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.replace('ph-moon', 'ph-sun');
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark');
+          themeIcon.classList.replace('ph-moon', 'ph-sun');
+        } else {
+          localStorage.setItem('theme', 'light');
+          themeIcon.classList.replace('ph-sun', 'ph-moon');
+        }
+      });
+
+      // Logout logic
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userToken');
+          window.location.href = '../../pages/auth/student_login.html';
+        });
+      }
+
+      // Global function for submitting assignments
+      window.submitAssignment = async (id) => {
+        const link = prompt("Enter your submission link (Drive, Github, etc):");
+        if (link !== null) {
+          if (link.trim() === '') {
+            alert('Submission link cannot be empty.');
+            return;
+          }
+          try {
+            const studentName = navUserName ? navUserName.innerText : localStorage.getItem('userName') || 'Student';
+            const res = await fetch(`/api/assignments/${id}/submit`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ studentName, submissionLink: link })
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert('Assignment submitted successfully!');
+              loadDeadlines();
+            } else {
+              alert('Submission failed: ' + data.message);
+            }
+          } catch (err) {
+            alert('Error submitting assignment. Ensure backend is running.');
+          }
+        }
+      };
+
+      // Fetch and render assignment deadlines
+      async function loadDeadlines() {
+        const colDueSoon = document.getElementById('colDueSoon');
+        const colUpcoming = document.getElementById('colUpcoming');
+        const colDone = document.getElementById('colDone');
+        const countDueSoon = document.getElementById('countDueSoon');
+        const countUpcoming = document.getElementById('countUpcoming');
+        const countDone = document.getElementById('countDone');
+        
+        if (!colDueSoon || !colUpcoming || !colDone) return;
+
+        try {
+          const studentName = navUserName ? navUserName.innerText : localStorage.getItem('userName') || 'Student';
+          const [response, subResponse] = await Promise.all([
+            fetch('/api/assignments'),
+            fetch(`/api/assignments/student/${encodeURIComponent(studentName)}/submissions`)
+          ]);
+          const data = await response.json();
+          let mySubmissions = {};
+          try {
+            const subData = await subResponse.json();
+            if (subData.success) {
+              subData.data.forEach(s => {
+                mySubmissions[s.assignmentId] = s;
+              });
+            }
+          } catch(e) {}
+          
+          colDueSoon.innerHTML = '';
+          colUpcoming.innerHTML = '';
+          colDone.innerHTML = '';
+          let dueSoonCount = 0;
+          let upcomingCount = 0;
+          let doneCount = 0;
+
+          if (data.success && data.data.length > 0) {
+            const now = new Date();
+            const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+
+            data.data.forEach(item => {
+              const deadline = new Date(item.deadline);
+              const isPast = deadline < now;
+              const isDueSoon = !isPast && (deadline - now) <= threeDaysMs;
+
+              const submission = mySubmissions[item._id];
+              const isDone = !!submission;
+
+              const teamBadge = item.isTeamProject ? `<span class="badge" style="margin-left: 8px;">Team Project</span>` : '';
+              const formattedDate = deadline.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+              let timeIcon = '<i class="ph ph-calendar"></i>';
+              let colorClass = 'class="task-date"';
+              
+              let statusBadge = '';
+              
+              if (isDone) {
+                statusBadge = submission.status === 'Late' ? `<span class="badge bg-amber-light" style="color: #d97706; margin-left: 8px;">Done Late</span>` : `<span class="badge bg-emerald-light" style="color: #059669; margin-left: 8px;">Turned In</span>`;
+              } else {
+                if (isPast) {
+                   statusBadge = `<span class="badge bg-rose-light color-rose" style="margin-left: 8px;">Missing</span>`;
+                   colorClass = 'class="task-date color-rose"';
+                   timeIcon = '<i class="ph ph-warning-circle"></i>';
+                } else if (isDueSoon) {
+                   colorClass = 'class="task-date color-rose"';
+                   timeIcon = '<i class="ph ph-clock"></i>';
+                }
+              }
+
+              const cardHtml = `
+                <div class="task-card ${isDueSoon && !isDone ? 'urgent' : ''}" ${(isPast && !isDone) ? 'style="border-left: 4px solid #e11d48;"' : ''}>
+                  <div style="display: flex; justify-content: space-between;">
+                    <div class="task-subject">${item.subject}</div>
+                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">By: ${item.postedBy}</div>
+                  </div>
+                  <h4 class="task-title" ${isDone ? 'style="text-decoration: line-through; opacity: 0.7;"' : ''}>${item.title}</h4>
+                  <div class="task-footer" style="padding-bottom: ${!isDone ? '10px' : '0'}; display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                    <span ${colorClass}>${timeIcon} ${isPast && !isDone ? 'Past Due (' : ''}${formattedDate}${isPast && !isDone ? ')' : ''}</span>
+                    <div style="display: flex; align-items: center;">
+                      ${statusBadge} ${teamBadge}
+                    </div>
+                  </div>
+                  ${!isDone ? `<button onclick="window.submitAssignment('${item._id}')" class="primary-btn" style="width: 100%; justify-content: center; font-size: 13px;">Submit Assignment</button>` : ''}
+                </div>
+              `;
+
+              if (isDone) {
+                 colDone.innerHTML += cardHtml;
+                 doneCount++;
+              } else if (isDueSoon || isPast) {
+                 colDueSoon.innerHTML += cardHtml;
+                 dueSoonCount++;
+              } else {
+                 colUpcoming.innerHTML += cardHtml;
+                 upcomingCount++;
+              }
+            });
+          }
+
+          if (dueSoonCount === 0) colDueSoon.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No immediate tasks!</p>';
+          if (upcomingCount === 0) colUpcoming.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No upcoming tasks yet.</p>';
+          if (doneCount === 0) colDone.innerHTML = '<p style="color: var(--text-muted); font-size: 14px; text-align: center; padding: 20px 0;">No completed tasks.</p>';
+
+          if (countDueSoon) countDueSoon.innerText = dueSoonCount;
+          if (countUpcoming) countUpcoming.innerText = upcomingCount;
+          if (countDone) countDone.innerText = doneCount;
+          
+        } catch (err) {
+          console.error('Error fetching assignments:', err);
+          colDueSoon.innerHTML = '<p style="color: #e11d48; font-size: 13px;">Error loading data.</p>';
+        }
+      }
+
+      loadDeadlines();
+    });
+  </script>
 </body>
 </html>

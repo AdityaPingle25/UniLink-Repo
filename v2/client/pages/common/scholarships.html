@@ -7,6 +7,221 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="../../assets/css/student_dashboard.css">
+  <style>
+    /* Make scholarship cards uniform height using grid stretch */
+    .scholarship-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .scholarship-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-soft);
+    }
+    .scholarship-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+    .scholarship-card .sch-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .scholarship-card .sch-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .scholarship-card .sch-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+    .scholarship-card .sch-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 16px;
+      flex-grow: 0;
+    }
+    .scholarship-card .sch-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+    .scholarship-card .sch-meta-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 13px;
+    }
+    .scholarship-card .sch-meta-label {
+      color: var(--text-muted);
+    }
+    .scholarship-card .sch-meta-value {
+      font-weight: 600;
+    }
+    .scholarship-card .sch-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .scholarship-card .sch-actions .details-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .scholarship-card .sch-actions .details-btn:hover {
+      background: rgba(0,0,0,0.04);
+    }
+    .scholarship-card .sch-actions .apply-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .scholarship-card .sch-actions .apply-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Modal styling */
+    .sch-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .sch-modal-content {
+      background: var(--bg-main);
+      padding: 28px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 460px;
+      position: relative;
+      color: var(--text-main);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.15);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .sch-modal-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sch-modal-close:hover { background: rgba(0,0,0,0.05); }
+    .sch-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      padding-right: 40px;
+    }
+    .sch-modal-category {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      background: rgba(79, 70, 229, 0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .sch-modal-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .sch-modal-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      background: rgba(0,0,0,0.03);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .sch-modal-details .detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    .sch-modal-details .detail-label { color: var(--text-muted); }
+    .sch-modal-details .detail-value { font-weight: 600; }
+    .sch-modal-apply {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+    .sch-modal-apply:hover { background: var(--primary-hover); }
+
+    body.dark-theme .scholarship-card .sch-actions .details-btn:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    body.dark-theme .sch-modal-details {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
 </head>
 <body>
 
@@ -16,15 +231,15 @@
     </div>
     <nav class="nav-items">
       <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
-      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Announcements</span></a>
-      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Deadlines</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
       <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
-      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Events</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
       <a href="../../pages/common/scholarships.html" class="nav-item active"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
       <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      
+      <a href="#" class="nav-item text-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> <span style="color: #e11d48;">Log Out</span></a>
     </nav>
   </aside>
 
@@ -33,19 +248,16 @@
       <div style="display: flex; align-items: center; gap: 16px;">
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
       </div>
-      <div class="search-bar">
-        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
-        <input type="text" placeholder="Search scholarships...">
-      </div>
-      <div class="profile-area">
-        <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
-        <div class="user-profile">
+      <div class="profile-area" style="margin-left: auto;">
+        <button class="icon-btn" id="themeToggleBtn"><i class="ph ph-moon"></i></button>
+        <a href="../../pages/student/student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
           <div class="avatar" id="navAvatar">S</div>
           <div class="user-info">
             <span class="user-name" id="navUserName">Student</span>
             <span class="user-role">Student</span>
           </div>
-        </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </a>
       </div>
     </header>
 
@@ -53,21 +265,6 @@
       <h1 class="welcome-title">Scholarships</h1>
       <p style="color: var(--text-muted); font-size: 15px;">Browse scholarships by category and apply before deadlines.</p>
     </section>
-
-    <!-- Currency Converter Component -->
-    <div class="currency-converter-widget" style="background: var(--bg-surface); padding: 16px 20px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border-color);">
-        <span style="font-weight: 500; font-size: 14px; color: var(--text-main); display: flex; align-items: center; gap: 6px;"><i class="ph ph-currency-circle-dollar" style="font-size: 18px; color: var(--primary);"></i> Quick Converter:</span>
-        <input type="number" id="convAmt" value="1000" min="0" style="width: 90px; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
-        <select id="convFrom" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
-          <option>USD</option><option>EUR</option><option>GBP</option><option>INR</option><option>AUD</option>
-        </select>
-        <span style="color: var(--text-muted); font-size: 14px;">to</span>
-        <select id="convTo" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-main); color: var(--text-main); font-family: inherit;">
-          <option selected>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AUD</option>
-        </select>
-        <button id="convBtn" class="primary-btn" style="padding: 8px 16px; min-height: unset; height: auto;">Convert</button>
-        <span id="convRes" style="font-weight: 600; color: var(--primary); margin-left: auto; font-size: 15px;"></span>
-    </div>
 
     <div class="filter-tabs" id="categoryFilters">
       <button class="filter-tab active" data-filter="All">All</button>
@@ -78,12 +275,36 @@
       <button class="filter-tab" data-filter="Minority">Minority</button>
     </div>
 
-    <div class="dashboard-grid" id="scholarshipsGrid">
+    <div class="scholarship-grid" id="scholarshipsGrid">
       <p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1; padding: 40px 0;">Loading scholarships...</p>
     </div>
   </main>
 
-  <script src="../../assets/js/app.js"></script>
+  <!-- Details Modal -->
+  <div class="sch-modal-overlay" id="schModal">
+    <div class="sch-modal-content">
+      <button class="sch-modal-close" id="closeSchModal">&times;</button>
+      <h2 class="sch-modal-title" id="schModalTitle">Scholarship Title</h2>
+      <span class="sch-modal-category" id="schModalCategory">General</span>
+      <p class="sch-modal-desc" id="schModalDesc">Full description will appear here.</p>
+      <div class="sch-modal-details">
+        <div class="detail-row">
+          <span class="detail-label">Amount</span>
+          <span class="detail-value" id="schModalAmount">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Deadline</span>
+          <span class="detail-value" id="schModalDeadline">-</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Category</span>
+          <span class="detail-value" id="schModalCat">-</span>
+        </div>
+      </div>
+      <a href="#" target="_blank" class="sch-modal-apply" id="schModalApplyLink"><i class="ph ph-arrow-square-out"></i> Apply Now</a>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const storedName = localStorage.getItem('userName');
@@ -92,37 +313,80 @@
         document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
       }
 
+      // Theme logic
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = themeToggleBtn.querySelector('i');
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.replace('ph-moon', 'ph-sun');
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark');
+          themeIcon.classList.replace('ph-moon', 'ph-sun');
+        } else {
+          localStorage.setItem('theme', 'light');
+          themeIcon.classList.replace('ph-sun', 'ph-moon');
+        }
+      });
+
+      // Logout logic
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userToken');
+          window.location.href = '../../pages/auth/student_login.html';
+        });
+      }
+
       let allScholarships = [];
 
       function renderScholarships(items) {
         const grid = document.getElementById('scholarshipsGrid');
         grid.innerHTML = '';
         if (items.length > 0) {
-          items.forEach(item => {
-            const bgColors = ['bg-indigo', 'bg-emerald', 'bg-rose', 'bg-amber', 'bg-sky', 'bg-purple'];
-            const randomBg = bgColors[Math.floor(Math.random() * bgColors.length)];
+          const bgColors = ['bg-indigo', 'bg-emerald', 'bg-rose', 'bg-amber', 'bg-sky', 'bg-purple'];
+          items.forEach((item, idx) => {
+            const bgClass = bgColors[idx % bgColors.length];
             const category = item.category || item.department || 'General';
+            const deadlineStr = new Date(item.deadline).toLocaleDateString();
+            const descSafe = (item.description || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const titleSafe = (item.title || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
             grid.innerHTML += `
-              <div class="card">
-                <div class="card-header">
-                  <div class="card-icon ${randomBg}"><i class="ph ph-bank"></i></div>
-                  <h2 class="card-title">${item.title}</h2>
+              <div class="scholarship-card">
+                <div class="sch-header">
+                  <div class="sch-icon ${bgClass}"><i class="ph ph-bank"></i></div>
+                  <div class="sch-title">${item.title}</div>
                 </div>
-                <p class="card-desc">${item.description}</p>
-                <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 12px; width: 100%;">
-                  <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
-                    <span style="color: var(--text-muted);">Amount</span>
-                    <span style="font-weight: 600;">${item.amount}</span>
+                <p class="sch-desc">${item.description}</p>
+                <div class="sch-meta">
+                  <div class="sch-meta-row">
+                    <span class="sch-meta-label">Amount</span>
+                    <span class="sch-meta-value">${item.amount}</span>
                   </div>
-                  <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
-                    <span style="color: var(--text-muted);">Deadline</span>
-                    <span style="font-weight: 600;">${new Date(item.deadline).toLocaleDateString()}</span>
+                  <div class="sch-meta-row">
+                    <span class="sch-meta-label">Deadline</span>
+                    <span class="sch-meta-value">${deadlineStr}</span>
                   </div>
-                  <div style="display: flex; justify-content: space-between; width: 100%; font-size: 13px;">
-                    <span style="color: var(--text-muted);">Category</span>
-                    <span style="font-weight: 600; color: var(--primary);">${category}</span>
+                  <div class="sch-meta-row">
+                    <span class="sch-meta-label">Category</span>
+                    <span class="sch-meta-value" style="color: var(--primary);">${category}</span>
                   </div>
-                  <a href="${item.applyLink}" target="_blank" class="primary-btn" style="width: 100%; justify-content: center; text-decoration: none;">Apply Now</a>
+                  <div class="sch-actions">
+                    <button class="details-btn" 
+                      data-title="${titleSafe}"
+                      data-desc="${descSafe}"
+                      data-amount="${item.amount || '-'}"
+                      data-deadline="${deadlineStr}"
+                      data-category="${category}"
+                      data-link="${item.applyLink || '#'}"
+                    >Details</button>
+                    <a href="${item.applyLink}" target="_blank" class="apply-btn">Apply Now</a>
+                  </div>
                 </div>
               </div>
             `;
@@ -155,64 +419,25 @@
         });
       });
 
-      // Currency Converter Logic
-      const convBtn = document.getElementById('convBtn');
-      const convFrom = document.getElementById('convFrom');
-      const convTo = document.getElementById('convTo');
-      const resEl = document.getElementById('convRes');
-      const amtEl = document.getElementById('convAmt');
+      // Modal logic
+      const schModal = document.getElementById('schModal');
+      document.getElementById('closeSchModal').addEventListener('click', () => schModal.style.display = 'none');
+      schModal.addEventListener('click', (e) => { if(e.target === schModal) schModal.style.display = 'none'; });
 
-      // 1. Fetch all available currencies and populate selects
-      async function setupConverter() {
-        try {
-          const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-          const data = await res.json();
-          if (data.rates) {
-            const currencies = Object.keys(data.rates).sort();
-            convFrom.innerHTML = '';
-            convTo.innerHTML = '';
-            
-            currencies.forEach(curr => {
-              const opt1 = document.createElement('option');
-              opt1.value = curr;
-              opt1.textContent = curr;
-              if (curr === 'USD') opt1.selected = true;
-              convFrom.appendChild(opt1);
-
-              const opt2 = document.createElement('option');
-              opt2.value = curr;
-              opt2.textContent = curr;
-              if (curr === 'INR') opt2.selected = true;
-              convTo.appendChild(opt2);
-            });
-          }
-        } catch (e) { console.error('Failed to load currencies', e); }
-      }
-      
-      setupConverter();
-
-      if (convBtn) {
-        convBtn.addEventListener('click', async () => {
-          const amt = amtEl.value;
-          const from = convFrom.value;
-          const to = convTo.value;
-          
-          if(from === to) { resEl.textContent = 'Select different currencies'; return; }
-          resEl.textContent = 'Converting...';
-          
-          try {
-            const res = await fetch(`https://api.exchangerate-api.com/v4/latest/${from}`);
-            const data = await res.json();
-            if(data.rates && data.rates[to]) {
-              resEl.textContent = `${amt} ${from} = ${(amt * data.rates[to]).toFixed(2)} ${to}`;
-            } else {
-              resEl.textContent = 'Conversion error';
-            }
-          } catch(e) {
-            resEl.textContent = 'Network Error';
-          }
-        });
-      }
+      document.getElementById('scholarshipsGrid').addEventListener('click', (e) => {
+        const btn = e.target.closest('.details-btn');
+        if (btn) {
+          document.getElementById('schModalTitle').textContent = btn.dataset.title;
+          document.getElementById('schModalDesc').textContent = btn.dataset.desc;
+          document.getElementById('schModalAmount').textContent = btn.dataset.amount;
+          document.getElementById('schModalDeadline').textContent = btn.dataset.deadline;
+          document.getElementById('schModalCat').textContent = btn.dataset.category;
+          document.getElementById('schModalCategory').textContent = btn.dataset.category;
+          const applyLink = document.getElementById('schModalApplyLink');
+          applyLink.href = btn.dataset.link;
+          schModal.style.display = 'flex';
+        }
+      });
     });
   </script>
 </body>

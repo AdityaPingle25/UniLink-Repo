@@ -15,14 +15,37 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get single event by ID
+router.get('/test/hello', (req, res) => res.json({ msg: 'HELLO TEST' }));
+
+router.get('/:id', async (req, res) => {
+  try {
+    console.log(`Hitting /:id with id: ${req.params.id}`);
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
+    res.json({ success: true, data: event });
+  } catch (err) {
+    console.error('Error in /:id route:', err);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
 // Create new event (teacher)
 router.post('/', async (req, res) => {
   try {
-    const { title, description, eventDate, eventTime, venue, category, teamSize, maxRegistrations, postedBy } = req.body;
+    const { title, description, eventDate, eventTime, venue, category, teamSize, maxRegistrations, bannerImage, prizePool, prizePoolCurrency, postedBy } = req.body;
     if (!title || !description || !eventDate || !eventTime || !venue || !category || !postedBy) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
     }
-    const newEvent = new Event({ title, description, eventDate, eventTime, venue, category, teamSize: teamSize || 1, maxRegistrations: maxRegistrations || 100, postedBy });
+    const newEvent = new Event({
+      title, description, eventDate, eventTime, venue, category,
+      teamSize: teamSize || 1,
+      maxRegistrations: maxRegistrations || 100,
+      bannerImage: bannerImage || '',
+      prizePool: prizePool || '',
+      prizePoolCurrency: prizePoolCurrency || 'INR',
+      postedBy
+    });
     await newEvent.save();
 
     // Trigger email notification
@@ -35,6 +58,7 @@ router.post('/', async (req, res) => {
         <p><strong>Date:</strong> ${new Date(eventDate).toLocaleDateString()} at ${eventTime}</p>
         <p><strong>Venue:</strong> ${venue}</p>
         <p><strong>Category:</strong> ${category}</p>
+        ${prizePool ? `<p><strong>Prize Pool:</strong> ${prizePool}</p>` : ''}
         <hr style="border: 0; border-top: 1px solid #eee;">
         <p>${description}</p>
         <p style="font-size: 12px; color: #666; margin-top: 20px;">Register now on the UniLink Events portal.</p>
@@ -42,6 +66,33 @@ router.post('/', async (req, res) => {
     );
 
     res.status(201).json({ success: true, data: newEvent });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
+// Update an event (teacher)
+router.put('/:id', async (req, res) => {
+  try {
+    const { title, description, eventDate, eventTime, venue, category, teamSize, maxRegistrations, bannerImage, prizePool, prizePoolCurrency } = req.body;
+    
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
+
+    if (title) event.title = title;
+    if (description) event.description = description;
+    if (eventDate) event.eventDate = eventDate;
+    if (eventTime) event.eventTime = eventTime;
+    if (venue) event.venue = venue;
+    if (category) event.category = category;
+    if (teamSize) event.teamSize = teamSize;
+    if (maxRegistrations) event.maxRegistrations = maxRegistrations;
+    if (bannerImage !== undefined) event.bannerImage = bannerImage;
+    if (prizePool !== undefined) event.prizePool = prizePool;
+    if (prizePoolCurrency) event.prizePoolCurrency = prizePoolCurrency;
+
+    await event.save();
+    res.json({ success: true, data: event });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server Error' });
   }

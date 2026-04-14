@@ -6,14 +6,16 @@ const { sendNotificationToAllStudents } = require('../utils/emailSender');
 // POST /api/announcements
 router.post('/', async (req, res) => {
   try {
-    const { title, description, audience, postedBy, department } = req.body;
+    const { title, description, audience, postedBy, department, fileUrl, fileName } = req.body;
 
     const newAnnouncement = new Announcement({
       title,
       description,
       audience,
       postedBy,
-      department
+      department,
+      fileUrl: fileUrl || '',
+      fileName: fileName || ''
     });
 
     await newAnnouncement.save();
@@ -49,6 +51,19 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching announcements:', error);
     res.status(500).json({ success: false, message: 'Server error fetching announcements' });
+  }
+});
+
+// DELETE /api/announcements/:id
+router.delete('/:id', async (req, res) => {
+  try {
+    const announcement = await Announcement.findById(req.params.id);
+    if (!announcement) return res.status(404).json({ success: false, message: 'Announcement not found' });
+    await announcement.deleteOne();
+    res.json({ success: true, message: 'Announcement deleted' });
+  } catch (error) {
+    console.error('Error deleting announcement:', error);
+    res.status(500).json({ success: false, message: 'Server error deleting announcement' });
   }
 });
 

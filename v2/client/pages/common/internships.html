@@ -16,15 +16,15 @@
     </div>
     <nav class="nav-items">
       <a href="../../pages/student/student_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> <span>Dashboard</span></a>
-      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Announcements</span></a>
-      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Deadlines</span></a>
+      <a href="../../pages/common/announcements.html" class="nav-item"><i class="ph ph-megaphone"></i> <span>Important Announcements</span></a>
+      <a href="../../pages/student/deadlines.html" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Assignment Deadlines</span></a>
       <a href="../../pages/common/internships.html" class="nav-item active"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
-      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Events</span></a>
+      <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Event Registration</span></a>
       <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
       <a href="../../pages/common/blog.html" class="nav-item"><i class="ph ph-article"></i> <span>Blog</span></a>
     </nav>
     <nav class="nav-items" style="margin-top: auto;">
-      
+      <a href="#" class="nav-item text-danger" id="logoutBtn"><i class="ph ph-sign-out"></i> <span style="color: #e11d48;">Log Out</span></a>
     </nav>
   </aside>
 
@@ -33,19 +33,16 @@
       <div style="display: flex; align-items: center; gap: 16px;">
         <button class="mobile-menu-btn"><i class="ph ph-list"></i></button>
       </div>
-      <div class="search-bar">
-        <i class="ph ph-magnifying-glass" style="color: var(--text-muted)"></i>
-        <input type="text" placeholder="Search internships, hackathons...">
-      </div>
-      <div class="profile-area">
-        <button class="icon-btn"><i class="ph ph-bell"></i><span class="notification-dot"></span></button>
-        <div class="user-profile">
+      <div class="profile-area" style="margin-left: auto;">
+        <button class="icon-btn" id="themeToggleBtn"><i class="ph ph-moon"></i></button>
+        <a href="../../pages/student/student_profile.html" class="user-profile" style="text-decoration: none; color: inherit; cursor: pointer;">
           <div class="avatar" id="navAvatar">S</div>
           <div class="user-info">
             <span class="user-name" id="navUserName">Student</span>
             <span class="user-role">Student</span>
           </div>
-        </div>
+          <i class="ph ph-caret-down" style="color: var(--text-muted); margin-left: 8px;"></i>
+        </a>
       </div>
     </header>
 
@@ -74,13 +71,41 @@
     </div>
   </main>
 
-  <script src="../../assets/js/app.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const storedName = localStorage.getItem('userName');
       if (storedName) {
         document.getElementById('navUserName').innerText = storedName;
         document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+      }
+
+      // Theme logic
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const themeIcon = themeToggleBtn.querySelector('i');
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.replace('ph-moon', 'ph-sun');
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark');
+          themeIcon.classList.replace('ph-moon', 'ph-sun');
+        } else {
+          localStorage.setItem('theme', 'light');
+          themeIcon.classList.replace('ph-sun', 'ph-moon');
+        }
+      });
+
+      // Logout logic
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userToken');
+          window.location.href = '../../pages/auth/student_login.html';
+        });
       }
 
       let allInternships = [];
@@ -111,7 +136,7 @@
                 <div class="job-footer">
                   <span class="apply-deadline">Deadline: ${new Date(item.deadline).toLocaleDateString()}</span>
                   <div style="display: flex; gap: 8px;">
-                    <button data-title="${item.title.replace(/"/g, '&quot;')}" data-desc="${item.description.replace(/"/g, '&quot;')}" class="primary-btn info-btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); cursor: pointer;">Details</button>
+                    <button data-title="${item.title.replace(/"/g, '&quot;')}" data-desc="${item.description.replace(/"/g, '&quot;')}" data-fileurl="${item.fileUrl || ''}" data-filename="${item.fileName || ''}" class="primary-btn info-btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); cursor: pointer;">Details</button>
                     <a href="${item.applyLink}" target="_blank" class="apply-btn" style="text-decoration: none;">Apply Now</a>
                   </div>
                 </div>
@@ -153,8 +178,28 @@
 
       document.getElementById('internshipsGrid').addEventListener('click', (e) => {
         if (e.target.classList.contains('info-btn')) {
-           document.getElementById('infoModalTitle').textContent = e.target.getAttribute('data-title');
-           document.getElementById('infoModalBody').textContent = e.target.getAttribute('data-desc');
+           const title = e.target.getAttribute('data-title');
+           const desc = e.target.getAttribute('data-desc');
+           const fileUrl = e.target.getAttribute('data-fileurl');
+           const fileName = e.target.getAttribute('data-filename');
+
+           document.getElementById('infoModalTitle').textContent = title;
+           document.getElementById('infoModalBody').textContent = desc;
+
+           // Handle attachment download button
+           let footer = document.querySelector('.modal-footer-btns');
+           if (!footer) {
+             footer = document.createElement('div');
+             footer.className = 'modal-footer-btns';
+             document.querySelector('.modal-content').appendChild(footer);
+           }
+           if (fileUrl) {
+             footer.innerHTML = `<a href="${fileUrl}" download="${fileName}" class="attachment-btn"><i class="ph ph-file-arrow-down"></i> Download Attachment (${fileName})</a>`;
+             footer.style.display = 'flex';
+           } else {
+             footer.style.display = 'none';
+           }
+
            infoModal.style.display = 'flex';
         }
       });
