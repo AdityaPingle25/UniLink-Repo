@@ -60,39 +60,76 @@
 
   <script>
     (function() {
-      // Setup Student Nav Profile
-      const storedName = localStorage.getItem('userName');
-      const navUserName = document.getElementById('navUserName');
-      const navAvatar = document.getElementById('navAvatar');
-      if (storedName && navUserName) navUserName.innerText = storedName;
-      if (storedName && navAvatar) navAvatar.innerText = storedName.charAt(0).toUpperCase();
+      if (localStorage.getItem('userRole') === 'Teacher') {
+        const tName = localStorage.getItem('teacherName') || 'Faculty';
+        const navUserName = document.getElementById('navUserName');
+        const navAvatar = document.getElementById('navAvatar');
+        if (navUserName) navUserName.innerText = tName;
+        if (navAvatar) navAvatar.innerText = tName.charAt(0).toUpperCase();
+        
+        const roleSpan = document.querySelector('.user-role');
+        if(roleSpan) roleSpan.innerText = 'Faculty';
+        const profileLink = document.querySelector('.user-profile');
+        if(profileLink) profileLink.href = '../../pages/teacher/teacher_profile.html';
+
+        // Override Sidebar
+        const sidebar = document.querySelector('.sidebar .nav-items');
+        if (sidebar) {
+          sidebar.innerHTML = `
+            <a href="../../pages/teacher/teacher_dashboard.html#dashboard" class="nav-item"><i class="ph ph-squares-four"></i> <span>Overview</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#post-announcement" class="nav-item active"><i class="ph ph-megaphone"></i> <span>Post Announcement</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#manage-assignments" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Manage Assignments</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#student-list" class="nav-item"><i class="ph ph-users"></i> <span>My Students</span></a>
+            <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+            <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+            <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Manage Events</span></a>
+          `;
+        }
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '../../pages/auth/teacher_login.html';
+          });
+        }
+      } else {
+        // Setup Student Nav Profile
+        const storedName = localStorage.getItem('userName');
+        const navUserName = document.getElementById('navUserName');
+        const navAvatar = document.getElementById('navAvatar');
+        if (storedName && navUserName) navUserName.innerText = storedName;
+        if (storedName && navAvatar) navAvatar.innerText = storedName.charAt(0).toUpperCase();
+
+        // Logout logic
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '../../pages/auth/student_login.html';
+          });
+        }
+      }
 
       // Theme logic
       const themeToggleBtn = document.getElementById('themeToggleBtn');
-      const themeIcon = themeToggleBtn.querySelector('i');
-      if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-theme');
-        themeIcon.classList.replace('ph-moon', 'ph-sun');
-      }
-      themeToggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        if (document.body.classList.contains('dark-theme')) {
-          localStorage.setItem('theme', 'dark');
+      if (themeToggleBtn) {
+        const themeIcon = themeToggleBtn.querySelector('i');
+        if (localStorage.getItem('theme') === 'dark') {
+          document.body.classList.add('dark-theme');
           themeIcon.classList.replace('ph-moon', 'ph-sun');
-        } else {
-          localStorage.setItem('theme', 'light');
-          themeIcon.classList.replace('ph-sun', 'ph-moon');
         }
-      });
-
-      // Logout logic
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          localStorage.removeItem('userName');
-          localStorage.removeItem('userToken');
-          window.location.href = '../../pages/auth/student_login.html';
+        themeToggleBtn.addEventListener('click', () => {
+          document.body.classList.toggle('dark-theme');
+          if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+            themeIcon.classList.replace('ph-moon', 'ph-sun');
+          } else {
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.replace('ph-sun', 'ph-moon');
+          }
         });
       }
 

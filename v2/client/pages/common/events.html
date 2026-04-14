@@ -79,10 +79,43 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const storedName = localStorage.getItem('userName');
-      if (storedName) {
-        document.getElementById('navUserName').innerText = storedName;
-        document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+      if (localStorage.getItem('userRole') === 'Teacher') {
+        const tName = localStorage.getItem('teacherName') || 'Faculty';
+        document.getElementById('navUserName').innerText = tName;
+        document.getElementById('navAvatar').innerText = tName.charAt(0).toUpperCase();
+        const roleSpan = document.querySelector('.user-role');
+        if(roleSpan) roleSpan.innerText = 'Faculty';
+        const profileLink = document.querySelector('.user-profile');
+        if(profileLink) profileLink.href = '../../pages/teacher/teacher_profile.html';
+
+        // Override Sidebar
+        const sidebar = document.querySelector('.sidebar .nav-items');
+        if(sidebar) {
+          sidebar.innerHTML = `
+            <a href="../../pages/teacher/teacher_dashboard.html#dashboard" class="nav-item"><i class="ph ph-squares-four"></i> <span>Overview</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#post-announcement" class="nav-item"><i class="ph ph-megaphone"></i> <span>Post Announcement</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#manage-assignments" class="nav-item"><i class="ph ph-calendar-check"></i> <span>Manage Assignments</span></a>
+            <a href="../../pages/teacher/teacher_dashboard.html#student-list" class="nav-item"><i class="ph ph-users"></i> <span>My Students</span></a>
+            <a href="../../pages/common/internships.html" class="nav-item"><i class="ph ph-rocket"></i> <span>Internships & Hackathons</span></a>
+            <a href="../../pages/common/scholarships.html" class="nav-item"><i class="ph ph-graduation-cap"></i> <span>Scholarships</span></a>
+            <a href="../../pages/common/events.html" class="nav-item"><i class="ph ph-ticket"></i> <span>Manage Events</span></a>
+          `;
+          
+          // Mark active if matches current page
+          const links = sidebar.querySelectorAll('a');
+          const currentUrl = window.location.href;
+          links.forEach(l => {
+            if (currentUrl.includes(l.getAttribute('href').split('/').pop())) {
+              l.classList.add('active');
+            }
+          });
+        }
+      } else {
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+          document.getElementById('navUserName').innerText = storedName;
+          document.getElementById('navAvatar').innerText = storedName.charAt(0).toUpperCase();
+        }
       }
 
       // Theme logic
@@ -108,9 +141,12 @@
       if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          localStorage.removeItem('userName');
-          localStorage.removeItem('userToken');
-          window.location.href = '../../pages/auth/student_login.html';
+          localStorage.clear();
+          if (localStorage.getItem('userRole') === 'Teacher') {
+            window.location.href = '../../pages/auth/teacher_login.html';
+          } else {
+            window.location.href = '../../pages/auth/student_login.html';
+          }
         });
       }
 
