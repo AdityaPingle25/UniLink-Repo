@@ -191,6 +191,9 @@
         const result = await response.json();
 
         if (result.success) {
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userRole'); // Replaced below
+          
           localStorage.setItem('teacherDbId', result.data.id);
           localStorage.setItem('teacherName', result.data.fullName);
           localStorage.setItem('teacherEmail', result.data.email);

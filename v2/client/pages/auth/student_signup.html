@@ -199,6 +199,10 @@
         const result = await response.json();
 
         if (result.success) {
+          // Securely set role and clear any previous Teacher session leakage
+          localStorage.removeItem('teacherName');
+          localStorage.setItem('userRole', 'Student');
+          
           localStorage.setItem('userId', result.data.id);
           localStorage.setItem('userName', result.data.fullName);
           localStorage.setItem('userEmail', result.data.email);

@@ -94,7 +94,10 @@
         const result = await response.json();
 
         if (result.success) {
-          // Store data in localStorage for dynamic UI update
+          // Clear any conflicting Teacher data
+          localStorage.removeItem('teacherName');
+          
+          localStorage.setItem('userRole', 'Student');
           localStorage.setItem('userId', result.data.id);
           localStorage.setItem('userName', result.data.fullName);
           localStorage.setItem('userEmail', result.data.email);
