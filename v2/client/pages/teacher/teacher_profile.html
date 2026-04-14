@@ -307,6 +307,104 @@
         grid-template-columns: repeat(3, 1fr);
       }
     }
+
+    /* Edit mode inputs */
+    .info-value-input {
+      font-size: 15px; font-weight: 500; color: var(--text-main);
+      padding: 8px 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
+      font-family: inherit; outline: none; width: 100%;
+      background: rgba(255,255,255,0.8); transition: all 0.2s;
+    }
+    .info-value-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+    .info-value-select {
+      font-size: 15px; font-weight: 500; color: var(--text-main);
+      padding: 8px 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
+      font-family: inherit; outline: none; width: 100%;
+      background: rgba(255,255,255,0.8); transition: all 0.2s;
+    }
+    .info-value-select:focus { border-color: var(--primary); }
+    .edit-actions { display: none; margin-top: 20px; gap: 12px; }
+    .edit-actions.active { display: flex; }
+    .save-btn {
+      background: var(--primary); color: white; border: none;
+      padding: 10px 24px; border-radius: 10px; font-family: inherit;
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .save-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .cancel-edit-btn {
+      background: transparent; border: 1px solid rgba(0,0,0,0.1); color: var(--text-muted);
+      padding: 10px 24px; border-radius: 10px; font-family: inherit; font-size: 14px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .cancel-edit-btn:hover { border-color: #e11d48; color: #e11d48; }
+    .success-msg {
+      display: none; background: #dcfce7; color: #166534;
+      padding: 12px 16px; border-radius: 10px; font-size: 14px; font-weight: 500;
+      margin-bottom: 16px; align-items: center; gap: 8px;
+    }
+    .success-msg.active { display: flex; }
+    .edit-btn {
+      background: transparent; border: 1.5px solid var(--primary); color: var(--primary);
+      padding: 6px 14px; border-radius: 8px; font-family: inherit; font-size: 12px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .edit-btn:hover { background: var(--primary); color: white; }
+    .info-card-actions { margin-left: auto; }
+
+    /* Division checkboxes */
+    .division-checkboxes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    .div-check-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 24px; cursor: pointer;
+      border: 1.5px solid rgba(5,150,105,0.3); font-size: 14px; font-weight: 500;
+      color: var(--text-muted); transition: all 0.2s; user-select: none;
+    }
+    .div-check-label input[type="checkbox"] { display: none; }
+    .div-check-label input[type="checkbox"]:checked + span { color: white; }
+    .div-check-label:has(input:checked) {
+      background: var(--primary); color: white;
+      border-color: var(--primary); box-shadow: 0 4px 10px rgba(5,150,105,0.25);
+    }
+
+    /* Social Links */
+    .social-links-list { display: flex; flex-direction: column; gap: 10px; }
+    .social-link-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 10px;
+      background: rgba(5,150,105,0.05); border: 1px solid rgba(5,150,105,0.1);
+      transition: all 0.2s;
+    }
+    .social-link-item:hover { background: rgba(5,150,105,0.1); border-color: rgba(5,150,105,0.25); }
+    .social-link-icon { font-size: 22px; flex-shrink: 0; }
+    .social-link-meta { flex: 1; min-width: 0; }
+    .social-link-platform { font-size: 13px; font-weight: 700; color: var(--text-main); }
+    .social-link-url { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .social-link-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .social-link-row select, .social-link-row input {
+      padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);
+      font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.8);
+      color: var(--text-main); outline: none; transition: border-color 0.2s;
+    }
+    .social-link-row select:focus, .social-link-row input:focus { border-color: var(--primary); }
+    .social-link-row select { flex: 0 0 140px; }
+    .social-link-row input { flex: 1; }
+    .remove-link-btn { background: none; border: none; color: #e11d48; font-size: 18px; cursor: pointer; flex-shrink: 0; padding: 4px; border-radius: 6px; transition: background 0.2s; }
+    .remove-link-btn:hover { background: #ffe4e6; }
+    .add-link-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; border: 1.5px dashed var(--primary); color: var(--primary);
+      padding: 8px 16px; border-radius: 10px; font-family: inherit; font-size: 13px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    }
+    .add-link-btn:hover { background: rgba(5,150,105,0.08); }
+    body.dark-theme .info-value-input, body.dark-theme .info-value-select,
+    body.dark-theme .social-link-row select, body.dark-theme .social-link-row input {
+      background: rgba(15,23,42,0.4); border-color: rgba(255,255,255,0.1); color: #f8fafc;
+    }
+    body.dark-theme .success-msg { background: rgba(22,101,52,0.2); color: #86efac; }
+    body.dark-theme .div-check-label { border-color: rgba(5,150,105,0.4); color: rgba(248,250,252,0.55); }
   </style>
 </head>
 
@@ -373,11 +471,17 @@
 
       <!-- Right: Info Cards -->
       <div class="profile-details-section">
+        <!-- Success Message -->
+        <div class="success-msg" id="successMsg">
+          <i class="ph ph-check-circle" style="font-size: 18px;"></i>
+          <span>Profile updated successfully!</span>
+        </div>
+
         <!-- Personal Info Card -->
         <div class="info-card">
           <div class="info-card-title" style="justify-content: space-between;">
              <div style="display: flex; align-items: center; gap: 10px;"><i class="ph ph-user-circle"></i> Personal & Academic Details</div>
-             <button id="openEditModal" class="change-avatar-btn" style="margin: 0; padding: 4px 12px;"><i class="ph ph-pencil-simple"></i> Edit</button>
+             <button id="openEditModal" class="edit-btn"><i class="ph ph-pencil-simple"></i> Edit</button>
           </div>
           <div class="info-grid">
             <div class="info-item">
@@ -421,6 +525,31 @@
             </div>
           </div>
         </div>
+
+        <!-- Social Links Card -->
+        <div class="info-card">
+          <div class="info-card-title">
+            <i class="ph ph-share-network"></i> Social & Coding Profiles
+            <div class="info-card-actions">
+              <button class="edit-btn" id="editSocialBtn" onclick="toggleEditSocial()"><i class="ph ph-pencil-simple"></i> Edit</button>
+            </div>
+          </div>
+          <!-- View Mode -->
+          <div id="socialViewMode">
+            <div class="social-links-list" id="socialLinksList">
+              <p style="color: var(--text-muted); font-size: 14px;">No social links added yet.</p>
+            </div>
+          </div>
+          <!-- Edit Mode -->
+          <div id="socialEditMode" style="display:none;">
+            <div id="socialLinksEditor"></div>
+            <button class="add-link-btn" onclick="addSocialRow()"><i class="ph ph-plus"></i> Add Platform</button>
+            <div class="edit-actions active" style="margin-top:16px;">
+              <button class="save-btn" onclick="saveSocialLinks()"><i class="ph ph-floppy-disk"></i> Save Links</button>
+              <button class="cancel-edit-btn" onclick="cancelEditSocial()">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -428,7 +557,7 @@
 
   <!-- Edit Profile Modal -->
   <div class="avatar-modal-overlay" id="editProfileModal">
-    <div class="avatar-modal">
+    <div class="avatar-modal" style="max-height: 90vh; overflow-y: auto;">
       <div class="modal-header">
         <h3>Edit Profile Details</h3>
         <button class="modal-close" id="closeEditModal"><i class="ph ph-x"></i></button>
@@ -436,34 +565,52 @@
       <form id="editProfileForm" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Full Name</label>
-          <input type="text" id="editName" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <input type="text" id="editName" class="info-value-input" required>
         </div>
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Email</label>
-          <input type="email" id="editEmail" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <div class="info-value" id="editEmailDisplay" style="padding: 9px 12px; border-radius: 8px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07); display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted);">
+            <i class="ph ph-lock" style="font-size: 15px;"></i>
+            <span id="editEmailVal"></span>
+            <em style="font-size: 12px; margin-left: auto;">(cannot be changed)</em>
+          </div>
         </div>
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Employee ID</label>
-          <input type="text" id="editPrn" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <input type="text" id="editPrn" class="info-value-input" required>
         </div>
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Department</label>
-          <input type="text" id="editDept" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <select id="editDept" class="info-value-select" required>
+            <option value="">Select Department...</option>
+            <option value="Computer Science (CS)">Computer Science (CS)</option>
+            <option value="Information Technology (IT)">Information Technology (IT)</option>
+            <option value="CSE (AI &amp; ML)">CSE (AI &amp; ML)</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electronics &amp; Telecom (ENTC)">Electronics &amp; Telecom (ENTC)</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Computer (Regional)">Computer (Regional)</option>
+          </select>
         </div>
         <div>
-          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Divisions (comma separated)</label>
-          <input type="text" id="editDivisions" placeholder="e.g. A, B, C" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px;">Assigned Divisions</label>
+          <div class="division-checkboxes">
+            <label class="div-check-label"><input type="checkbox" value="A" id="divCheck_A"><span>Division A</span></label>
+            <label class="div-check-label"><input type="checkbox" value="B" id="divCheck_B"><span>Division B</span></label>
+            <label class="div-check-label"><input type="checkbox" value="C" id="divCheck_C"><span>Division C</span></label>
+            <label class="div-check-label"><input type="checkbox" value="D" id="divCheck_D"><span>Division D</span></label>
+          </div>
         </div>
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Phone</label>
-          <input type="text" id="editPhone" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <input type="text" id="editPhone" class="info-value-input">
         </div>
         <div>
           <label style="font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">College</label>
-          <input type="text" id="editCollege" class="dashboard-form input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--input-border);" required>
+          <input type="text" id="editCollege" class="info-value-input">
         </div>
       </form>
-      <button class="modal-save-btn" id="saveProfileBtn">Save Changes</button>
+      <button class="save-btn" id="saveProfileBtn" style="width:100%; justify-content: center;">Save Changes</button>
     </div>
   </div>
 
@@ -534,13 +681,21 @@
       // --- Edit Profile ---
       const editModal = document.getElementById('editProfileModal');
       document.getElementById('openEditModal').addEventListener('click', () => {
-         document.getElementById('editName').value = name;
-         document.getElementById('editEmail').value = email;
-         document.getElementById('editPrn').value = prn;
-         document.getElementById('editDept').value = branch;
-         document.getElementById('editDivisions').value = Array.isArray(JSON.parse(rawDivisions || '[]')) ? JSON.parse(rawDivisions || '[]').join(', ') : rawDivisions;
+         document.getElementById('editName').value = name || '';
+         // Email is read-only — show in display element only
+         const emailSpan = document.getElementById('editEmailVal');
+         if (emailSpan) emailSpan.textContent = email || '';
+         document.getElementById('editPrn').value = prn || '';
+         document.getElementById('editDept').value = branch || '';
+         // Pre-tick division checkboxes
+         const existingDivs = [];
+         try { if (rawDivisions) JSON.parse(rawDivisions).forEach(d => existingDivs.push(d.trim())); } catch(e) {}
+         ['A','B','C','D'].forEach(d => {
+           const cb = document.getElementById('divCheck_' + d);
+           if (cb) cb.checked = existingDivs.includes(d);
+         });
          document.getElementById('editPhone').value = phone === 'Not set' ? '' : phone;
-         document.getElementById('editCollege').value = college === 'PCCOE, Pune' ? 'PCCOE, Pune' : college;
+         document.getElementById('editCollege').value = college;
          editModal.classList.add('active');
       });
       document.getElementById('closeEditModal').addEventListener('click', () => editModal.classList.remove('active'));
@@ -553,12 +708,12 @@
 
          const payload = {
             fullName: document.getElementById('editName').value,
-            email: document.getElementById('editEmail').value,
+            // email intentionally excluded — cannot be changed
             employeeId: document.getElementById('editPrn').value,
             department: document.getElementById('editDept').value,
             phone: document.getElementById('editPhone').value,
             college: document.getElementById('editCollege').value,
-            divisions: document.getElementById('editDivisions').value.split(',').map(s=>s.trim())
+            divisions: ['A','B','C','D'].filter(d => document.getElementById('divCheck_' + d)?.checked)
          };
 
          try {
@@ -585,6 +740,66 @@
             alert('Server error saving profile.');
          }
       });
+
+      // --- Social Links ---
+      const SOCIAL_PLATFORMS = [
+        { value: 'linkedin',      label: 'LinkedIn',      icon: 'ph-linkedin-logo',    color: '#0077B5' },
+        { value: 'leetcode',      label: 'LeetCode',      icon: 'ph-code',             color: '#FFA116' },
+        { value: 'hackerrank',    label: 'HackerRank',    icon: 'ph-terminal-window',  color: '#00EA64' },
+        { value: 'codechef',      label: 'CodeChef',      icon: 'ph-cooking-pot',      color: '#5B4638' },
+        { value: 'geeksforgeeks', label: 'GeeksForGeeks', icon: 'ph-leaf',             color: '#2F8D46' },
+        { value: 'github',        label: 'GitHub',        icon: 'ph-github-logo',      color: '#181717' },
+        { value: 'twitter',       label: 'Twitter / X',   icon: 'ph-twitter-logo',     color: '#1DA1F2' },
+        { value: 'instagram',     label: 'Instagram',     icon: 'ph-instagram-logo',   color: '#E1306C' },
+        { value: 'portfolio',     label: 'Portfolio',     icon: 'ph-globe',            color: '#059669' },
+        { value: 'other',         label: 'Other',         icon: 'ph-link',             color: '#64748b' }
+      ];
+      function getPlatformMeta(v) { return SOCIAL_PLATFORMS.find(p => p.value === v) || SOCIAL_PLATFORMS[SOCIAL_PLATFORMS.length-1]; }
+
+      function renderSocialLinks() {
+        const raw = localStorage.getItem('teacherSocialLinks');
+        const links = raw ? JSON.parse(raw) : [];
+        const container = document.getElementById('socialLinksList');
+        if (!links.length) { container.innerHTML = '<p style="color: var(--text-muted); font-size: 14px;">No social links added yet.</p>'; return; }
+        container.innerHTML = links.map(l => {
+          const meta = getPlatformMeta(l.platform);
+          return `<div class="social-link-item"><i class="ph ${meta.icon} social-link-icon" style="color:${meta.color}"></i><div class="social-link-meta"><div class="social-link-platform">${meta.label}</div><div class="social-link-url">${l.url}</div></div><a href="${l.url}" target="_blank" style="color:var(--primary);font-size:18px;"><i class="ph ph-arrow-square-out"></i></a></div>`;
+        }).join('');
+      }
+      renderSocialLinks();
+
+      window.addSocialRow = (platform = '', url = '') => {
+        const editor = document.getElementById('socialLinksEditor');
+        const row = document.createElement('div');
+        row.className = 'social-link-row';
+        const options = SOCIAL_PLATFORMS.map(p => `<option value="${p.value}" ${p.value === platform ? 'selected' : ''}>${p.label}</option>`).join('');
+        row.innerHTML = `<select><option value="">Select platform...</option>${options}</select><input type="url" placeholder="https://..." value="${url}"><button class="remove-link-btn" onclick="this.parentElement.remove()"><i class="ph ph-trash"></i></button>`;
+        editor.appendChild(row);
+      };
+      window.toggleEditSocial = () => {
+        document.getElementById('socialViewMode').style.display = 'none';
+        document.getElementById('socialEditMode').style.display = 'block';
+        document.getElementById('editSocialBtn').style.display = 'none';
+        const editor = document.getElementById('socialLinksEditor');
+        editor.innerHTML = '';
+        const raw = localStorage.getItem('teacherSocialLinks');
+        const links = raw ? JSON.parse(raw) : [];
+        if (links.length) links.forEach(l => addSocialRow(l.platform, l.url)); else addSocialRow();
+      };
+      window.cancelEditSocial = () => {
+        document.getElementById('socialViewMode').style.display = 'block';
+        document.getElementById('socialEditMode').style.display = 'none';
+        document.getElementById('editSocialBtn').style.display = '';
+      };
+      window.saveSocialLinks = () => {
+        const rows = document.querySelectorAll('#socialLinksEditor .social-link-row');
+        const links = [];
+        rows.forEach(row => { const p = row.querySelector('select').value; const u = row.querySelector('input').value.trim(); if (p && u) links.push({ platform: p, url: u }); });
+        localStorage.setItem('teacherSocialLinks', JSON.stringify(links));
+        renderSocialLinks();
+        cancelEditSocial();
+        alert('Social links saved!');
+      };
 
       // --- Standard Initial Avatar ---
       if (name) {
