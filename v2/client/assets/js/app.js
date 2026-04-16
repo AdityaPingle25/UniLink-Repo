@@ -614,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const fileMap = {
             'dashboard': 'student_dashboard.html',
             'announcements': '../common/announcements.html',
-            'deadlines': 'deadlines.html',
+            'deadlines': '../common/deadlines.html',
             'internships': '../common/internships.html',
             'events': '../common/events.html',
             'scholarships': '../common/scholarships.html'
