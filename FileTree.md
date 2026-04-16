@@ -1,6 +1,6 @@
 # File Tree: v2
 
-**Generated:** 4/11/2026, 2:01:27 PM
+**Generated:** 4/16/2026, 10:51:47 PM
 **Root Path:** `c:\Users\ADITYA\OneDrive\Documents\Full Stack Development - I\UniLink\UniLink-Repo\v2`
 
 ```
@@ -11,6 +11,10 @@
 │   │   │   ├── 🎨 student_dashboard.css
 │   │   │   ├── 🎨 student_login.css
 │   │   │   └── 🎨 style.css
+│   │   ├── 📁 images
+│   │   │   ├── 🖼️ colorful_hero_doodle.png
+│   │   │   ├── 🖼️ hero_doodle.png
+│   │   │   └── 🖼️ minimalist_hero_doodle.png
 │   │   ├── 📁 img
 │   │   │   ├── 🖼️ 1000105511.jpg
 │   │   │   ├── 🖼️ 1000105512.jpg
@@ -36,13 +40,14 @@
 │   │   ├── 📁 common
 │   │   │   ├── 🌐 announcements.html
 │   │   │   ├── 🌐 blog.html
+│   │   │   ├── 🌐 deadlines.html
 │   │   │   ├── 🌐 events.html
 │   │   │   ├── 🌐 internships.html
 │   │   │   └── 🌐 scholarships.html
 │   │   ├── 📁 public
-│   │   │   └── 🌐 blog.html
+│   │   │   ├── 🌐 blog.html
+│   │   │   └── 🌐 event_details.html
 │   │   ├── 📁 student
-│   │   │   ├── 🌐 deadlines.html
 │   │   │   ├── 🌐 student_dashboard.html
 │   │   │   └── 🌐 student_profile.html
 │   │   └── 📁 teacher
@@ -59,7 +64,9 @@
     │   ├── 📄 Internship.js
     │   ├── 📄 Scholarship.js
     │   ├── 📄 Student.js
-    │   └── 📄 Teacher.js
+    │   ├── 📄 StudentProfile.js
+    │   ├── 📄 Teacher.js
+    │   └── 📄 TeacherProfile.js
     ├── 📁 routes
     │   ├── 📄 announcements.js
     │   ├── 📄 assignments.js
@@ -67,11 +74,13 @@
     │   ├── 📄 events.js
     │   ├── 📄 internships.js
     │   ├── 📄 scholarships.js
-    │   └── 📄 students.js
+    │   ├── 📄 students.js
+    │   └── 📄 teachers.js
     ├── 📁 utils
     │   └── 📄 emailSender.js
     ├── ⚙️ package-lock.json
-    └── ⚙️ package.json
+    ├── ⚙️ package.json
+    └── 📄 server.js
 ```
 
 ---
