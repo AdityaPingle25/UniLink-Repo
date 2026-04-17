@@ -1,78 +1,86 @@
-# 🚀 UniLink – Smart Campus Communication Platform
+# UniLink – Smart Campus Communication Platform
 
-## 📌 Overview  
-UniLink is a centralized web-based platform designed to streamline communication within academic institutions. It brings all important updates like assignments, events, and opportunities into one unified system.
-
----
-
-## 🌐 Live Website  
-
-🔗 **Visit UniLink:** https://unilnk.onrender.com/
-
-> You can directly access the platform using your college email ID.
+## Overview  
+UniLink is a centralized web-based platform designed to streamline communication within academic institutions. It brings together important updates such as assignments, events, internships, and announcements into a single, unified system.
 
 ---
 
-## 🎯 Problem Statement  
-Academic institutions generate a large amount of daily information such as:
+## Live Website  
+
+Visit the deployed application:  
+https://unilnk.onrender.com/
+
+Users can access the platform using their college email ID.
+
+---
+
+## Problem Statement  
+Academic institutions generate a large amount of daily information, including:
 - Assignment deadlines  
 - Event notifications  
 - Internship opportunities  
 - Scholarship alerts  
 - Administrative announcements  
 
-This information is scattered across multiple platforms like WhatsApp, emails, and notice boards, leading to:
-- Missed updates by students  
-- Inefficient communication for faculty  
+This information is often distributed across multiple platforms such as WhatsApp groups, emails, and notice boards. As a result:
+- Students may miss important updates  
+- Faculty face difficulty reaching the intended audience  
 
 ---
 
-## 💡 Proposed Solution  
-UniLink provides a **single platform** where:
-- Faculty can post announcements easily  
+## Proposed Solution  
+UniLink provides a centralized platform where:
+- Faculty can post announcements efficiently  
 - Students can access all updates in one place  
-- Information is categorized and organized  
+- Information is structured and categorized  
 
 ---
 
-## 🛠️ Tech Stack  
+## Tech Stack  
 
-**Frontend:**  
+Frontend:  
 - HTML  
 - CSS  
 - JavaScript  
 
-**Backend:**  
+Backend:  
 - Node.js  
 - Express.js  
 
-**Database:**  
+Database:  
 - MongoDB  
 
-**Authentication:**  
-- Google OAuth (College Email Restricted Access)
+Authentication:  
+- Google OAuth (restricted to college email IDs)  
 
-**Deployment:**  
+Deployment:  
 - Render  
 
 ---
 
-## ✨ Features  
+## Features  
 
-- 🔐 Secure login with college email  
-- 📢 Centralized announcements dashboard  
-- 🗂️ Categorized posts  
-- 🔔 Notification system  
-- 👨‍🏫 Role-based access  
-- 📱 Responsive design  
+- Secure login using college email  
+- Centralized announcements dashboard  
+- Categorized posts (assignments, events, internships, etc.)  
+- Notification system  
+- Role-based access (Admin, Faculty, Student)  
+- Responsive user interface  
 
 ---
 
-## 🧩 System Architecture  
+## System Architecture  
 
-- Frontend communicates with backend via REST APIs  
-- Backend handles authentication and business logic  
+- Frontend communicates with backend using REST APIs  
+- Backend manages authentication and business logic  
 - MongoDB stores user and post data  
-- Google OAuth ensures secure login  
+- Google OAuth ensures secure access  
 
 ---
+
+## Installation and Setup (Local Development)  
+
+### 1. Clone the repository  
+```bash
+git clone https://github.com/AdityaPingle25/UniLink-Repo.git
+cd UniLink-Repo
