@@ -1,7 +1,15 @@
 # 🚀 UniLink – Smart Campus Communication Platform
 
 ## 📌 Overview  
-UniLink is a centralized web-based platform designed to streamline communication within academic institutions. It solves the problem of scattered information by bringing all important updates like assignments, events, and opportunities into one unified system.
+UniLink is a centralized web-based platform designed to streamline communication within academic institutions. It brings all important updates like assignments, events, and opportunities into one unified system.
+
+---
+
+## 🌐 Live Website  
+
+🔗 **Visit UniLink:** https://unilnk.onrender.com/
+
+> You can directly access the platform using your college email ID.
 
 ---
 
@@ -13,7 +21,7 @@ Academic institutions generate a large amount of daily information such as:
 - Scholarship alerts  
 - Administrative announcements  
 
-Currently, this information is distributed across multiple platforms like WhatsApp groups, emails, and notice boards, leading to:
+This information is scattered across multiple platforms like WhatsApp, emails, and notice boards, leading to:
 - Missed updates by students  
 - Inefficient communication for faculty  
 
@@ -42,7 +50,7 @@ UniLink provides a **single platform** where:
 - MongoDB  
 
 **Authentication:**  
-- Google OAuth (Restricted to college email IDs)
+- Google OAuth (College Email Restricted Access)
 
 **Deployment:**  
 - Render  
@@ -53,25 +61,18 @@ UniLink provides a **single platform** where:
 
 - 🔐 Secure login with college email  
 - 📢 Centralized announcements dashboard  
-- 🗂️ Categorized posts (Assignments, Events, Internships, etc.)  
+- 🗂️ Categorized posts  
 - 🔔 Notification system  
-- 👨‍🏫 Role-based access (Admin / Faculty / Student)  
+- 👨‍🏫 Role-based access  
 - 📱 Responsive design  
 
 ---
 
 ## 🧩 System Architecture  
 
-- Frontend communicates with backend using APIs  
+- Frontend communicates with backend via REST APIs  
 - Backend handles authentication and business logic  
 - MongoDB stores user and post data  
 - Google OAuth ensures secure login  
 
 ---
-
-## ⚙️ Installation & Setup  
-
-### 1. Clone the repository  
-```bash
-git clone https://github.com/AdityaPingle25/UniLink-Repo.git
-cd UniLink-Repo
