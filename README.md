@@ -77,10 +77,3 @@ Deployment:
 - Google OAuth ensures secure access  
 
 ---
-
-## Installation and Setup (Local Development)  
-
-### 1. Clone the repository  
-```bash
-git clone https://github.com/AdityaPingle25/UniLink-Repo.git
-cd UniLink-Repo
